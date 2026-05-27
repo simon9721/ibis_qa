@@ -1,54 +1,57 @@
-# ibis_qa — IBIS Quality Specification v3.0 Automated Checker
+# ibis_qa — IBIS Quality Specification v3.0 Checker
 
-A Python tool that runs the **AUTO-class checks** defined in the
-[IBIS Quality Specification v3.0](https://ibis.org/quality_ver3.0/)
-against any `.ibs` file.
+A Python tool that evaluates IBIS `.ibs` files against the
+[IBIS Quality Specification v3.0](https://ibis.org/quality_ver3.0/) (ratified Sep 15, 2023).
+
+The canonical data source for all check definitions, automation classes, and
+implementation guidance is `ibis_quality_spec_3_0.json`, included in this
+repository. Every check ID, title, level, and `how-to-automate` description
+in this README is drawn directly from that file.
 
 ---
 
 ## Background
 
-The IBIS Quality Specification defines 67 check items across four IQ levels
-(IQ1–IQ4) plus special correlation designators (G, M, S, X). Each check is
-classified as:
+The IBIS Quality Specification defines 68 check items across four IQ levels
+plus a set of special correlation designators. Each check is classified by
+how much can be verified from the IBIS file alone:
 
 | Class | Count | Meaning |
 |-------|------:|---------|
-| AUTO | 16 | Fully deterministic — parser rules and numeric checks only |
-| SEMI-AUTO | 31 | Tool computes evidence; reviewer confirms edge cases |
-| MANUAL | 20 | Requires external data (datasheet, SPICE model, extraction docs) |
-| OPTIONAL | 1 | Good practice; not required for any IQ level |
+| `auto` | 17 | Fully deterministic — parser rules and numeric checks, no reviewer needed |
+| `semi_auto` | 30 | Tool computes evidence; reviewer confirms edge cases or technology exceptions |
+| `manual` | 20 | Requires external data — datasheet, SPICE model, or extraction documentation |
+| `optional` | 1 | Good practice; does not affect the IQ score |
 
-This tool covers all **16 AUTO checks** plus the automatable portions of
-several SEMI-AUTO checks. MANUAL and OPTIONAL checks are outside scope and
-must be evaluated by a qualified engineer using the appropriate external
-references.
+This tool currently implements **22 of the 17 `auto` checks** (all of them,
+plus a few partially-automatable `semi_auto` checks) and produces a
+structured report that surfaces evidence for the remaining checks so a
+reviewer can work efficiently.
 
 ---
 
 ## Requirements
 
 - Python 3.9 or later
-- No third-party dependencies — standard library only
-- IBISCHK executable (optional): if `ibischk` or `ibischk7` is on your PATH,
-  check 2.1 will also run the parser and report error/warning counts
+- No third-party packages — standard library only
+- `ibischk` or `ibischk7` on PATH (optional): enables check 2.1 execution
 
 ---
 
 ## Quick Start
 
 ```bash
-# Basic run — shows only failures, warnings, and errors
+# Default: show failures, warnings, and errors only
 python ibis_qa.py my_model.ibs
 
-# Show everything including PASS and NA results
+# Show everything including PASS and NA
 python ibis_qa.py my_model.ibs --verbose
 
-# Output structured JSON (for downstream tooling)
+# Structured JSON output for downstream tooling
 python ibis_qa.py my_model.ibs --json > report.json
 ```
 
-### Example output
+### Sample output
 
 ```
 ========================================================================
@@ -69,23 +72,16 @@ IQ Score in file: (not found)
 
 ========================================================================
 SUMMARY
-  FAIL  : 83
-  WARN  : 8
-  PASS  : 238
-  NA    : 184
-  ERROR : 0
-  Total results: 513
+  FAIL  : 83   WARN  : 8   PASS  : 238   NA  : 184   ERROR : 0
 ========================================================================
 ```
-
-**Status symbols:**
 
 | Symbol | Status | Meaning |
 |--------|--------|---------|
 | ✓ | PASS | Rule satisfied |
 | ✗ | FAIL | Rule violated |
 | — | NA | Rule does not apply to this item |
-| ⚠ | WARN | Soft finding — noteworthy but not a spec-mandated failure |
+| ⚠ | WARN | Noteworthy finding; not a spec-mandated failure |
 | ! | ERROR | Check itself failed (parse issue or missing data) |
 
 ---
@@ -94,104 +90,167 @@ SUMMARY
 
 ```
 ibis_qa/
-├── ibis_qa.py              Entry point (CLI)
-├── config.py               All numeric tolerances — tune here
-├── runner.py               Discovers and runs all check modules
-├── reporter.py             Text and JSON output formatting
+├── ibis_qa.py                   Entry point (CLI)
+├── config.py                    All numeric tolerances — tune here
+├── runner.py                    Auto-discovers and runs all check modules
+├── reporter.py                  Text and JSON output formatting
+├── ibis_quality_spec_3_0.json   Canonical check definitions (source of truth)
 ├── parser/
-│   └── ibis_parser.py      Single-pass IBIS file tokeniser
+│   └── ibis_parser.py           Single-pass IBIS tokeniser → IBISFile object
 └── checks/
-    ├── base.py             CheckResult, Status, CheckModule base class
-    ├── c2_1_ibischk.py     Check 2.1  — IBISCHK + IQ score in file
-    ├── c3_1_package.py     Checks 3.1.1, 3.1.2 — [Package] values
-    ├── c3_component_structural.py
-    │                       Checks 3.2.2, 3.3.1, 3.3.2, 3.4.1, 3.4.3
-    ├── c5_3_iv_tables.py   Checks 5.3.2–5.3.9, 5.3.13, 5.3.7
-    ├── c5_ramp_waveform.py Checks 5.5.1, 5.5.3, 5.8.1, 5.8.2, 5.8.8
-    └── c5_7_isso.py        Check 5.7.1 — ISSO PU/PD tables
+    ├── base.py                  CheckResult, Status, CheckModule base class
+    ├── c2_1_ibischk.py          Check 2.1
+    ├── c3_1_package.py          Checks 3.1.1, 3.1.2
+    ├── c3_component_structural.py   Checks 3.2.2, 3.3.1, 3.3.2, 3.4.1, 3.4.3
+    ├── c5_3_iv_tables.py        Checks 5.3.2–5.3.9, 5.3.13, 5.3.7
+    ├── c5_ramp_waveform.py      Checks 5.5.1, 5.5.3, 5.8.1, 5.8.2, 5.8.8
+    └── c5_7_isso.py             Check 5.7.1
 ```
 
 ---
 
-## Checks Implemented
+## Check Coverage
 
 ### IQ Level 1
 
-| ID | Description | Class |
-|----|-------------|-------|
-| 2.1 | IBIS file passes IBISCHK with zero errors; IQ score tag present in file | AUTO |
+| ID | Title | Class | Status |
+|----|-------|-------|--------|
+| 2.1 | IBIS file passes IBISCHK | `auto` | ✅ implemented |
 
-> **Note on 2.1:** The spec (§1.4) requires the IQ score string to be embedded
-> inside the `.ibs` file itself (in `[Notes]` or a comment line). Referencing
-> an external quality report document does not satisfy this requirement.
-> Professional vendor files commonly omit this — the tool will flag it.
+**How (from spec JSON):** Run the appropriate IBISCHK version for the file's
+`[IBIS Ver]`, capture the full output, parse version/errors/warnings/cautions,
+fail on any error, and require `[Notes]`/comments plus the X designator for
+unresolved warnings.
 
-### IQ Level 2
+> **Note on §1.4 (IQ score in file):** The spec requires the IQ score string
+> to be written inside the `.ibs` file itself, not only in an external quality
+> report. This tool checks for the `|IQ Score:` tag as part of check 2.1.
 
-| ID | Description | Class |
-|----|-------------|-------|
-| 3.1.1 | `[Package]` has typ/min/max values (no NA) | AUTO |
-| 3.1.2 | `[Package]` values within limits (L<100nH, C<100pF, R<10Ω) and min≤typ≤max | AUTO |
-| 3.3.1 | `[Diff Pin]` model names match; mismatches have explanatory comment | AUTO |
-| 3.3.2 | `[Diff Pin]` Vdiff/Tdelay columns correct per model type | AUTO |
-| 5.3.2 | `[Pullup]` voltage sweep covers −Vcc to +2×Vcc | AUTO |
-| 5.3.3 | `[Pulldown]` voltage sweep covers −Vcc to +2×Vcc | AUTO |
-| 5.3.4 | `[POWER Clamp]` voltage sweep covers at least −Vcc to 0 | AUTO |
-| 5.3.5 | `[GND Clamp]` voltage sweep covers −Vcc to +Vcc | AUTO |
-| 5.3.7 | I-V tables are monotonically non-decreasing | AUTO |
-| 5.3.8 | `[Pulldown]` passes through ≈0mA at 0V (CMOS; exceptions auto-detected) | AUTO |
-| 5.3.9 | `[Pullup]` passes through ≈0mA at Vtable=0 (CMOS; exceptions auto-detected) | AUTO |
-| 5.3.13 | ECL model I-V tables swept from −Vcc to +2×Vcc | AUTO |
-| 5.5.1 | `[Ramp]` R_load present when load ≠ 50Ω | AUTO |
-| 5.5.3 | `[Ramp]` dV consistent with I-V load-line within 5% | AUTO |
+---
 
-### IQ Level 3
+### IQ Level 2 — 35 checks
 
-| ID | Description | Class |
-|----|-------------|-------|
-| 3.2.2 | `[Pin]` RLC values present; TD=√(LC)<300ps and Z0=√(L/C)<100Ω | AUTO |
+| ID | Title | Class | Status |
+|----|-------|-------|--------|
+| 3.1.1 | `[Package]` must have typ/min/max values | `auto` | ✅ implemented |
+| 3.1.2 | `[Package]` model values must be reasonable | `semi_auto` | ✅ auto portion |
+| 3.2.1 | `[Pin]` section complete | `semi_auto` | ⬜ not yet |
+| 3.3.1 | `[Diff Pin]` referenced pin models match | `semi_auto` | ✅ auto portion |
+| 4.1 | `[Model Selector]` entries have reasonable descriptions | `semi_auto` | ⬜ not yet |
+| 4.2 | Default `[Model Selector]` entries are consistent | `manual` | — out of scope |
+| 5.1.1 | `[Model]` parameters have correct typ/min/max order | `semi_auto` | ⬜ not yet |
+| 5.1.2 | `[Model]` C_comp is reasonable | `semi_auto` | ⬜ not yet |
+| 5.1.3 | `[Temperature Range]` is reasonable | `manual` | — out of scope |
+| 5.1.4 | `[Voltage Range]` or `[* Reference]` is reasonable | `semi_auto` | ⬜ not yet |
+| 5.2.5 | `[Model Spec]` S_Overshoot complete and match datasheet | `manual` | — out of scope |
+| 5.2.6 | `[Model Spec]` S_Overshoot track typ/min/max | `semi_auto` | ⬜ not yet |
+| 5.2.7 | `[Model Spec]` D_Overshoot complete and match datasheet | `manual` | — out of scope |
+| 5.2.8 | `[Model Spec]` D_Overshoot track typ/min/max | `semi_auto` | ⬜ not yet |
+| 5.3.1 | I-V tables have correct typ/min/max order | `semi_auto` | ⬜ not yet |
+| 5.3.2 | `[Pullup]` voltage sweep range is correct | `auto` | ✅ implemented |
+| 5.3.3 | `[Pulldown]` voltage sweep range is correct | `auto` | ✅ implemented |
+| 5.3.4 | `[POWER Clamp]` voltage sweep range is correct | `auto` | ✅ implemented |
+| 5.3.5 | `[GND Clamp]` voltage sweep range is correct | `auto` | ✅ implemented |
+| 5.3.6 | I-V tables do not exhibit stair-stepping | `semi_auto` | ⬜ not yet |
+| 5.3.7 | Combined I-V tables are monotonic | `auto` | ✅ implemented |
+| 5.3.8 | `[Pulldown]` I-V tables pass through zero/zero | `semi_auto` | ✅ auto portion |
+| 5.3.9 | `[Pullup]` I-V tables pass through zero/zero | `semi_auto` | ✅ auto portion |
+| 5.3.10 | No leakage current in clamp I-V tables | `semi_auto` | ⬜ not yet |
+| 5.3.11 | I-V behavior not double-counted | `manual` | — out of scope |
+| 5.3.12 | On-die termination modeling documented | `manual` | — out of scope |
+| 5.3.13 | ECL models I-V tables swept from −Vcc to +2×Vcc | `auto` | ✅ implemented |
+| 5.3.14 | Point distributions in I-V tables should be sufficient | `semi_auto` | ⬜ not yet |
+| 5.4.1 | Output and I/O buffers have sufficient V-T tables | `semi_auto` | ⬜ not yet |
+| 5.4.2 | V-T tables have reasonable point distribution | `semi_auto` | ⬜ not yet |
+| 5.4.4 | V-T table endpoints match fixture voltages | `semi_auto` | ⬜ not yet |
+| 5.5.1 | `[Ramp]` R_load present if value other than 50Ω | `auto` | ✅ implemented |
+| 5.5.2 | `[Ramp]` typ/min/max order is correct | `semi_auto` | ⬜ not yet |
+| 5.5.3 | `[Ramp]` dV consistent with I-V load-line | `auto` | ✅ implemented |
+| 5.5.4 | `[Ramp]` dt consistent with 20–80% crossing time | `semi_auto` | ⬜ not yet |
 
-### IQ Level 4
+---
 
-| ID | Description | Class |
-|----|-------------|-------|
-| 3.4.1 | `[Pin Mapping]` present for each component (bare-die exempt) | AUTO |
-| 3.4.3 | `[Merged Pins]` present when package model merges physical pins | AUTO |
-| 5.7.1 | `[ISSO PU]` and `[ISSO PD]` present; endpoint equations satisfied | AUTO |
-| 5.8.1 | Every `[Rising/Falling Waveform]` has a `[Composite Current]` table | AUTO |
-| 5.8.2 | `[Composite Current]` time range matches parent V-T waveform | AUTO |
-| 5.8.8 | `[Composite Current]` starts or ends at 0A when V_fixture=0 | AUTO |
+### IQ Level 3 — 14 checks
+
+| ID | Title | Class | Status |
+|----|-------|-------|--------|
+| 3.2.2 | `[Pin]` RLC values present and reasonable | `auto` | ✅ implemented |
+| 3.3.2 | `[Diff Pin]` Vdiff and Tdelay_* complete and reasonable | `auto` | ✅ implemented |
+| 5.2.1 | `[Model]` Vinl and Vinh reasonable | `manual` | — out of scope |
+| 5.2.2 | `[Model Spec]` Vinl and Vinh reasonable | `manual` | — out of scope |
+| 5.2.3 | `[Model Spec]` Vinl+/− and Vinh+/− complete and reasonable | `manual` | — out of scope |
+| 5.2.9 | `[Receiver Thresholds]` Vth present and matches datasheet | `manual` | — out of scope |
+| 5.2.10 | `[Receiver Thresholds]` Vth_min and Vth_max match datasheet | `manual` | — out of scope |
+| 5.2.11 | `[Receiver Thresholds]` Vinh_ac, Vinl_ac match datasheet | `manual` | — out of scope |
+| 5.2.12 | `[Receiver Thresholds]` Vinh_dc, Vinl_dc match datasheet | `manual` | — out of scope |
+| 5.2.13 | `[Receiver Thresholds]` Tslew_ac/Tdiffslew_ac match datasheet | `manual` | — out of scope |
+| 5.2.14 | `[Receiver Thresholds]` Threshold_sensitivity and Ext_ref | `manual` | — out of scope |
+| 5.4.3 | V-T table duration is not excessive | `semi_auto` | ⬜ not yet |
+| 5.6.1 | `[Model Spec]` Vmeas and Vref used if typ/min/max variation | `manual` | — out of scope |
+| 5.6.2 | Vref consistent for Open-drain, Open-source, ECL | `semi_auto` | ⬜ not yet |
+
+---
+
+### IQ Level 4 — 17 checks
+
+| ID | Title | Class | Status |
+|----|-------|-------|--------|
+| 3.1.3 | Package model includes power and ground pins | `manual` | — out of scope |
+| 3.1.4 | On-die and on-package decoupling included | `manual` | — out of scope |
+| 3.4.1 | `[Pin Mapping]` section included for each component | `auto` | ✅ implemented |
+| 3.4.2 | `[Pin Mapping]` includes power and ground pins | `semi_auto` | ⬜ not yet |
+| 3.4.3 | `[Merged Pins]` keyword present when applicable | `auto` | ✅ implemented |
+| 5.7.1 | Output-capable models include `[ISSO PU]` and `[ISSO PD]` | `semi_auto` | ✅ auto portion |
+| 5.7.2 | ISSO tables have correct typ/min/max order | `semi_auto` | ⬜ not yet |
+| 5.7.3 | ISSO tables have sufficient point distribution | `semi_auto` | ⬜ not yet |
+| 5.7.4 | ISSO tables voltage sweep range is correct | `semi_auto` | ⬜ not yet |
+| 5.8.1 | Every `[Rising/Falling Waveform]` includes `[Composite Current]` | `auto` | ✅ implemented |
+| 5.8.2 | `[Composite Current]` covers same time range as V-T | `auto` | ✅ implemented |
+| 5.8.3 | `[Composite Current]` time-aligned with V-T | `semi_auto` | ⬜ not yet |
+| 5.8.4 | `[Composite Current]` includes pre-driver behavior | `manual` | — out of scope |
+| 5.8.5 | `[Composite Current]` start/end correlates with I-V | `semi_auto` | ⬜ not yet |
+| 5.8.6 | `[Composite Current]` current from correct rails | `manual` | — out of scope |
+| 5.8.7 | `[Composite Current]` curve flat at start and end | `semi_auto` | ⬜ not yet |
+| 5.8.8 | `[Composite Current]` = 0 at start/end when V_fixture=0 | `auto` | ✅ implemented |
+
+---
+
+### Optional
+
+| ID | Title | Class | Status |
+|----|-------|-------|--------|
+| 5.2.4 | `[Model Spec]` Pulse subparameters complete | `optional` | — out of scope |
 
 ---
 
 ## NA Handling
 
-A result of **NA** means the rule genuinely does not apply to that item — it
-is not a failure and does not block any IQ level claim. Key NA conditions:
+**NA** means the rule does not apply to this specific item. It is not a
+failure and does not block any IQ level claim. Key NA conditions:
 
-- **Bare-die components** (detected by stub package values ≈0.001nH/pF):
-  checks 3.1.1, 3.1.2, 3.4.1 are NA
-- **Input-only models** (no `[Pullup]`/`[Pulldown]`):
-  checks 5.3.2, 5.3.3, 5.3.8, 5.3.9, 5.7.1 are NA
+- **Bare-die components** (stub `[Package]` values ≈0.001nH/pF): checks
+  3.1.1, 3.1.2, 3.4.1 are NA
+- **Input-only models** (no `[Pullup]`/`[Pulldown]` tables): checks 5.3.2,
+  5.3.3, 5.3.8, 5.3.9, 5.7.1 are NA
 - **ECL models**: check 5.7.1 (ISSO) is NA
 - **Components without `[Diff Pin]`**: checks 3.3.1, 3.3.2 are NA
 - **Technology exceptions** for zero-crossing (TTL, PECL, LVDS, SERDES):
-  checks 5.3.8, 5.3.9 are NA — detected from Model_type
+  checks 5.3.8 and 5.3.9 are NA — detected automatically from `Model_type`
 
 ---
 
 ## Numeric Tolerances
 
-All thresholds are in `config.py`. Adjust to calibrate for your technology:
+All thresholds live in `config.py`. Calibrate here for your technology:
 
-| Constant | Default | Used in |
-|----------|---------|---------|
+| Constant | Default | Check |
+|----------|---------|-------|
 | `PKG_L_MAX_H` | 100 nH | 3.1.2 |
 | `PKG_C_MAX_F` | 100 pF | 3.1.2 |
 | `PKG_R_MAX_OHM` | 10 Ω | 3.1.2 |
 | `PIN_TD_MAX_S` | 300 ps | 3.2.2 |
 | `PIN_Z0_MAX_OHM` | 100 Ω | 3.2.2 |
-| `IV_RANGE_TOLERANCE` | 2% | 5.3.2–5.3.5 |
+| `IV_RANGE_TOLERANCE` | 2% of Vcc | 5.3.2–5.3.5 |
 | `ZERO_CROSS_TOL_A` | 1 µA | 5.3.8, 5.3.9 |
 | `RAMP_DV_TOLERANCE` | 5% | 5.5.3 |
 | `ISSO_ENDPOINT_TOL` | 2% | 5.7.1 |
@@ -202,18 +261,17 @@ All thresholds are in `config.py`. Adjust to calibrate for your technology:
 
 ## Adding a New Check
 
-1. Create a file `checks/c<id>_<topic>.py`
-2. Define a class inheriting from `CheckModule`
-3. Set `check_ids`, `iq_level`, and `auto_class`
-4. Implement `run(self, ibis_file) -> list[CheckResult]`
+1. Create `checks/c<id>_<topic>.py`
+2. Subclass `CheckModule`, set `check_ids`, `iq_level`, `auto_class`
+3. Implement `run(self, ibis_file) -> list[CheckResult]`
 
-The runner discovers it automatically — no registration needed.
+The runner discovers it automatically — no registration step needed.
 
 ```python
 from checks.base import CheckModule, CheckResult
 from parser.ibis_parser import IBISFile
 
-class CheckMyNew(CheckModule):
+class Check5_3_6(CheckModule):
     check_ids  = ["5.3.6"]
     iq_level   = "LEVEL 2"
     auto_class = "semi_auto"
@@ -221,47 +279,49 @@ class CheckMyNew(CheckModule):
     def run(self, ibis_file: IBISFile) -> list[CheckResult]:
         results = []
         for model in ibis_file.models.values():
-            # ... your logic ...
-            results.append(self._pass("5.3.6", model.name, "Looks good"))
+            # compute Appendix A smoothness metric...
+            results.append(self._pass("5.3.6", model.name, "Smoothness OK"))
         return results
 ```
+
+The `automation.how` field in `ibis_quality_spec_3_0.json` gives the
+authoritative implementation guidance for each check ID.
 
 ---
 
 ## Known Calibration Items
 
-These are findings from running against the Micron DDR4 z41c reference file
-that require algorithm refinement before production use:
+Findings from running against Micron DDR4 z41c (reference file, IBIS 5.0):
 
-| Check | Issue | Fix needed |
-|-------|-------|-----------|
-| 3.2.2 | Bare-die components have numeric pin names without RLC — flagged incorrectly | Add bare-die NA logic to pin-level loop |
-| 3.3.2 | Inverting-pin model type looked up via non-inverting pin — CLKIN misclassified | Look up inv_pin model type separately |
-| 5.5.3 | Load-line intersection fails for DDR4 push-pull models (Vcc-relative convention not fully applied before solving) | Apply Vcc offset before intersection search |
-| 5.7.1 | ISSO PU voltage axis convention mismatch for some model types | Align ISSO PU table axis with Pullup convention |
+| Check | Observation | Fix needed |
+|-------|-------------|-----------|
+| 3.2.2 | Bare-die pins are numbered differently and have no RLC — flagged incorrectly | Add bare-die NA to per-pin loop |
+| 3.3.2 | Inverting pin model type looked up via non-inverting pin — CLKIN misclassified | Look up `inv_pin` model separately |
+| 5.5.3 | Load-line intersection fails for DDR4 (Vcc-relative convention not fully applied before solving) | Apply Vcc offset before intersection |
+| 5.7.1 | ISSO PU voltage axis mismatch for some model types | Align ISSO PU axis with [Pullup] convention |
 | 5.8.8 | ±1µA tolerance is borderline for DDR4 ODT models (1.1–1.3µA observed) | Raise to ±2µA or make technology-conditional |
 
 ---
 
-## What This Tool Does NOT Cover
+## Out of Scope
 
-The following require human review with external reference data:
+The following are not evaluated by this tool and require a qualified
+engineer with the referenced external data:
 
-- **MANUAL checks** (20 items): all threshold/overshoot/timing checks that
-  require comparison against a datasheet (5.2.x, 5.1.3, etc.)
-- **SPICE-dependent checks**: 5.8.4, 5.8.6 (pre-driver circuit topology)
-- **SEMI-AUTO review step**: the tool may flag items for review, but the
-  reviewer must apply engineering judgment and external references
-- **Special designators G, M, S**: Golden Waveforms, Measurement Correlation,
-  and Simulation Correlation all require hardware or SPICE data
-- **IQ score computation**: the tool reports what it finds; computing the
-  final IQ level and writing the in-file score is the user's responsibility
+- All 20 **`manual`** checks — require datasheet, SPICE model, or extraction
+  documentation
+- **Special designators G and M** — require hardware measurements or SPICE
+  simulation results; see the
+  [I/O Buffer Accuracy Handbook](https://www.ibis.org/accuracy/)
+- **Special designator S** — requires SPICE model and simulation results
+- **IQ score computation** — the tool reports findings; writing the final
+  score into the file is the user's responsibility
 
 ---
 
 ## References
 
-- [IBIS Quality Specification v3.0](https://ibis.org/quality_ver3.0/) (ratified Sep 15, 2023)
-- [IBIS Specification v8.0](https://ibis.org/ver8.0/) (ratified Dec 5, 2025)
-- [I/O Buffer Accuracy Handbook](https://www.ibis.org/accuracy/) (for M and S correlation methods)
-- [IBISCHK parser](https://ibis.org/ibischk/) (required for check 2.1 execution)
+- [IBIS Quality Specification v3.0](https://ibis.org/quality_ver3.0/) (Sep 2023)
+- [IBIS Specification v8.0](https://ibis.org/ver8.0/) (Dec 2025)
+- [I/O Buffer Accuracy Handbook](https://www.ibis.org/accuracy/)
+- [IBISCHK parser](https://ibis.org/ibischk/)

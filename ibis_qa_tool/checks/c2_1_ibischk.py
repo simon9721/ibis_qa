@@ -11,6 +11,7 @@ from __future__ import annotations
 import re
 import shutil
 import subprocess
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from checks.base import CheckModule, CheckResult, Status
@@ -59,7 +60,7 @@ class Check2_1(CheckModule):
             ))
 
         # ── Sub-check C: Run IBISCHK if available ────────────────────────────
-        ibischk_path = shutil.which("ibischk") or shutil.which("ibischk7")
+        ibischk_path = self._find_ibischk()
         if ibischk_path:
             try:
                 proc = subprocess.run(
@@ -98,3 +99,30 @@ class Check2_1(CheckModule):
             ))
 
         return results
+
+    def _find_ibischk(self) -> str | None:
+        """Find IBISCHK on PATH or in a repo-local IBISCHK bundle."""
+        path_hit = (
+            shutil.which("ibischk")
+            or shutil.which("ibischk7")
+            or shutil.which("ibischk7_64")
+            or shutil.which("ibischk7_64.exe")
+        )
+        if path_hit:
+            return path_hit
+
+        repo_root = Path(__file__).resolve().parents[2]
+        candidates = [
+            repo_root / "ibischk721_win_64" / "ibischk7_64.exe",
+            repo_root / "ibischk7_64.exe",
+            repo_root / "ibischk7.exe",
+            repo_root / "ibischk.exe",
+        ]
+        for candidate in candidates:
+            if candidate.exists():
+                return str(candidate)
+
+        for candidate in repo_root.glob("ibischk*_win_64/ibischk*.exe"):
+            return str(candidate)
+
+        return None

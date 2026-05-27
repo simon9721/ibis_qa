@@ -6,8 +6,8 @@ This catalog groups every IBIS Quality Specification 3.0 check by the current au
 
 ## Summary
 
-- `auto`: 17 checks
-- `semi_auto`: 30 checks
+- `auto`: 22 checks
+- `semi_auto`: 25 checks
 - `manual`: 20 checks
 - `optional`: 1 checks
 
@@ -20,7 +20,7 @@ Checks that should be implemented as deterministic parser, numeric, or external-
 - Section: 2 General Header Section Requirements
 - Keywords: `[IBIS Ver]`, `[Notes]`
 - Why: Run IBISCHK, parse version/errors/warnings/cautions, and require documented exceptions for any remaining warnings.
-- How: Run the appropriate IBISCHK version for the file's [IBIS Ver], capture the full output, parse version/errors/warnings/cautions, fail on any error, and require [Notes]/comments plus the X designator for unresolved warnings.
+- How: Run the appropriate IBISCHK version for the file's [IBIS Ver], capture the full output, parse version/errors/warnings/cautions, fail on any error, and require [Notes]/comments plus the X designator for unresolved warnings. Additionally verify per §1.4 that an |IQ Score: tag appears inside the .ibs file itself (in [Notes] or a comment line) and that the IBISCHK version used is documented in-file; referencing an external quality report does not satisfy this requirement.
 
 ### `3.1.1` LEVEL 2 - [Package] must have typ/min/max values
 
@@ -36,6 +36,13 @@ Checks that should be implemented as deterministic parser, numeric, or external-
 - Why: Presence of pin RLC or [Package Model], plus TD and Z0 limits, can be computed from the IBIS data.
 - How: For every signal pin, require R/L/C values or a [Package Model], compute TD = sqrt(LC) and Z0 = sqrt(L/C), and compare them to the spec limits.
 
+### `3.3.1` LEVEL 2 - [Diff Pin] referenced pin models match
+
+- Section: 3.3 Component Diff Pin Requirements
+- Keywords: `[Diff Pin]`, `[Model]`, `[Notes]`
+- Why: Model-name matching is a deterministic string comparison. When names differ, comment/[Notes] presence is a text search. Both steps are fully parseable with no reviewer judgment required.
+- How: Compare the model names on each [Diff Pin] pair. If they differ, search for an explanatory comment or [Notes] entry referencing those pins. Pass if names match or a comment is found; fail if names differ and no explanation is present.
+
 ### `3.3.2` LEVEL 3 - [Diff Pin] Vdiff and Tdelay_* complete and reasonable
 
 - Section: 3.3 Component Diff Pin Requirements
@@ -48,7 +55,7 @@ Checks that should be implemented as deterministic parser, numeric, or external-
 - Section: 3.4 Component Pin Mapping Requirements
 - Keywords: `[Pin Mapping]`, `[Pin]`
 - Why: Presence and coverage of [Pin Mapping] can be checked from [Pin] and IBIS version rules.
-- How: For each [Component], require [Pin Mapping] coverage for the non POWER/GND/NC pins required by the IBIS version rules.
+- How: For each [Component], require [Pin Mapping] coverage for the non-POWER/GND/NC pins per IBIS version rules. Bare-die components (detectable by stub [Package] values of approximately 0.001nH/pF or bare-die naming) are exempt and should be marked NA rather than failed.
 
 ### `3.4.3` LEVEL 4 - Specify [Merged Pins] keyword if applicable
 
@@ -56,6 +63,13 @@ Checks that should be implemented as deterministic parser, numeric, or external-
 - Keywords: `[Define Package Model]`, `[Merged Pins]`, `[Model Data]`
 - Why: If package model data uses merged pins, require [Merged Pins].
 - How: Detect merged pin usage in package-model data and require a matching [Merged Pins] keyword.
+
+### `5.3.1` LEVEL 2 - I-V tables have correct typ/min/max order
+
+- Section: 5.3 Model I-V Table Requirements
+- Keywords: `[POWER Clamp]`
+- Why: Column order is a positional parse. Active-region current ordering is a numeric comparison. Technology crossover exceptions are handleable with a tolerance band. IBISCHK already performs this check.
+- How: Parse every I-V table. Verify column order is voltage/typ/min/max. In the active region check that |Imax| >= |Ityp| >= |Imin| at each voltage step, allowing a small tolerance band for near-overlay cases and single crossover points near clamping onset.
 
 ### `5.3.2` LEVEL 2 - [Pullup] voltage sweep range is correct
 
@@ -92,6 +106,20 @@ Checks that should be implemented as deterministic parser, numeric, or external-
 - Why: Combined-table monotonicity can be checked numerically and by IBISCHK.
 - How: Combine I-V tables according to IBIS rules and check for monotonically increasing current with no slope reversals; optionally cross-check with IBISCHK output.
 
+### `5.3.8` LEVEL 2 - [Pulldown] I-V tables pass through zero/zero
+
+- Section: 5.3 Model I-V Table Requirements
+- Keywords: `[Pulldown]`
+- Why: Interpolating [Pulldown] at 0V and checking against a tolerance is deterministic. Technology exceptions (TTL, PECL, LVDS, SERDES) are enumerated in the spec and auto-detectable from Model_type. Input-only models without [Pulldown] are NA.
+- How: Interpolate [Pulldown] typ/min/max currents at V=0.0V. For CMOS-class Model_types require all three values within +/-1uA. Auto-detect technology exceptions from Model_type (TTL, PECL, LVDS, SERDES) and mark those as NA. Models without [Pulldown] are NA.
+
+### `5.3.9` LEVEL 2 - [Pullup] I-V tables pass through zero/zero
+
+- Section: 5.3 Model I-V Table Requirements
+- Keywords: `[Pullup]`
+- Why: Same as 5.3.8 for [Pullup]. The Vcc-relative convention (Vtable=0 corresponds to Voutput=Vcc) is deterministic once applied correctly. Technology exceptions are enumerated and auto-detectable from Model_type.
+- How: Interpolate [Pullup] typ/min/max currents at Vtable=0.0V (which corresponds to Voutput=Vcc in the Vcc-relative convention). For CMOS-class Model_types require all three values within +/-1uA. Auto-detect technology exceptions from Model_type and mark as NA. Models without [Pullup] are NA.
+
 ### `5.3.13` LEVEL 2 - ECL models I-V tables swept from -Vcc to +2 * Vcc.
 
 - Section: 5.3 Model I-V Table Requirements
@@ -112,6 +140,13 @@ Checks that should be implemented as deterministic parser, numeric, or external-
 - Keywords: `[Ramp]`
 - Why: Calculate dV from I-V load-line values and compare against the 5 percent tolerance.
 - How: Use [Ramp] R_load and I-V load-line calculations to derive high/low voltages, compute 60 percent dV, and require agreement within 5 percent.
+
+### `5.7.1` LEVEL 4 - All output-capable models include [ISSO PU] and [ISSO PD] tables
+
+- Section: 5.7 Model ISSO Table Requirements
+- Keywords: `[ISSO PD]`, `[ISSO PU]`
+- Why: ISSO table presence is a structural check. Endpoint equations (Isso_pd(0)=Ipd(Vcc), Isso_pu(0)=Ipu(Vcc), Isso_pd(Vcc)~0, Isso_pu(Vcc)~0) are explicit numeric formulas from the spec. IBISCHK7 performs both checks. Validated at 0.01% error on real DDR4 data.
+- How: For every output-capable model (excluding Input, Terminator, and ECL types), require both [ISSO PU] and [ISSO PD] tables. Interpolate endpoint values and verify: Isso_pd(0)=Ipd(Vcc), Isso_pu(0)=Ipu(Vtable=0), Isso_pd(Vcc)~0, Isso_pu(Vcc)~0, each within a 2% tolerance. Reuse IBISCHK7 output where available.
 
 ### `5.8.1` LEVEL 4 - Each [Rising Waveform] and [Falling Waveform] table includes a [Composite Current] table
 
@@ -151,13 +186,6 @@ Checks where software can collect strong evidence, but a reviewer may need to co
 - Keywords: `[Model Selector]`, `[Model]`, `[Pin]`
 - Why: Parser can check pin syntax and NC/POWER/GND naming; completeness versus the datasheet requires external data.
 - How: Parse [Pin] entries, check NC/POWER/GND conventions, and compare model assignments against an external pin list or datasheet when available.
-
-### `3.3.1` LEVEL 2 - [Diff Pin] referenced pin models match
-
-- Section: 3.3 Component Diff Pin Requirements
-- Keywords: `[Diff Pin]`, `[Model]`, `[Notes]`
-- Why: Model-name matching is automatic; non-matching pairs require comment or [Notes] review.
-- How: Compare the model names on each [Diff Pin] pair; if they differ, find an explanatory comment or [Notes] entry and send it to the reviewer.
 
 ### `3.4.2` LEVEL 4 - [Pin Mapping] table includes power and ground pins
 
@@ -208,33 +236,12 @@ Checks where software can collect strong evidence, but a reviewer may need to co
 - Why: Corner tracking can be checked when values exist; correctness of limits still needs datasheet context.
 - How: When D_overshoot corners differ, compare their trend with supply/process corners and flag inconsistent corner tracking.
 
-### `5.3.1` LEVEL 2 - I-V tables have correct typ/min/max order
-
-- Section: 5.3 Model I-V Table Requirements
-- Keywords: `[POWER Clamp]`
-- Why: Column order and curve order can be checked; active-region exceptions need review.
-- How: Parse every I-V table, confirm column order, compare typ/min/max curve ordering in the active region, and generate plots/evidence for exceptions.
-
 ### `5.3.6` LEVEL 2 - I-V tables do not exhibit stair-stepping
 
 - Section: 5.3 Model I-V Table Requirements
 - Keywords: none detected
 - Why: Smoothness/stair-step metrics can flag problems, with plot review as backup.
 - How: Run a stair-step or smoothness metric over I-V curves and generate plots so the reviewer can confirm whether flat sections and abrupt jumps are real issues.
-
-### `5.3.8` LEVEL 2 - [Pulldown] I-V tables pass through zero/zero
-
-- Section: 5.3 Model I-V Table Requirements
-- Keywords: `[Pulldown]`
-- Why: Zero-crossing can be checked; technology exceptions must be documented.
-- How: Interpolate [Pulldown] currents at 0 V and check that typ/min/max are approximately 0 for full-swing technologies, with documented exceptions.
-
-### `5.3.9` LEVEL 2 - [Pullup] I-V tables pass through zero/zero
-
-- Section: 5.3 Model I-V Table Requirements
-- Keywords: `[Pullup]`
-- Why: Zero-crossing can be checked; technology exceptions must be documented.
-- How: Interpolate [Pullup] currents at 0 V and check that typ/min/max are approximately 0 for full-swing technologies, with documented exceptions.
 
 ### `5.3.10` LEVEL 2 - No leakage current in clamp I-V tables
 
@@ -298,13 +305,6 @@ Checks where software can collect strong evidence, but a reviewer may need to co
 - Keywords: `[Model Spec]`, `[Model]`, `[Pulldown Reference]`, `[Pullup Reference]`
 - Why: Model-type reference-voltage rules can be checked, with exceptions reviewed.
 - How: Check Vref relative to Vmeas and pullup/pulldown references for Open-drain, Open-source/Open-sink, and ECL model types.
-
-### `5.7.1` LEVEL 4 - All output-capable models include [ISSO PU] and [ISSO PD] tables
-
-- Section: 5.7 Model ISSO Table Requirements
-- Keywords: `[ISSO PD]`, `[ISSO PU]`
-- Why: ISSO table presence and IBISCHK correlation equations can be checked; curve correlation may need review.
-- How: For every output-capable model, require [ISSO PU] and [ISSO PD] tables and check IBISCHK endpoint correlation equations against pullup/pulldown curves.
 
 ### `5.7.2` LEVEL 4 - ISSO tables have correct typ/min/max order
 

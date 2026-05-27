@@ -12,8 +12,8 @@ Legend:
 
 Check counts by automation class:
 
-- `auto`: 17
-- `semi_auto`: 30
+- `auto`: 22
+- `semi_auto`: 25
 - `manual`: 20
 - `optional`: 1
 
@@ -45,7 +45,7 @@ IBIS Quality Specification 3.0
 |   |   |-- 3.2.1 [LEVEL 2, semi_auto] [Pin] section complete
 |   |   `-- 3.2.2 [LEVEL 3, auto] [Pin] RLC values are present and reasonable
 |   |-- 3.3. Component Diff Pin Requirements
-|   |   |-- 3.3.1 [LEVEL 2, semi_auto] [Diff Pin] referenced pin models match
+|   |   |-- 3.3.1 [LEVEL 2, auto] [Diff Pin] referenced pin models match
 |   |   `-- 3.3.2 [LEVEL 3, auto] [Diff Pin] Vdiff and Tdelay_* complete and reasonable
 |   `-- 3.4. Component Pin Mapping Requirements
 |       |-- 3.4.1 [LEVEL 4, auto] [Pin Mapping] section is included for each component
@@ -76,15 +76,15 @@ IBIS Quality Specification 3.0
 |   |   |-- 5.2.13 [LEVEL 3, manual] [Receiver Thresholds] Tslew_ac/Tdiffslew_ac present and match data sheet, if needed
 |   |   `-- 5.2.14 [LEVEL 3, manual] [Receiver Thresholds] Threshold_sensitivity and Ext_ref present and match data sheet, if needed
 |   |-- 5.3. Model I-V Table Requirements
-|   |   |-- 5.3.1 [LEVEL 2, semi_auto] I-V tables have correct typ/min/max order
+|   |   |-- 5.3.1 [LEVEL 2, auto] I-V tables have correct typ/min/max order
 |   |   |-- 5.3.2 [LEVEL 2, auto] [Pullup] voltage sweep range is correct
 |   |   |-- 5.3.3 [LEVEL 2, auto] [Pulldown] voltage sweep range is correct
 |   |   |-- 5.3.4 [LEVEL 2, auto] [POWER Clamp] voltage sweep range is correct
 |   |   |-- 5.3.5 [LEVEL 2, auto] [GND Clamp] voltage sweep range is correct
 |   |   |-- 5.3.6 [LEVEL 2, semi_auto] I-V tables do not exhibit stair-stepping
 |   |   |-- 5.3.7 [LEVEL 2, auto] Combined I-V tables are monotonic
-|   |   |-- 5.3.8 [LEVEL 2, semi_auto] [Pulldown] I-V tables pass through zero/zero
-|   |   |-- 5.3.9 [LEVEL 2, semi_auto] [Pullup] I-V tables pass through zero/zero
+|   |   |-- 5.3.8 [LEVEL 2, auto] [Pulldown] I-V tables pass through zero/zero
+|   |   |-- 5.3.9 [LEVEL 2, auto] [Pullup] I-V tables pass through zero/zero
 |   |   |-- 5.3.10 [LEVEL 2, semi_auto] No leakage current in clamp I-V tables
 |   |   |-- 5.3.11 [LEVEL 2, manual] I-V behavior not double-counted
 |   |   |-- 5.3.12 [LEVEL 2, manual] On-die termination modeling documented
@@ -104,7 +104,7 @@ IBIS Quality Specification 3.0
 |   |   |-- 5.6.1 [LEVEL 3, manual] [Model Spec] Vmeas and Vref used if typ/min/max variation
 |   |   `-- 5.6.2 [LEVEL 3, semi_auto] Vref consistent for Open-drain, Open-source, and ECL Model_types
 |   |-- 5.7. Model ISSO Table Requirements
-|   |   |-- 5.7.1 [LEVEL 4, semi_auto] All output-capable models include [ISSO PU] and [ISSO PD] tables
+|   |   |-- 5.7.1 [LEVEL 4, auto] All output-capable models include [ISSO PU] and [ISSO PD] tables
 |   |   |-- 5.7.2 [LEVEL 4, semi_auto] ISSO tables have correct typ/min/max order
 |   |   |-- 5.7.3 [LEVEL 4, semi_auto] ISSO tables have sufficient point distribution
 |   |   `-- 5.7.4 [LEVEL 4, semi_auto] ISSO tables voltage sweep range is correct

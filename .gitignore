@@ -1,0 +1,7 @@
+# Local IBIS test corpus and bundled parser binaries.
+/Micron/
+/ibischk721_win_64/
+
+# Python bytecode/cache output.
+__pycache__/
+*.py[cod]
