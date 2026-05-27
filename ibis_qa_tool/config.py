@@ -37,6 +37,13 @@ ZERO_CROSS_TOL_A   = 1e-6      # 1 µA — max |I| at 0V for PASS
 # ── 5.3.14 / 5.7.3 Smoothness (Appendix A) ───────────────────────────────────
 # Fraction of peak-to-peak current that the interpolation delta may not exceed
 SMOOTHNESS_THRESHOLD = 0.02    # 2% — tune empirically
+STAIRSTEP_REVIEW_THRESHOLD = 0.10  # semi-auto roughness threshold for visual review
+MIN_TABLE_POINTS = 20          # minimum point count evidence threshold
+MIN_WAVEFORM_POINTS = 20       # minimum V-T/Composite Current point count
+VT_ENDPOINT_TOL_V = 0.02       # 20 mV endpoint-to-fixture evidence tolerance
+VT_DURATION_MAX_S = 1e-6       # 1 us evidence threshold for excessive duration
+CC_FLAT_SLOPE_TOL_A = 1e-6     # 1 uA edge flatness evidence tolerance
+CLAMP_LEAKAGE_TOL_A = 1e-6     # 1 uA clamp leakage evidence tolerance
 
 # ── 5.5.3 Ramp dV vs I-V load-line ──────────────────────────────────────────
 RAMP_DV_TOLERANCE   = 0.05     # 5%

@@ -35,6 +35,8 @@ class CheckResult:
     message:    str                    # one-line summary
     details:    list[str]              = field(default_factory=list)  # extra lines
     spec_ref:   str                    = ""   # Quality Spec section
+    automation_class: str              = "auto"
+    review_required: bool              = False
 
 
 class CheckModule:

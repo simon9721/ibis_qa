@@ -16,6 +16,9 @@
 - Added `tools/render_qa_methods.py` so `docs/qa-methods.md` can be regenerated from `data/ibis_quality_spec_3_0.json` without rebuilding or overwriting the manually edited JSON.
 - Made `tools/render_qa_methods.py` report output paths correctly even when `--output` points outside the repository.
 - Implemented check `5.3.1` for I-V table row shape and active-region typ/min/max current ordering.
+- Added semi-auto evidence collectors for all 25 `semi_auto` checks in `data/ibis_quality_spec_3_0.json`, including structural, I-V, V-T, Ramp, ISSO, and Composite Current evidence.
+- Added `automation_class` and `review_required` fields to JSON result entries.
+- Configured CLI stdout/stderr as UTF-8 on Python builds that support stream reconfiguration, preventing Windows text-report encoding errors.
 
 ### Tested
 
@@ -23,12 +26,17 @@
 
 | File | PASS | FAIL | WARN | NA | ERROR |
 |---|---:|---:|---:|---:|---:|
-| `y32a.ibs` | 446 | 106 | 7 | 270 | 0 |
-| `z41c.ibs` | 336 | 83 | 7 | 184 | 0 |
-| `z41c_it.ibs` | 342 | 77 | 7 | 184 | 0 |
+| `y32a.ibs` | 861 | 106 | 76 | 1109 | 0 |
+| `z41c.ibs` | 590 | 83 | 107 | 735 | 0 |
+| `z41c_it.ibs` | 668 | 77 | 35 | 735 | 0 |
 
 - IBISCHK reported `0 errors, 0 warning(s)` for all three Micron files.
 - Check `5.3.1` produced no failures for the Micron files.
+- Semi-auto evidence produced review-required warnings where reviewer judgment is needed:
+  - `y32a.ibs`: 69 review items
+  - `z41c.ibs`: 100 review items
+  - `z41c_it.ibs`: 28 review items
+- Judgment note: semi-auto evidence uses `WARN` with `review_required=true` instead of hard `FAIL` unless a finding is already covered by an auto check, because these checks depend on technology intent, datasheet comparison, or visual/engineering review.
 - All Micron report results were classified into file, component, model, or package-model scopes; `ungrouped_results` is empty for all three reports.
 
 ### Updated Artifacts

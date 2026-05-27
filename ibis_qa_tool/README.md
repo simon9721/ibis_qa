@@ -23,8 +23,8 @@ how much can be verified from the IBIS file alone:
 | `manual` | 20 | Requires external data — datasheet, SPICE model, or extraction documentation |
 | `optional` | 1 | Good practice; does not affect the IQ score |
 
-This tool currently implements all **22 `auto` checks** plus the auto portion
-of a few `semi_auto` checks, and produces a
+This tool currently implements all **22 `auto` checks** plus evidence
+collectors for all **25 `semi_auto` checks**, and produces a
 structured report that surfaces evidence for the remaining checks so a
 reviewer can work efficiently.
 
@@ -55,7 +55,7 @@ python ibis_qa.py my_model.ibs --json > report.json
 
 ```
 ========================================================================
-IBIS QA Report — AUTO Checks
+IBIS QA Report — AUTO Checks and SEMI-AUTO Evidence
 File   : z41c.ibs
 IBIS Ver: 5.0   File Rev: 2.3   Date: 6/19/2022
 IQ Score in file: (not found)
@@ -102,7 +102,10 @@ ibis_qa/
     ├── c2_1_ibischk.py          Check 2.1
     ├── c3_1_package.py          Checks 3.1.1, 3.1.2
     ├── c3_component_structural.py   Checks 3.2.2, 3.3.1, 3.3.2, 3.4.1, 3.4.3
+    ├── c3_semiauto_structural.py    Checks 3.2.1, 3.4.2, 4.1
     ├── c5_3_iv_tables.py        Checks 5.3.1–5.3.9, 5.3.13
+    ├── c5_semiauto_ordering.py  Checks 5.1.1, 5.2.6, 5.2.8, 5.5.2, 5.7.2
+    ├── c5_semiauto_wave_quality.py  Evidence for remaining 5.x semi-auto checks
     ├── c5_ramp_waveform.py      Checks 5.5.1, 5.5.3, 5.8.1, 5.8.2, 5.8.8
     └── c5_7_isso.py             Check 5.7.1
 ```
@@ -134,39 +137,39 @@ unresolved warnings.
 |----|-------|-------|--------|
 | 3.1.1 | `[Package]` must have typ/min/max values | `auto` | ✅ implemented |
 | 3.1.2 | `[Package]` model values must be reasonable | `semi_auto` | ✅ auto portion |
-| 3.2.1 | `[Pin]` section complete | `semi_auto` | ⬜ not yet |
+| 3.2.1 | `[Pin]` section complete | `semi_auto` | ✅ evidence |
 | 3.3.1 | `[Diff Pin]` referenced pin models match | `semi_auto` | ✅ auto portion |
-| 4.1 | `[Model Selector]` entries have reasonable descriptions | `semi_auto` | ⬜ not yet |
+| 4.1 | `[Model Selector]` entries have reasonable descriptions | `semi_auto` | ✅ evidence |
 | 4.2 | Default `[Model Selector]` entries are consistent | `manual` | — out of scope |
-| 5.1.1 | `[Model]` parameters have correct typ/min/max order | `semi_auto` | ⬜ not yet |
-| 5.1.2 | `[Model]` C_comp is reasonable | `semi_auto` | ⬜ not yet |
+| 5.1.1 | `[Model]` parameters have correct typ/min/max order | `semi_auto` | ✅ evidence |
+| 5.1.2 | `[Model]` C_comp is reasonable | `semi_auto` | ✅ evidence |
 | 5.1.3 | `[Temperature Range]` is reasonable | `manual` | — out of scope |
-| 5.1.4 | `[Voltage Range]` or `[* Reference]` is reasonable | `semi_auto` | ⬜ not yet |
+| 5.1.4 | `[Voltage Range]` or `[* Reference]` is reasonable | `semi_auto` | ✅ evidence |
 | 5.2.5 | `[Model Spec]` S_Overshoot complete and match datasheet | `manual` | — out of scope |
-| 5.2.6 | `[Model Spec]` S_Overshoot track typ/min/max | `semi_auto` | ⬜ not yet |
+| 5.2.6 | `[Model Spec]` S_Overshoot track typ/min/max | `semi_auto` | ✅ evidence |
 | 5.2.7 | `[Model Spec]` D_Overshoot complete and match datasheet | `manual` | — out of scope |
-| 5.2.8 | `[Model Spec]` D_Overshoot track typ/min/max | `semi_auto` | ⬜ not yet |
+| 5.2.8 | `[Model Spec]` D_Overshoot track typ/min/max | `semi_auto` | ✅ evidence |
 | 5.3.1 | I-V tables have correct typ/min/max order | `auto` | ✅ implemented |
 | 5.3.2 | `[Pullup]` voltage sweep range is correct | `auto` | ✅ implemented |
 | 5.3.3 | `[Pulldown]` voltage sweep range is correct | `auto` | ✅ implemented |
 | 5.3.4 | `[POWER Clamp]` voltage sweep range is correct | `auto` | ✅ implemented |
 | 5.3.5 | `[GND Clamp]` voltage sweep range is correct | `auto` | ✅ implemented |
-| 5.3.6 | I-V tables do not exhibit stair-stepping | `semi_auto` | ⬜ not yet |
+| 5.3.6 | I-V tables do not exhibit stair-stepping | `semi_auto` | ✅ evidence |
 | 5.3.7 | Combined I-V tables are monotonic | `auto` | ✅ implemented |
 | 5.3.8 | `[Pulldown]` I-V tables pass through zero/zero | `semi_auto` | ✅ auto portion |
 | 5.3.9 | `[Pullup]` I-V tables pass through zero/zero | `semi_auto` | ✅ auto portion |
-| 5.3.10 | No leakage current in clamp I-V tables | `semi_auto` | ⬜ not yet |
+| 5.3.10 | No leakage current in clamp I-V tables | `semi_auto` | ✅ evidence |
 | 5.3.11 | I-V behavior not double-counted | `manual` | — out of scope |
 | 5.3.12 | On-die termination modeling documented | `manual` | — out of scope |
 | 5.3.13 | ECL models I-V tables swept from −Vcc to +2×Vcc | `auto` | ✅ implemented |
-| 5.3.14 | Point distributions in I-V tables should be sufficient | `semi_auto` | ⬜ not yet |
-| 5.4.1 | Output and I/O buffers have sufficient V-T tables | `semi_auto` | ⬜ not yet |
-| 5.4.2 | V-T tables have reasonable point distribution | `semi_auto` | ⬜ not yet |
-| 5.4.4 | V-T table endpoints match fixture voltages | `semi_auto` | ⬜ not yet |
+| 5.3.14 | Point distributions in I-V tables should be sufficient | `semi_auto` | ✅ evidence |
+| 5.4.1 | Output and I/O buffers have sufficient V-T tables | `semi_auto` | ✅ evidence |
+| 5.4.2 | V-T tables have reasonable point distribution | `semi_auto` | ✅ evidence |
+| 5.4.4 | V-T table endpoints match fixture voltages | `semi_auto` | ✅ evidence |
 | 5.5.1 | `[Ramp]` R_load present if value other than 50Ω | `auto` | ✅ implemented |
-| 5.5.2 | `[Ramp]` typ/min/max order is correct | `semi_auto` | ⬜ not yet |
+| 5.5.2 | `[Ramp]` typ/min/max order is correct | `semi_auto` | ✅ evidence |
 | 5.5.3 | `[Ramp]` dV consistent with I-V load-line | `auto` | ✅ implemented |
-| 5.5.4 | `[Ramp]` dt consistent with 20–80% crossing time | `semi_auto` | ⬜ not yet |
+| 5.5.4 | `[Ramp]` dt consistent with 20–80% crossing time | `semi_auto` | ✅ evidence |
 
 ---
 
@@ -185,9 +188,9 @@ unresolved warnings.
 | 5.2.12 | `[Receiver Thresholds]` Vinh_dc, Vinl_dc match datasheet | `manual` | — out of scope |
 | 5.2.13 | `[Receiver Thresholds]` Tslew_ac/Tdiffslew_ac match datasheet | `manual` | — out of scope |
 | 5.2.14 | `[Receiver Thresholds]` Threshold_sensitivity and Ext_ref | `manual` | — out of scope |
-| 5.4.3 | V-T table duration is not excessive | `semi_auto` | ⬜ not yet |
+| 5.4.3 | V-T table duration is not excessive | `semi_auto` | ✅ evidence |
 | 5.6.1 | `[Model Spec]` Vmeas and Vref used if typ/min/max variation | `manual` | — out of scope |
-| 5.6.2 | Vref consistent for Open-drain, Open-source, ECL | `semi_auto` | ⬜ not yet |
+| 5.6.2 | Vref consistent for Open-drain, Open-source, ECL | `semi_auto` | ✅ evidence |
 
 ---
 
@@ -198,19 +201,19 @@ unresolved warnings.
 | 3.1.3 | Package model includes power and ground pins | `manual` | — out of scope |
 | 3.1.4 | On-die and on-package decoupling included | `manual` | — out of scope |
 | 3.4.1 | `[Pin Mapping]` section included for each component | `auto` | ✅ implemented |
-| 3.4.2 | `[Pin Mapping]` includes power and ground pins | `semi_auto` | ⬜ not yet |
+| 3.4.2 | `[Pin Mapping]` includes power and ground pins | `semi_auto` | ✅ evidence |
 | 3.4.3 | `[Merged Pins]` keyword present when applicable | `auto` | ✅ implemented |
 | 5.7.1 | Output-capable models include `[ISSO PU]` and `[ISSO PD]` | `semi_auto` | ✅ auto portion |
-| 5.7.2 | ISSO tables have correct typ/min/max order | `semi_auto` | ⬜ not yet |
-| 5.7.3 | ISSO tables have sufficient point distribution | `semi_auto` | ⬜ not yet |
-| 5.7.4 | ISSO tables voltage sweep range is correct | `semi_auto` | ⬜ not yet |
+| 5.7.2 | ISSO tables have correct typ/min/max order | `semi_auto` | ✅ evidence |
+| 5.7.3 | ISSO tables have sufficient point distribution | `semi_auto` | ✅ evidence |
+| 5.7.4 | ISSO tables voltage sweep range is correct | `semi_auto` | ✅ evidence |
 | 5.8.1 | Every `[Rising/Falling Waveform]` includes `[Composite Current]` | `auto` | ✅ implemented |
 | 5.8.2 | `[Composite Current]` covers same time range as V-T | `auto` | ✅ implemented |
-| 5.8.3 | `[Composite Current]` time-aligned with V-T | `semi_auto` | ⬜ not yet |
+| 5.8.3 | `[Composite Current]` time-aligned with V-T | `semi_auto` | ✅ evidence |
 | 5.8.4 | `[Composite Current]` includes pre-driver behavior | `manual` | — out of scope |
-| 5.8.5 | `[Composite Current]` start/end correlates with I-V | `semi_auto` | ⬜ not yet |
+| 5.8.5 | `[Composite Current]` start/end correlates with I-V | `semi_auto` | ✅ evidence |
 | 5.8.6 | `[Composite Current]` current from correct rails | `manual` | — out of scope |
-| 5.8.7 | `[Composite Current]` curve flat at start and end | `semi_auto` | ⬜ not yet |
+| 5.8.7 | `[Composite Current]` curve flat at start and end | `semi_auto` | ✅ evidence |
 | 5.8.8 | `[Composite Current]` = 0 at start/end when V_fixture=0 | `auto` | ✅ implemented |
 
 ---

@@ -38,7 +38,7 @@ class Reporter:
         f = self.ibis_file
 
         lines.append("=" * 72)
-        lines.append(f"IBIS QA Report — AUTO Checks")
+        lines.append(f"IBIS QA Report — AUTO Checks and SEMI-AUTO Evidence")
         lines.append(f"File   : {f.path}")
         lines.append(f"IBIS Ver: {f.ibis_ver}   File Rev: {f.file_rev}   Date: {f.date}")
         lines.append(f"IQ Score in file: {f.iq_score_in_file or '(not found)'}")
@@ -166,6 +166,8 @@ class Reporter:
             "check_id": r.check_id,
             "status": r.status.value,
             "scope": scope_info["scope"],
+            "automation_class": r.automation_class,
+            "review_required": r.review_required,
             "component_name": scope_info.get("component_name"),
             "model_name": scope_info.get("model_name"),
             "package_model_name": scope_info.get("package_model_name"),

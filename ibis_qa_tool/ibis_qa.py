@@ -69,6 +69,11 @@ from reporter import Reporter
 
 
 def main():
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")
+    if hasattr(sys.stderr, "reconfigure"):
+        sys.stderr.reconfigure(encoding="utf-8")
+
     ap = argparse.ArgumentParser(description="IBIS Quality Spec v3.0 AUTO checker")
     ap.add_argument("ibis_file", help="Path to .ibs file")
     ap.add_argument("--json", action="store_true", help="Output JSON report")
