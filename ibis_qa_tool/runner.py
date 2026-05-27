@@ -36,7 +36,7 @@ class CheckRunner:
         seen_classes = set()
 
         for _, mod_name, _ in pkgutil.iter_modules([str(checks_path)]):
-            if mod_name == "base":
+            if mod_name == "base" or mod_name.startswith("__"):
                 continue
             try:
                 module = importlib.import_module(f"checks.{mod_name}")
