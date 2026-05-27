@@ -1,0 +1,2848 @@
+{
+  "schema_version": "0.1",
+  "generated_on": "2026-05-22",
+  "source": {
+    "document": "IBIS Quality Specification",
+    "version": "3.0",
+    "ratified": "2023-09-15",
+    "ibis_spec_version": "7.2",
+    "source_files": [
+      "quality_ver3.0.md",
+      "ibis_quality_3.0_checklist_auto.xlsx"
+    ]
+  },
+  "quality_levels": [
+    {
+      "id": "IQ0",
+      "numeric_level": 0,
+      "title": "Not Checked",
+      "meaning": "No documented quality checking has been performed."
+    },
+    {
+      "id": "IQ1",
+      "numeric_level": 1,
+      "title": "Passes IBISCHK",
+      "meaning": "IBISCHK has been run with zero errors and documented handling of warnings."
+    },
+    {
+      "id": "IQ2",
+      "numeric_level": 2,
+      "title": "Suitable for Waveform Simulation",
+      "meaning": "IQ1 plus all LEVEL 2 checks for basic waveform simulation data."
+    },
+    {
+      "id": "IQ3",
+      "numeric_level": 3,
+      "title": "Suitable for Timing Analysis",
+      "meaning": "IQ2 plus all LEVEL 3 checks for timing analysis data."
+    },
+    {
+      "id": "IQ4",
+      "numeric_level": 4,
+      "title": "Suitable for Power-Aware Analysis",
+      "meaning": "IQ3 plus all LEVEL 4 checks for power-aware modeling data."
+    }
+  ],
+  "special_designators": [
+    {
+      "letter": "G",
+      "name": "Contains Golden Waveforms",
+      "meaning": "The file contains golden waveform data using [Test Data] and [Test Load] or equivalent external documentation."
+    },
+    {
+      "letter": "M",
+      "name": "Measurement Correlated",
+      "meaning": "IBIS simulation has been correlated against hardware measurements with documented methods/results."
+    },
+    {
+      "letter": "S",
+      "name": "Simulation Correlated",
+      "meaning": "IBIS simulation has been correlated against a reference simulation such as SPICE with documented methods/results."
+    },
+    {
+      "letter": "X",
+      "name": "Exceptions",
+      "meaning": "One or more checks require documented exceptions in [Notes] or comments."
+    }
+  ],
+  "result_values": [
+    {
+      "value": "PASS",
+      "counts_as_pass": true
+    },
+    {
+      "value": "NA",
+      "counts_as_pass": true
+    },
+    {
+      "value": "EXCEPTION",
+      "counts_as_pass": true,
+      "requires_designator": "X"
+    },
+    {
+      "value": "FAIL",
+      "counts_as_pass": false
+    },
+    {
+      "value": "---",
+      "counts_as_pass": false,
+      "meaning": "unchecked/not assessed"
+    }
+  ],
+  "scoring_rules": {
+    "base_level": "The summary IQ number is the highest level for which all required checks at that level and below pass, are NA, or are accepted exceptions.",
+    "optional_checks": "OPTIONAL checks are good practice but do not change the summary IQ number.",
+    "correlation_designators": "Append M, S, and/or G when measurement correlation, simulation correlation, and/or golden waveform evidence is documented for a reasonable set of models.",
+    "exception_designator": "Append X when any check passes only by documented exception or any remaining parser warning needs user attention.",
+    "writeback": "The summary IQ score must be written into the IBIS file, preferably in [Notes]; detailed per-check status is better stored in a quality report."
+  },
+  "report_requirements": {
+    "summary_fields": [
+      "vendor",
+      "ibis_file",
+      "file_rev",
+      "date",
+      "overall_iq_score",
+      "ibischk_version",
+      "ibischk_errors",
+      "ibischk_warnings",
+      "ibischk_cautions",
+      "notes"
+    ],
+    "per_check_fields": [
+      "check_id",
+      "iq_level",
+      "component_or_model_name",
+      "result",
+      "comments",
+      "evidence"
+    ],
+    "preferred_artifacts": [
+      "quality report with pass/fail status and reviewer notes",
+      "correlation metrics and waveforms when M or S designators are used",
+      "IBIS [Notes] or comments that locate any external correlation documentation"
+    ]
+  },
+  "sections": [
+    {
+      "kind": "section",
+      "id": "1",
+      "level": null,
+      "title": "IBIS Quality Designator",
+      "source_line": 185,
+      "paragraphs": [
+        "The quality of an IBIS file can be determined by checking its data for correctness, and by correlating the data to a reference. Correctness is defined as conforming to a designated version of the IBIS",
+        "Specification and the component data sheet. The checks defined in this document are performed to find the overall file quality. The quality score is represented with a designator such as \"IQ3S\", for example, which would indicate that data for basic simulation and timing analysis have been checked, and the IBIS model has been correlated to a reference simulation. The summary IBIS Quality designator is embedded in the IBIS file as a comment or in the [Notes] section."
+      ]
+    },
+    {
+      "kind": "section",
+      "id": "1.1",
+      "level": null,
+      "title": "IBIS Quality Level Definitions",
+      "source_line": 191,
+      "paragraphs": [
+        "The quality level is defined as a combination of correctness checks and correlation checks. The correctness level is a number, and other special designations such as correlation are shown as appended letters. Some examples:",
+        "- IQ0 - No IQ checking at all",
+        "- IQ1 - Passes IBISCHK without errors or unexplained warnings",
+        "- IQ2 - IQ1 + data for basic simulation checked",
+        "- IQ3 - IQ2 + data for timing analysis checked",
+        "- IQ4 - IQ3 + data for power-aware analysis checked",
+        "- IQ3M - IQ3 + correlated against hardware measurements",
+        "- IQ3MS - IQ3 + correlated against measurements and simulation",
+        "- IQ3GS - IQ3 + golden waveforms + correlated against simulation",
+        "- IQ4X - IQ4, but exception(s) to check(s) commented in file",
+        "The 5 recognized levels of correctness checks and 3 levels of correlation checks are discussed below. Details of the referenced checks and correlation tests are given in sections 2 through 7."
+      ]
+    },
+    {
+      "kind": "section",
+      "id": "1.1.1",
+      "level": null,
+      "title": "IQ0 - Not Checked",
+      "source_line": 215,
+      "paragraphs": [
+        "An IQ0 file has not been checked, or at least the checking has not been documented. This is a placeholder level useful for showing which files are queued for checking. Tools that create IBIS files should put IQ0 comments in the files."
+      ]
+    },
+    {
+      "kind": "section",
+      "id": "1.1.2",
+      "level": null,
+      "title": "IQ1 - Passes IBISCHK",
+      "source_line": 219,
+      "paragraphs": [
+        "An IQ1 file has been checked with the latest IBISCHK parser at the time of checking.",
+        "- The version of IBISCHK used must be documented in the Quality Summary.",
+        "- IBISCHK must report zero errors.",
+        "- All IBISCHK warnings must be explained if they cannot be eliminated. Ideally, there should be no warnings, but it is recognized that some warnings cannot be eliminated. The IQ X designator",
+        "should be used if any remaining warning would warrant the model user's attention. For example, comments might specify special simulator setting requirements."
+      ]
+    },
+    {
+      "kind": "section",
+      "id": "1.1.3",
+      "level": null,
+      "title": "IQ2 - Suitable for Waveform Simulation",
+      "source_line": 235,
+      "paragraphs": [
+        "An IQ2 file can be simulated with reasonable assurance that the buffer signal waveforms are correct. It does not necessarily have accurate per-pin or coupled package modeling, may not have information needed to check timing, and may not have information to help measure power currents. IQ2 includes all items in IQ1, plus all items designated \"{LEVEL 2}\"."
+      ]
+    },
+    {
+      "kind": "section",
+      "id": "1.1.4",
+      "level": null,
+      "title": "IQ3 - Suitable for Timing Analysis",
+      "source_line": 239,
+      "paragraphs": [
+        "An IQ3 file is suitable for signal timing analysis. Package modeling at the pin level is present and accurate, and special keywords for measuring timing are present and correct. Coupled package modeling is not required. IQ3 includes all items in IQ2, plus all items designated \"{LEVEL 3}\"."
+      ]
+    },
+    {
+      "kind": "section",
+      "id": "1.1.5",
+      "level": null,
+      "title": "IQ4 - Suitable for Power-Aware Analysis",
+      "source_line": 243,
+      "paragraphs": [
+        "An IQ4 file is suitable for power-aware analysis. The power and ground currents associated with groups of buffers are accurately modeled. This is an extension of the signal analysis capabilities addressed by IQ2 and IQ3."
+      ]
+    },
+    {
+      "kind": "section",
+      "id": "1.2",
+      "level": null,
+      "title": "Special Designators",
+      "source_line": 247,
+      "paragraphs": [
+        "The following special designator letters can be appended to the IQ level to convey additional important information."
+      ]
+    },
+    {
+      "kind": "section",
+      "id": "1.2.1",
+      "level": null,
+      "title": "Designator \"G\" - Contains Golden Waveforms",
+      "source_line": 251,
+      "paragraphs": [
+        "Special designator \"G\" indicates that the file contains golden waveforms, the [Test Data] and [Test Load] keywords defined in IBIS 4.0. Users can compare simulations of IBIS buffer models with the same test loads against the corresponding golden waveforms. Golden waveforms must be produced from source simulations or measurements, not from simulations of IBIS models. The set of [Test Load] fixtures used must include at least one with a transmission line. The \"G\" designator may be used with IBIS files containing golden waveforms for only a subset of buffer models, as determined by sound engineering judgment."
+      ]
+    },
+    {
+      "kind": "section",
+      "id": "1.2.2",
+      "level": null,
+      "title": "Designator \"M\" - Measurement Correlated",
+      "source_line": 255,
+      "paragraphs": [
+        "Special designator \"M\" indicates that measurement correlation has been performed and the results are deemed satisfactory. The \"M\" designator may be used with IBIS files containing golden waveforms for only a subset of buffer models, as determined by sound engineering judgment. More on correlation can be found in section 6."
+      ]
+    },
+    {
+      "kind": "section",
+      "id": "1.2.3",
+      "level": null,
+      "title": "Designator \"S\" - Simulation Correlated",
+      "source_line": 263,
+      "paragraphs": [
+        "Special designator \"S\" indicates that simulation correlation has been performed and the results are deemed satisfactory. The \"S\" designator may be used with IBIS files containing golden waveforms for only a subset of buffer models, as determined by sound engineering judgment. More on correlation can be found in section 6."
+      ]
+    },
+    {
+      "kind": "section",
+      "id": "1.2.4",
+      "level": null,
+      "title": "Designator \"X\" - Exceptions",
+      "source_line": 267,
+      "paragraphs": [
+        "Special designator \"X\" refers to exception from correctness or correlation. Exceptions should be used to declare that the file is suitable for the purpose indicated by the IQ level even though one or more checks are not passed by strict standards. The reason for the exception must be documented in the [Notes] section. Before using an IBIS file with the X designator in its IQ score, the model user should open the file and look for comments explaining exceptions."
+      ]
+    },
+    {
+      "kind": "section",
+      "id": "1.3",
+      "level": null,
+      "title": "OPTIONAL Checks",
+      "source_line": 271,
+      "paragraphs": [
+        "A limited number of IQ checks have {OPTIONAL} in the title instead of a {LEVEL n} designator. While considered good practice, these checks are not required to achieve any IQ level. This is generally used where data is not commonly available in suitable form for the IBIS representation."
+      ]
+    },
+    {
+      "kind": "section",
+      "id": "1.4",
+      "level": null,
+      "title": "IBIS Quality Summary",
+      "source_line": 275,
+      "paragraphs": [
+        "The summary IQ score for an IBIS file is determined as follows:",
+        "- The summary IQ level number is the highest for which all checks of that level are passed.",
+        "- \"M\", \"S\", and/or \"G\" designators are appended to the summary IQ score if a reasonable set of models have been measurement and/or simulation correlated, or if the file contains golden waveforms, respectively.",
+        "- \"X\" is appended to the summary IQ score if any check in the file cannot be passed without exception.",
+        "- OPTIONAL checks have no effect on the summary IQ score.",
+        "The summary IQ score must be written in the IBIS file. This should appear in the [Notes] section, but comment lines are acceptable. Any exceptions must also be explained in the IBIS file. An example IQ summary in an IBIS file might look like this:",
+        "- `|IQ Score: IQ3SX`",
+        "- `|IQ Exception: Correlation not performed for untimed low speed signals.`",
+        "The pass/fail status of individual IQ checks may be posted in the file as comments or contained in a separate document such as an IBIS file quality report. The latter is preferred, especially if the report also contains details such as waveforms, correlation metrics, and reviewer's notes. For each check the ID number and IQ level of the check should be stated, along with the name of any [Component] or [Model] to which it applies, as well as the pass/fail status."
+      ]
+    },
+    {
+      "kind": "section",
+      "id": "2",
+      "level": null,
+      "title": "General Header Section Requirements",
+      "source_line": 299,
+      "paragraphs": [
+        "Requirements for the header section of the IBIS file, from the beginning of the file to the line before the first [Component] keyword."
+      ]
+    },
+    {
+      "kind": "section",
+      "id": "3",
+      "level": null,
+      "title": "Component Section",
+      "source_line": 339,
+      "paragraphs": [
+        "Checks for the [Component] section may be waived for IBIS files for programmable parts such as FPGAs, if the file is generic in nature, and does not represent a final, programmed part. In generic IBIS files the [Pin] section typically contains one entry for each [Model], but it does not correspond to any actual device pin map."
+      ]
+    },
+    {
+      "kind": "section",
+      "id": "3.1",
+      "level": null,
+      "title": "Component Package Requirements",
+      "source_line": 343,
+      "paragraphs": [
+        "Requirements for the [Package] and [Package Model] sections:"
+      ]
+    },
+    {
+      "kind": "section",
+      "id": "3.2",
+      "level": null,
+      "title": "Component Pin Requirements",
+      "source_line": 418,
+      "paragraphs": [
+        "Requirements for the [Pin] section:"
+      ]
+    },
+    {
+      "kind": "section",
+      "id": "3.3",
+      "level": null,
+      "title": "Component Diff Pin Requirements",
+      "source_line": 455,
+      "paragraphs": [
+        "Requirements for the optional [Diff Pin] section:"
+      ]
+    },
+    {
+      "kind": "section",
+      "id": "3.4",
+      "level": null,
+      "title": "Component Pin Mapping Requirements",
+      "source_line": 467,
+      "paragraphs": []
+    },
+    {
+      "kind": "section",
+      "id": "4",
+      "level": null,
+      "title": "[Model Selector] Section",
+      "source_line": 491,
+      "paragraphs": []
+    },
+    {
+      "kind": "section",
+      "id": "5",
+      "level": null,
+      "title": "Model Section",
+      "source_line": 507,
+      "paragraphs": []
+    },
+    {
+      "kind": "section",
+      "id": "5.1",
+      "level": null,
+      "title": "Model General Requirements",
+      "source_line": 509,
+      "paragraphs": []
+    },
+    {
+      "kind": "section",
+      "id": "5.2",
+      "level": null,
+      "title": "Model Switching Behavior Requirements",
+      "source_line": 595,
+      "paragraphs": [
+        "A few parameters in the [Model] and [Model Spec] sections specify the switching characteristics of input and I/O buffers, in response to waveforms. These values must be defined the same as in the component datasheet for timing calculations to be correct."
+      ]
+    },
+    {
+      "kind": "section",
+      "id": "5.3",
+      "level": null,
+      "title": "Model I-V Table Requirements",
+      "source_line": 689,
+      "paragraphs": [
+        "The term \"table\" as used in this document refers to rows and columns of numbers appearing in the text of the IBIS file. The term \"curve\" refers to the visual plotting of table data. Some checks are more easily performed visually.",
+        "The voltage columns in the [Pullup] and [POWER Clamp] tables in IBIS files are Vcc-relative. This means that the voltage values in the first column are actually inverted offsets from Vcc. For example, the value at 0 V in a [Pullup] table is actually measured at Vcc and the value at Vcc in the table is measured at 0 V. Bear this in mind when checking Vcc-relative tables. The formula is:",
+        "``` Vtable = Vcc - Voutput ```",
+        "Curve viewing tools may offer the ability to translate Vcc-relative tables so that the curves viewed are ground relative."
+      ]
+    },
+    {
+      "kind": "section",
+      "id": "5.4",
+      "level": null,
+      "title": "Model V-T Table Requirements",
+      "source_line": 785,
+      "paragraphs": []
+    },
+    {
+      "kind": "section",
+      "id": "5.5",
+      "level": null,
+      "title": "Model [Ramp] Data Requirements",
+      "source_line": 829,
+      "paragraphs": [
+        "The [Ramp] section is required even if [Rising Waveform] and [Falling Waveform] are present in a [Model]. [Ramp] information is used in some tools for non-simulation purposes, for example quickly finding the fastest pin on a net."
+      ]
+    },
+    {
+      "kind": "section",
+      "id": "5.6",
+      "level": null,
+      "title": "Output Timing Checks",
+      "source_line": 859,
+      "paragraphs": []
+    },
+    {
+      "kind": "section",
+      "id": "5.7",
+      "level": null,
+      "title": "Model ISSO Table Requirements",
+      "source_line": 869,
+      "paragraphs": []
+    },
+    {
+      "kind": "section",
+      "id": "5.8",
+      "level": null,
+      "title": "Model I-T Table Requirements",
+      "source_line": 899,
+      "paragraphs": []
+    },
+    {
+      "kind": "section",
+      "id": "6",
+      "level": null,
+      "title": "Correlation",
+      "source_line": 947,
+      "paragraphs": [
+        "IBIS quality correlation designator \"S\" specifies that the model developer has simulated a buffer using identical test loads in SPICE and in IBIS and compared the results. Likewise, the \"M\" designator specifies that IBIS simulations and bench measurements have been compared. The intention of correlation is to assess the degree to which the IBIS model data will result in simulations that match SPICE simulations and/or bench measurements. By careful attention to detail and understanding the behavior of the I/O circuit, it is possible to achieve extremely close correlation between SPICE and IBIS simulation results. Be aware that not all IBIS behavioral simulators are created equal; discrepancies may be an artifact of the behavioral simulator rather than the IBIS model extraction process.",
+        "If the \"M\" or \"S\" correlation designators are used the methods employed and results must be thoroughly documented. If the documentation is external to the IBIS file, the IBIS file must contain comments sufficient to locate the correlation documentation. Inclusion of golden waveforms, either in external documents or in the IBIS file as [Test Data] and [Test Load] sections, or both, is recommended.",
+        "For detailed information please refer to the \"I/O Buffer Accuracy Handbook\":",
+        "https://www.ibis.org/accuracy/",
+        "The I/O Buffer Accuracy Handbook defines quantitative methods for correlating hardware measurements, SPICE simulations and IBIS simulations, and documenting the results of the correlation. It describes general principles such as overlay and envelope metrics, test circuits, and specific figures of merit to grade correlation results. Correlation methods are not limited to those described in the I/O Buffer Accuracy Handbook, but all methods used must be documented if the \"M\" and/or \"S\" designators are used."
+      ]
+    },
+    {
+      "kind": "appendix",
+      "id": "Appendix A",
+      "level": null,
+      "title": "Smoothness checking algorithm",
+      "source_line": 963,
+      "paragraphs": [
+        "The smoothness of table data representing a curve can be tested algorithmically. The threshold on the smoothness metric might be adjusted with experience or to represent good, caution, or error conditions. The smoothness might be checked by various methods including visually, polynomial curve fitting, interpolation, etc. An example of a smoothness measure follows.",
+        "1. Examine every 3 consecutive data points, f, g, and h, in the table.",
+        "2. Calculate a line segment between end points f and h.",
+        "3. Calculate the delta between the Y value of point g and the interpolated Y value at the same X value from the line segment in step 2. Smaller delta values are evidence of a smoother curve.",
+        "4. Use the delta values to calculate an average error, or RSS error, or similar metric. The X delta value is also useful to weight the Y delta values.",
+        "5. Compare the error metric to an empirically determined threshold to report a warning or error. h",
+        "g",
+        "f",
+        "te"
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "kind": "check",
+      "id": "2.1",
+      "level": "LEVEL 1",
+      "title": "IBIS file passes IBISCHK",
+      "source_line": 303,
+      "paragraphs": [
+        "IBIS models are expected to pass the checks performed by the IBISCHK program before they are released to the public. Passing IBISCHK ensures that the file will attain at least an IQ1 level designation.",
+        "A best practice is to insert the full output from the IBISCHK program into the IBIS file as comments, with explanation for any warnings annotated within. When doing this it is important to ensure that the added comments do not cause new \"line too long\" IBISCHK warnings.",
+        "In general, it is best to use the latest available version of the IBISCHK program, as the latest version may include new tests and fixes for bugs found in the older versions. The IBISCHK program used must, at a minimum, be able to accommodate the [IBIS Ver] of the IBIS file at hand. The [IBIS Ver] used in the IBIS file is set by the model maker based on the set of IBIS keywords required to represent the behavior of the part completely and correctly.",
+        "Some IBISCHK warnings may be permissible due to special circumstances regarding the model, but they must be identified in the IBIS file itself in the [Notes] section of the file. The warnings, along with the reason why they should be considered acceptable must be identified. Also, the IQ level designator must include \"X\" for exceptions due to warnings.",
+        "The X (exception) designation is used to document all exception cases that might be important to some users. These would mostly apply to warning messages where the model provider gives further information. The X designation may also apply to cases where the extracted or specification information has been changed. The model provider should describe the impact of this change. Finally, it can also be used for any unusual situation in the parser, where the model information is correct, but the parser still issues warning or caution messages. The main point is that the model provider has purposely issued the model with some deviation, and the user needs to know about its details to understand the issues that might arise in using the model.",
+        "For some minor deviations including where model data is changed to eliminate warning messages, the X designation might not be needed. For example, the X would normally not be used for I-V table regions where some non-monotonic data due to measurement noise or spurious data is removed. The changed data has minimal impact on model simulations and helps increase model portability.",
+        "Occasionally a problem exists with IBISCHK rather than with the model. While the IBISCHK problem may be fixed in the future, the existing model could be tagged with X and contain a description of its issues and how this may impact how the IBIS model is used. In the event an error is generated due to a specific bug in the IBISCHK, intentional deviation in the model may be permitted to suppress the error in the model, provided such deviations are properly documented in the [Notes] section with \"X\" tagged in the quality designation. This suppression of an error is a unique case and should have minimal impact on the accuracy of the model.",
+        "A Level 1 Model must NOT produce ANY errors when run through IBISCHK.",
+        "Summary:",
+        "- The goal is zero errors and zero warnings.",
+        "- In some cases, zero warnings are not possible.",
+        "- Add the \"X\" designator to the IQ level if there are warnings.",
+        "- Document known cases of acceptable warnings.",
+        "- Document the version of IBISCHK used.",
+        "- Include a list of past File Rev/Dates and the reason for each model change."
+      ],
+      "numeric_level": 1,
+      "optional": false,
+      "section_id": "2",
+      "section_title": "General Header Section Requirements",
+      "ibis_keywords": [
+        "[IBIS Ver]",
+        "[Notes]"
+      ],
+      "automation": {
+        "class": "auto",
+        "rationale": "Run IBISCHK, parse version/errors/warnings/cautions, and require documented exceptions for any remaining warnings.",
+        "how": "Run the appropriate IBISCHK version for the file's [IBIS Ver], capture the full output, parse version/errors/warnings/cautions, fail on any error, and require [Notes]/comments plus the X designator for unresolved warnings."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "3.1.1",
+      "level": "LEVEL 2",
+      "title": "[Package] must have typ/min/max values",
+      "source_line": 347,
+      "paragraphs": [
+        "The IBIS specification requires typical values in the [Package] keywords and allows minimum and maximum values to be NA if not available. To achieve IQ level 2 an IBIS file must have typical, minimum, and maximum values in the [Package] keywords. A reflection analysis based only on typical package model is likely to be optimistic. Minimum and maximum values are required to ensure that peak distortion levels are predicted."
+      ],
+      "numeric_level": 2,
+      "optional": false,
+      "section_id": "3.1",
+      "section_title": "Component Package Requirements",
+      "ibis_keywords": [
+        "[Package]"
+      ],
+      "automation": {
+        "class": "auto",
+        "rationale": "Parse [Package] values and require typ/min/max values instead of NA.",
+        "how": "Parse each [Package] R_pkg, L_pkg, and C_pkg row and require populated typical, minimum, and maximum values for the target IQ level."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "3.1.2",
+      "level": "LEVEL 2",
+      "title": "[Package] model values must be reasonable",
+      "source_line": 351,
+      "paragraphs": [
+        "Reasonable values for signal pins are L < 100 nH, C < 100 pF, R < 10 ohm. Minimum must be less than typical and typical less than maximum.",
+        "The IBISCHK program detects typographical errors such as omitting the scaling factor following a number value, by checking against higher limits: L < 1000 nH, C < 1000 pF, R < 50 ohm. An R_pkg value of 1000 would easily fail this test, for example. This IQ check, with its lower limits, will detect other errors such as extra digits or measurement error.",
+        "The minimum and maximum values of these parameter values should represent the range spanned by the actual pin parameter values for signal pins. The typical values should fall between the minimum and maximum values; typically, it is the average of the signal pin values, but it need not be. Methods and assumptions used, such as whether power and ground pins are included in the determination of the [Package] model values, should be documented as comments.",
+        "L and C values might be used in the EDA tool to create a transmission-line model or might be left as discrete L and C elements. The EDA tool might connect the discrete L and C elements in a series, T, or pi topology. The model changes the simulation results. The model creator should add a comment in the file to state the preferred modeling method. The model user might then select the appropriate model option in the EDA tool."
+      ],
+      "numeric_level": 2,
+      "optional": false,
+      "section_id": "3.1",
+      "section_title": "Component Package Requirements",
+      "ibis_keywords": [
+        "[Package]"
+      ],
+      "automation": {
+        "class": "semi_auto",
+        "rationale": "Numeric limits and typ/min/max ordering can be checked automatically; modeling assumptions still need review.",
+        "how": "Check package R/L/C values against the spec limits, verify min < typ < max, and surface any missing comments about modeling assumptions for reviewer confirmation."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "3.1.3",
+      "level": "LEVEL 4",
+      "title": "Package model includes power and ground pins",
+      "source_line": 365,
+      "paragraphs": [
+        "The assigned package model includes power pins with coupling between signals, power, and ground. The package model might be defined by keywords:",
+        "- [Define Package Model]",
+        "- [External Circuit] (not preferred)",
+        "- [Interconnect Model] (including IBIS-ISS and Touchstone files)",
+        "- [EMD Model]",
+        "These sections should not be mixed in the same component since this situation causes confusion for the model user and possibly for the EDA tool.",
+        "The model comments should explain the package modeling method.",
+        "|**Model Type **|**Pro**|**Con**| |---|---|---| |**[Define Package Model]**|Details for long pin<br>interconnect|Coupled, single-stage, lumped* OR T-lines with<br>forks,not both| |**[External Circuit]**|Existing models|Possible misinterpretation<br>Replaced bynewer syntax| |**[Interconnect Model]**|Very flexible|Complicated<br>Difficult to check| |**EMD**|Multi-die modules with<br>coupling|Complicated<br>Not referenced from IBS file (reversed reference)<br>Notyet fullysupported byall EDA tools|",
+        "* L and C values might be used in the EDA tool to create a transmission-line model or might be left as discrete L and C elements. The EDA tool might connect the discrete L and C elements in a series, T, or pi topology. The model changes the simulation results. The model creator should add a comment in the file to state the preferred modeling method. The model user might then select the appropriate model option in the EDA tool.",
+        "Package model guidance:",
+        "Package models should include all pins with coupling between signals, power, and ground. While it's valid to use a package model that does not include the coupling between signals, power, and ground pins, a good quality model includes these coupling effects. Likewise, the loop inductance through the power and return paths could be modeled by a single inductance value in the power path, but such a model does not fully represent the voltage fluctuations used in the ISSO Pulldown effect. This topology is often for Touchstone (TS) file(s) for package models since the loop inductance is usually represented in only one value.",
+        "A package model represented with a Touchstone S-parameter file must be passive and causal. Passivity and causality checks are slightly different between EDA tools. The model creator should include a comment telling which tool or threshold was used to check passivity and causality.",
+        "Package models are often represented with SPICE subcircuits. The elements in the subcircuit should not be connected to a global reference node, known in SPICE as node 0, as noted on page 344 of the IBIS Specification version 7.2. A global reference node is not the same as the VSS terminal ([Pulldown Reference] or [Ground Clamp Reference]) in an IBIS model. Connections to a global reference node might make sense for controlled voltage sources used to mathematically reproduce frequency-domain data or if VSS is a defined path in the subcircuit and the model reference truly is the universe."
+      ],
+      "numeric_level": 4,
+      "optional": false,
+      "section_id": "3.1",
+      "section_title": "Component Package Requirements",
+      "ibis_keywords": [
+        "[Define Package Model]",
+        "[EMD Model]",
+        "[External Circuit]",
+        "[Ground Clamp Reference]",
+        "[Interconnect Model]",
+        "[Pulldown Reference]"
+      ],
+      "automation": {
+        "class": "manual",
+        "rationale": "The tool can detect package-model mechanisms, but inclusion of power/ground coupling and method quality require engineering review.",
+        "how": "Detect package-model mechanisms such as [Define Package Model], [Interconnect Model], [External Circuit], or EMD references, then have a reviewer confirm power/ground pins and coupling are actually represented."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "3.1.4",
+      "level": "LEVEL 4",
+      "title": "On-die and on-package decoupling included",
+      "source_line": 404,
+      "paragraphs": [
+        "The inclusion of on-die and on-package decoupling can have a significant effect on the SSO calculation in the buffer model. On-die decoupling (non-ideal capacitance) is an important part of the component PDN. The on-die decoupling is probably included in an:",
+        "- [Interconnect Model] section (IBIS-ISS or Touchstone models)",
+        "- [External Circuit] and [Circuit Call] sections",
+        "- [PDN Domain], Signal_name, Bus_label, [PDN Model], C_pdn, R_pdn, and R_leak.",
+        "- new keywords and parameters in 7.1 (BIRD198.3)",
+        "The on-package decoupling is included in the package model."
+      ],
+      "numeric_level": 4,
+      "optional": false,
+      "section_id": "3.1",
+      "section_title": "Component Package Requirements",
+      "ibis_keywords": [
+        "[Circuit Call]",
+        "[External Circuit]",
+        "[Interconnect Model]",
+        "[PDN Domain]",
+        "[PDN Model]"
+      ],
+      "automation": {
+        "class": "manual",
+        "rationale": "The tool can detect PDN/decoupling-related keywords, but sufficiency of on-die/on-package decoupling is a modeling judgment.",
+        "how": "Detect PDN/decoupling-related keywords and package-model references, then require reviewer evidence that on-die and on-package decoupling are included sufficiently for SSO/power-aware use."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "3.2.1",
+      "level": "LEVEL 2",
+      "title": "[Pin] section complete",
+      "source_line": 422,
+      "paragraphs": [
+        "All pins must be defined for a component. In addition to signal pins:",
+        "- No Connect pins must be represented with model name NC.",
+        "- Power pins must be represented with model name POWER.",
+        "- Ground pins must be represented with model name GND.",
+        "- The variety of [Model]s assigned to pins matches the variety of buffer characteristics described in the datasheet, and each pin has the correct [Model] or [Model Selector] assigned to it.",
+        "- Special Pins (e.g., analog) are to be represented in the [Pin] section, even if they are marked NC. Explanatory comments are recommended for these. A common practice is to represent analog pins with Terminator models, so that waveforms of crosstalk received at the pins can be viewed in EDA tools.",
+        "For IBIS buffer [Model] libraries, it is recommended that one pin be used for every model and that the pin name be the same as the model name."
+      ],
+      "numeric_level": 2,
+      "optional": false,
+      "section_id": "3.2",
+      "section_title": "Component Pin Requirements",
+      "ibis_keywords": [
+        "[Model Selector]",
+        "[Model]",
+        "[Pin]"
+      ],
+      "automation": {
+        "class": "semi_auto",
+        "rationale": "Parser can check pin syntax and NC/POWER/GND naming; completeness versus the datasheet requires external data.",
+        "how": "Parse [Pin] entries, check NC/POWER/GND conventions, and compare model assignments against an external pin list or datasheet when available."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "3.2.2",
+      "level": "LEVEL 3",
+      "title": "[Pin] RLC values are present and reasonable",
+      "source_line": 442,
+      "paragraphs": [
+        "For a LEVEL 2 model, pin model values are optional, but they are mandatory for a LEVEL 3 model (that is, a model suitable for timing). To pass this check the RLC values must be present for all signal pins in the [Pin] section, or [Package Model] must be present. Pin model values should either be measured or extracted using a 2D or 3D solver. Reasonable signal pin model values will result in impedance and delay characteristics that fall in the ranges:",
+        "``` TD = SQRT(LC) < 300 ps Z0 = SQRT(L/C) < 100 ohm ```",
+        "L and C values might be used in the EDA tool to create a transmission-line model or might be left as discrete L and C elements. The EDA tool might connect the discrete L and C elements in a series, T, or pi topology. The model changes the simulation results. The model creator should add a comment in the file to state the preferred modeling method. The model user might then select the appropriate model option in the EDA tool.",
+        "Note that IQ check 3.1.2. also requires that each [Pin] RLC value falls within the min/max range as given by the [Package] keyword. The [Package] keyword can be adjusted to accommodate."
+      ],
+      "numeric_level": 3,
+      "optional": false,
+      "section_id": "3.2",
+      "section_title": "Component Pin Requirements",
+      "ibis_keywords": [
+        "[Package Model]",
+        "[Package]",
+        "[Pin]"
+      ],
+      "automation": {
+        "class": "auto",
+        "rationale": "Presence of pin RLC or [Package Model], plus TD and Z0 limits, can be computed from the IBIS data.",
+        "how": "For every signal pin, require R/L/C values or a [Package Model], compute TD = sqrt(LC) and Z0 = sqrt(L/C), and compare them to the spec limits."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "3.3.1",
+      "level": "LEVEL 2",
+      "title": "[Diff Pin] referenced pin models match",
+      "source_line": 459,
+      "paragraphs": [
+        "It is expected that both pins of a differential pair will use the same [Model]. If the buffer models referenced by the two physical pins of a [Diff Pin] entry are not the same [Model] name, a comment or [Notes] entry must be present to explain why."
+      ],
+      "numeric_level": 2,
+      "optional": false,
+      "section_id": "3.3",
+      "section_title": "Component Diff Pin Requirements",
+      "ibis_keywords": [
+        "[Diff Pin]",
+        "[Model]",
+        "[Notes]"
+      ],
+      "automation": {
+        "class": "semi_auto",
+        "rationale": "Model-name matching is automatic; non-matching pairs require comment or [Notes] review.",
+        "how": "Compare the model names on each [Diff Pin] pair; if they differ, find an explanatory comment or [Notes] entry and send it to the reviewer."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "3.3.2",
+      "level": "LEVEL 3",
+      "title": "[Diff Pin] Vdiff and Tdelay_* complete and reasonable",
+      "source_line": 463,
+      "paragraphs": [
+        "For input and I/O pins Vdiff must be defined, non-zero and positive. For output and I/O pins Tdelay_typ, Tdelay_min, and Tdelay_max data can be zero, but must be defined. Both Vdiff and Tdelay_* are measured relative to the die pads and must not include additional package delays and offsets. Output pins should have NA for Vdiff. For input pins Tdelay_typ, Tdelay_min, and Tdelay_max must be NA."
+      ],
+      "numeric_level": 3,
+      "optional": false,
+      "section_id": "3.3",
+      "section_title": "Component Diff Pin Requirements",
+      "ibis_keywords": [
+        "[Diff Pin]"
+      ],
+      "automation": {
+        "class": "auto",
+        "rationale": "Presence, polarity, zero/NA rules, and output/input applicability can be checked from [Diff Pin] and model types.",
+        "how": "Use [Diff Pin] entries and referenced model types to check Vdiff/Tdelay presence, positive/zero/NA rules, and input/output applicability."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "3.4.1",
+      "level": "LEVEL 4",
+      "title": "[Pin Mapping] section is included for each component",
+      "source_line": 469,
+      "paragraphs": [
+        "The [Pin Mapping] section must include all I/O pins from the [Pin] section. This requirement is checked by IBISCHK. The IBIS specification 7.0 states, \"If the [Pin Mapping] keyword is present, then the bus",
+        "connections for every pin listed under the [Pin] keyword whose model_name is not POWER, GND or NC shall be given.\""
+      ],
+      "numeric_level": 4,
+      "optional": false,
+      "section_id": "3.4",
+      "section_title": "Component Pin Mapping Requirements",
+      "ibis_keywords": [
+        "[Pin Mapping]",
+        "[Pin]"
+      ],
+      "automation": {
+        "class": "auto",
+        "rationale": "Presence and coverage of [Pin Mapping] can be checked from [Pin] and IBIS version rules.",
+        "how": "For each [Component], require [Pin Mapping] coverage for the non POWER/GND/NC pins required by the IBIS version rules."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "3.4.2",
+      "level": "LEVEL 4",
+      "title": "[Pin Mapping] table includes power and ground pins",
+      "source_line": 479,
+      "paragraphs": [
+        "If [IBIS Ver] is less than 7.0, then all power pins must be included in [Pin Mapping] table. In Version 7.0 the requirement is relaxed (by BIRD182) to link [Pin Mapping] bus labels to [Pin] signal names. Additionally, the [Interconnect Model] and [EMD Model] syntax have rules to map power rails by keywords [Bus Label] and [Die Supply Pads]. Therefore, if [IBIS Ver] is 7.0 or greater, \"If a pin has model",
+        "name POWER or GND and there is no entry for this pin under the [Pin Mapping], [Bus Label], or",
+        "[Die Supply Pads] keywords then the bus_label for that pin will be its signal name.\" (IBIS Specification Version 7.2, pg 48)"
+      ],
+      "numeric_level": 4,
+      "optional": false,
+      "section_id": "3.4",
+      "section_title": "Component Pin Mapping Requirements",
+      "ibis_keywords": [
+        "[Bus Label]",
+        "[Die Supply Pads]",
+        "[EMD Model]",
+        "[IBIS Ver]",
+        "[Interconnect Model]",
+        "[Pin Mapping]",
+        "[Pin]"
+      ],
+      "automation": {
+        "class": "semi_auto",
+        "rationale": "Version-dependent coverage can be checked; rail-label intent may need review.",
+        "how": "Check POWER/GND mapping requirements using [Pin Mapping], [Bus Label], and [Die Supply Pads], then have a reviewer confirm rail-label intent."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "3.4.3",
+      "level": "LEVEL 4",
+      "title": "Specify [Merged Pins] keyword if applicable",
+      "source_line": 487,
+      "paragraphs": [
+        "If the package model merges pins under the [Define Package Model] and [Model Data] keywords, then the [Merged Pins] keyword must be defined."
+      ],
+      "numeric_level": 4,
+      "optional": false,
+      "section_id": "3.4",
+      "section_title": "Component Pin Mapping Requirements",
+      "ibis_keywords": [
+        "[Define Package Model]",
+        "[Merged Pins]",
+        "[Model Data]"
+      ],
+      "automation": {
+        "class": "auto",
+        "rationale": "If package model data uses merged pins, require [Merged Pins].",
+        "how": "Detect merged pin usage in package-model data and require a matching [Merged Pins] keyword."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "4.1",
+      "level": "LEVEL 2",
+      "title": "[Model Selector] entries have reasonable descriptions",
+      "source_line": 493,
+      "paragraphs": [
+        "Each line of the [Model Selector] keyword must have two fields. The first field lists the referenced [Model] name and second field contains a short description of the model shown in first field. The purpose of the description is to aid the user of the EDA tool in making intelligent buffer model selections. It can be used by the EDA tool in a user interface dialog box as the basis of an interactive buffer selection mechanism. An example of usage of [Model Selector] with an appropriate description might be a programmable buffer in DDR3, where the description may include the impedance of the driver and the applicable maximum frequency of the model (800 Mbps, 34-ohm Data I/O with no ODT). It is recommended to have a specific description in the [Notes] section about the existence of [Model Selector] in an IBIS file with a short explanation of why it was used, possibly with references to the data sheet for further explanation."
+      ],
+      "numeric_level": 2,
+      "optional": false,
+      "section_id": "4",
+      "section_title": "[Model Selector] Section",
+      "ibis_keywords": [
+        "[Model Selector]",
+        "[Model]",
+        "[Notes]"
+      ],
+      "automation": {
+        "class": "semi_auto",
+        "rationale": "The tool can detect missing descriptions; reasonableness and usefulness are reviewer judgments.",
+        "how": "For every [Model Selector] entry, verify that it has both a referenced model and a non-empty description; flag generic descriptions for reviewer judgment."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "4.2",
+      "level": "LEVEL 2",
+      "title": "Default [Model Selector] entries are consistent",
+      "source_line": 497,
+      "paragraphs": [
+        "The first entry under each [Model Selector] keyword is the default entry. They will be the models used by EDA tools if the user makes no specific choice. The set of default entries should be consistent, describing a state that may likely exist on the part, considering dependencies between them. For example, if the [Model Selector] entries describe controlled output impedances for a part on which all buffers are set to the same impedance, then the default entries for all [Model Selector] keywords would have the same impedance. There should not be one [Model Selector] defaulting to 35 ohms and another",
+        "to 50 ohms in that case. Furthermore, the most frequently used setting of a [Model Selector] is the preferred default, if that can be determined."
+      ],
+      "numeric_level": 2,
+      "optional": false,
+      "section_id": "4",
+      "section_title": "[Model Selector] Section",
+      "ibis_keywords": [
+        "[Model Selector]"
+      ],
+      "automation": {
+        "class": "manual",
+        "rationale": "Default model selector consistency depends on product configuration and likely use cases.",
+        "how": "Present each selector's first/default entry side by side and have a reviewer confirm the defaults describe one plausible product configuration."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.1.1",
+      "level": "LEVEL 2",
+      "title": "[Model] parameters have correct typ/min/max order",
+      "source_line": 511,
+      "paragraphs": [
+        "For [Model] parameters, minimum corresponds to the conditions for weak/slow buffers, maximum corresponds to conditions for strong/fast buffers. These conditions are controlled by buffer selections for process, temperature and voltage conditions.",
+        "Normally all keywords and subparameters scoped by the [Model] keyword with typ/min/max data have three columns corresponding to typical, weak/slow, and strong/fast, in order. The major exception is C_comp (including C_comp_*), which uses the numerically lowest value for minimum, and numerically highest for maximum. The highest [Temperature] value may fall into the minimum column or the maximum column, depending on technology. For CMOS technology the highest [Temperature] usually results in slow/weak operation and would appear in the minimum column."
+      ],
+      "numeric_level": 2,
+      "optional": false,
+      "section_id": "5.1",
+      "section_title": "Model General Requirements",
+      "ibis_keywords": [
+        "[Model]",
+        "[Temperature]"
+      ],
+      "automation": {
+        "class": "semi_auto",
+        "rationale": "Column order can be checked numerically, but technology-specific weak/strong exceptions require review.",
+        "how": "Parse typ/min/max data scoped by [Model], check ordering against weak/slow and strong/fast conventions, and route technology exceptions to review."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.1.2",
+      "level": "LEVEL 2",
+      "title": "[Model] C_comp is reasonable",
+      "source_line": 517,
+      "paragraphs": [
+        "When present in the model as an alternative to the overall C_comp value, C_comp_pullup, C_comp_pulldown, C_comp_power_clamp, and C_comp_ground_clamp, or any combination thereof chosen to represent the die capacitance of the buffer, must sum to the original C_comp value. In other words, specifying the die capacitance in this more specific way should not change its overall value.",
+        "Note that a model may contain a combination of C_comp_* parameters that appear inconsistent with the buffer type. For instance, an open-drain model might include the C_comp_pullup parameter. This is because a pullup structure, for instance, may exist in the silicon and simply not be used for a particular I/O type. However, its parasitic capacitance will still be present at the node.",
+        "All general notes regarding choice of capacitance to report, given that die capacitance is frequency/voltage dependent, that apply to the C_comp parameter apply here as well.",
+        "As is the case with C_comp, the C_comp_* parameters must be positive. Also, cases in which the total of the C_comp_* values is greater than 20 pF should be explained in the [Notes] section, as is suggested for C_comp.",
+        "The values for C_comp must be checked for plausibility. Sometimes a compromise must be reached because C_comp in driving mode and C_comp in non-driving mode can be different. However, IBIS allows us to specify only a single value for total C_comp.",
+        "The process of determining the appropriate C_comp depends on the type of systems in which the device is being used. For example, topology and data rate can affect the choice of C_comp. For low frequency point-to-point terminated systems, the effect of C_comp on signal integrity is typically less than high",
+        "frequency systems with complex topologies. The model maker is encouraged to make necessary adjustments in C_comp that give the best correlation with SPICE simulation or with measurement data.",
+        "One approach is to include both driving mode and non-driving mode C_comp values, with one commented out. An alternative is to calculate the average values. A suggested practice is to offer all of the above using comment lines to allow selection by the user:",
+        "``` C_comp 3.0p 2.9p 3.1p | C_comp_non-driving |C_comp 4.0p 3.9p 4.1p | C_comp_driving |C_comp 3.5p 3.4p 3.6p | (C_comp_non-driving + C_comp_driving) / 2 ```",
+        "The set of values is not restricted to those shown above. C_comp might also be computed for other combinations of voltage and frequency."
+      ],
+      "numeric_level": 2,
+      "optional": false,
+      "section_id": "5.1",
+      "section_title": "Model General Requirements",
+      "ibis_keywords": [
+        "[Model]",
+        "[Notes]"
+      ],
+      "automation": {
+        "class": "semi_auto",
+        "rationale": "C_comp positivity and C_comp_* sums can be computed; plausibility and comments above 20 pF require review.",
+        "how": "Check that C_comp and C_comp_* values are positive, that C_comp_* sums match C_comp by corner when both forms exist, and that values above 20 pF have comments."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.1.3",
+      "level": "LEVEL 2",
+      "title": "[Temperature Range] is reasonable",
+      "source_line": 547,
+      "paragraphs": [
+        "To pass this check the [Temperature Range] keyword must be present. The keyword needs some explanation because \"minimum\" corresponds to a slow, weak driver and \"maximum\" corresponds to a fast, strong driver. Slow and fast, in relation to temperature, depends on the process technology being described.",
+        "Normally, CMOS has the relationship:",
+        "``` Temp(minimum) > Temp(maximum) ```",
+        "While Bipolar normally has:",
+        "``` Temp(minimum) < Temp(maximum) ```",
+        "Mixed and temperature-compensated technologies could go either way.",
+        "The [Temperature Range] specified should normally match the temperatures at which the model was extracted. This is the chip die temperature, NOT the ambient temperature. The temperature being specified is usually higher than ambient temperature because the IC and parts around it in the measurement setup (or simulation) dissipate power. If the [Temperature Range] might not accurately represent chip die temperature, this should be documented in a comment.",
+        "The reasons for differences between [Temperature Range] keyword and any model extraction temperature ranges should be documented as an exception, or comment.",
+        "The [Temperature Range] should not exceed the safe operating temperature range as given on the data sheet."
+      ],
+      "numeric_level": 2,
+      "optional": false,
+      "section_id": "5.1",
+      "section_title": "Model General Requirements",
+      "ibis_keywords": [
+        "[Temperature Range]"
+      ],
+      "automation": {
+        "class": "manual",
+        "rationale": "Requires extraction conditions, technology behavior, and datasheet operating temperature comparison.",
+        "how": "Compare [Temperature Range] with extraction conditions and datasheet safe operating limits, including technology-specific interpretation of minimum and maximum corners."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.1.4",
+      "level": "LEVEL 2",
+      "title": "[Voltage Range] or [* Reference] is reasonable",
+      "source_line": 571,
+      "paragraphs": [
+        "[Voltage Range] is the operating supply voltage for a [Model]. It is required unless ALL FOUR of the other voltage reference keywords are supplied. When [Voltage Range] is used alone, the other keywords use default values.",
+        "[Pullup Reference] defaults to [Voltage Range]",
+        "[Pulldown Reference] defaults to 0 V",
+        "[POWER Clamp Reference] defaults to [Voltage Range]",
+        "[GND Clamp Reference] defaults to 0 V",
+        "Regardless of whether [Voltage Range] or [* Reference] is used, the values must be reasonable and must represent the actual conditions of IBIS model extraction. The typical, minimum, and maximum values of the chosen voltages should normally follow the relationship:",
+        "minimum < typical < maximum:",
+        "The minimum and maximum voltages must fall within the maximum operating conditions specified by the data sheet but are not required to span the full range. Model users will be looking for minimum and maximum voltages that will reflect the range of supply voltages for their design, which will usually not stray more than 10% from the nominal voltage. If a buffer can be operated at more than one nominal voltage, a separate [Model] should be created for each nominal voltage, with reasonable minimum and maximum values for each typical voltage. In this case [Model Selector] would be used to allow the user to choose the nominal voltage used for the application.",
+        "There should be consistency among models of the same nominal voltage. For example, all 2.5 V buffer models used for one [Component] would be expected to have the same minimum values and the same maximum values. Departures from this must be documented."
+      ],
+      "numeric_level": 2,
+      "optional": false,
+      "section_id": "5.1",
+      "section_title": "Model General Requirements",
+      "ibis_keywords": [
+        "[* Reference]",
+        "[Component]",
+        "[GND Clamp Reference]",
+        "[Model Selector]",
+        "[Model]",
+        "[POWER Clamp Reference]",
+        "[Pulldown Reference]",
+        "[Pullup Reference]",
+        "[Voltage Range]"
+      ],
+      "automation": {
+        "class": "semi_auto",
+        "rationale": "Voltage presence/order/consistency can be checked; extraction and datasheet fit require review.",
+        "how": "Resolve [Voltage Range] and reference keyword defaults, check normal min < typ < max ordering and same-nominal-voltage consistency, then compare against datasheet/extraction evidence."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.2.1",
+      "level": "LEVEL 3",
+      "title": "[Model] Vinl and Vinh reasonable",
+      "source_line": 599,
+      "paragraphs": [
+        "The Vinl and Vinh parameters of the [Model] keyword represent the range of input threshold voltages for a population of buffers. The Vinl and Vinh parameters would correspond to the threshold values for Vinl and Vinh in a data sheet, in the case where only a single value applies for each, under all conditions. The [Model] Vinl and Vinh values must match corresponding values in [Model Spec], when [Model Spec] is present. The [Model] Vinl and Vinh values are normally worst case and may correspond to typical, minimum, or maximum values in the [Model Spec] keyword, as appropriate.",
+        "For I/O buffers, Vinl and Vinh values should be below and above, respectively, Vmeas. Exceptions to this should be explained in a comment."
+      ],
+      "numeric_level": 3,
+      "optional": false,
+      "section_id": "5.2",
+      "section_title": "Model Switching Behavior Requirements",
+      "ibis_keywords": [
+        "[Model Spec]",
+        "[Model]"
+      ],
+      "automation": {
+        "class": "manual",
+        "rationale": "Requires comparing thresholds against datasheet and Vmeas intent.",
+        "how": "Compare [Model] Vinl/Vinh to datasheet values, [Model Spec] values when present, and Vmeas expectations for I/O models."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.2.2",
+      "level": "LEVEL 3",
+      "title": "[Model Spec] Vinl and Vinh reasonable",
+      "source_line": 605,
+      "paragraphs": [
+        "Because the input switching uncertainty region defined by the Vinl and Vinh sub-parameters of the [Model] section (See section 5.2.1.) can be affected by power supply fluctuation for many I/O standards, a range may be specified for these parameters in the [Model Spec] section. The \"minimum\" and \"maximum\" values given must be correct for the \"minimum\" and \"maximum\" values given for the",
+        "supply voltage in the [Voltage Range] keyword. Vinl and Vinh are needed only for Input and I/O types of models."
+      ],
+      "numeric_level": 3,
+      "optional": false,
+      "section_id": "5.2",
+      "section_title": "Model Switching Behavior Requirements",
+      "ibis_keywords": [
+        "[Model Spec]",
+        "[Model]",
+        "[Voltage Range]"
+      ],
+      "automation": {
+        "class": "manual",
+        "rationale": "Requires datasheet threshold ranges and supply variation interpretation.",
+        "how": "Compare [Model Spec] Vinl/Vinh ranges against datasheet thresholds and the supply variation represented by [Voltage Range]."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.2.3",
+      "level": "LEVEL 3",
+      "title": "[Model Spec] Vinl+/- and Vinh+/- complete and reasonable",
+      "source_line": 615,
+      "paragraphs": [
+        "For input buffers with different voltage thresholds for rising and falling edges, Vinh+, Vinh-, Vinl+, and Vinl- are given in the [Model Spec] section. This would be required for inputs that exhibit hysteresis, such as Schmitt trigger devices. For I/O buffers, Vinl+ and Vinh- values should be below and above, respectively, Vmeas. Exceptions to this should be explained in a comment."
+      ],
+      "numeric_level": 3,
+      "optional": false,
+      "section_id": "5.2",
+      "section_title": "Model Switching Behavior Requirements",
+      "ibis_keywords": [
+        "[Model Spec]"
+      ],
+      "automation": {
+        "class": "manual",
+        "rationale": "Requires datasheet/hysteresis intent plus comment review for exceptions.",
+        "how": "Determine from the datasheet whether edge-specific or hysteresis thresholds are required, then compare Vinl+/Vinl-/Vinh+/Vinh- and comments."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.2.4",
+      "level": "OPTIONAL",
+      "title": "[Model Spec] Pulse subparameters complete",
+      "source_line": 619,
+      "paragraphs": [
+        "Ordinarily when an input voltage level rises above Vinl or falls below Vinh, there is a possibility that the input will switch. If the data sheet specifies that input voltage levels can rise above Vinl or fall below Vinh for short periods of time with no possibility of being sensed as an input logic level change, then Pulse_high, Pulse_low, Pulse_time can be given in the [Model Spec] section.",
+        "While all buffers exhibit this characteristic to some degree, the IBIS format may not be flexible enough to adequately represent the behavior. Therefore, a model for which this data is present in the data sheet might not have Pulse parameters in the IBIS file."
+      ],
+      "numeric_level": null,
+      "optional": true,
+      "section_id": "5.2",
+      "section_title": "Model Switching Behavior Requirements",
+      "ibis_keywords": [
+        "[Model Spec]"
+      ],
+      "automation": {
+        "class": "optional",
+        "rationale": "Optional good-practice check; depends on datasheet pulse behavior and IBIS representability.",
+        "how": "If the datasheet defines pulse immunity behavior, check for Pulse_high, Pulse_low, and Pulse_time in [Model Spec] or document why the optional data is omitted."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.2.5",
+      "level": "LEVEL 2",
+      "title": "[Model Spec] S_Overshoot subparameters complete and match data sheet",
+      "source_line": 625,
+      "paragraphs": [
+        "All input and I/O buffers should have S_overshoot_high and S_overshoot_low in the [Model Spec] section. The values must match the voltage limits beyond which the device may not function correctly. These limits may be different from the absolute maximum ratings, which may be related to device destruction. The functional limits may not be found in some data sheets."
+      ],
+      "numeric_level": 2,
+      "optional": false,
+      "section_id": "5.2",
+      "section_title": "Model Switching Behavior Requirements",
+      "ibis_keywords": [
+        "[Model Spec]"
+      ],
+      "automation": {
+        "class": "manual",
+        "rationale": "Requires datasheet functional overshoot limits.",
+        "how": "Compare S_overshoot_high and S_overshoot_low values to datasheet functional overshoot limits for each input or I/O model."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.2.6",
+      "level": "LEVEL 2",
+      "title": "[Model Spec] S_Overshoot subparameters track typ/min/max",
+      "source_line": 629,
+      "paragraphs": [
+        "When overshoot voltage limits are different in minimum and maximum corners, S_overshoot_high and S_overshoot_low should track these differences. For example, S_overshoot_high may increase with the higher supply voltage assumed for maximum mode."
+      ],
+      "numeric_level": 2,
+      "optional": false,
+      "section_id": "5.2",
+      "section_title": "Model Switching Behavior Requirements",
+      "ibis_keywords": [
+        "[Model Spec]"
+      ],
+      "automation": {
+        "class": "semi_auto",
+        "rationale": "Corner tracking can be checked when values exist; correctness of limits still needs datasheet context.",
+        "how": "When S_overshoot corners differ, compare their trend with supply/process corners and flag inconsistent corner tracking."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.2.7",
+      "level": "LEVEL 2",
+      "title": "[Model Spec] D_Overshoot_* subparameters complete and match data sheet",
+      "source_line": 633,
+      "paragraphs": [
+        "If greater levels of overshoot can be tolerated for short periods of time and is specified in the data sheet, these must be given as D_overshoot_high, D_overshoot_low, and D_overshoot_time subparameters of the [Model Spec] keyword. For some technologies the data sheet may specify different parameters to address this concept. For example, data sheets may specify dynamic allowances expressed as current limits that override voltage limits, or a time-voltage area limit may be specified instead of a simple time window. In this case the method by which D_overshoot_high,",
+        "D_overshoot_low, and D_overshoot_time have been determined should be documented in the IBIS file as comments."
+      ],
+      "numeric_level": 2,
+      "optional": false,
+      "section_id": "5.2",
+      "section_title": "Model Switching Behavior Requirements",
+      "ibis_keywords": [
+        "[Model Spec]"
+      ],
+      "automation": {
+        "class": "manual",
+        "rationale": "Requires datasheet dynamic overshoot limits and documented conversion method.",
+        "how": "Compare D_overshoot_high, D_overshoot_low, and D_overshoot_time to datasheet dynamic overshoot rules and review any documented conversion method."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.2.8",
+      "level": "LEVEL 2",
+      "title": "[Model Spec] D_Overshoot_* subparameters track typ/min/max",
+      "source_line": 643,
+      "paragraphs": [
+        "When D_overshoot_* voltage limits are present and different in minimum and maximum corners, D_overshoot_high and D_overshoot_low should track supply voltage and process changes across the corners. For example, D_overshoot_high may increase with the higher supply voltage assumed for maximum mode."
+      ],
+      "numeric_level": 2,
+      "optional": false,
+      "section_id": "5.2",
+      "section_title": "Model Switching Behavior Requirements",
+      "ibis_keywords": [
+        "[Model Spec]"
+      ],
+      "automation": {
+        "class": "semi_auto",
+        "rationale": "Corner tracking can be checked when values exist; correctness of limits still needs datasheet context.",
+        "how": "When D_overshoot corners differ, compare their trend with supply/process corners and flag inconsistent corner tracking."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.2.9",
+      "level": "LEVEL 3",
+      "title": "[Receiver Thresholds] Vth present and matches data sheet, if needed",
+      "source_line": 647,
+      "paragraphs": [
+        "If [Receiver Thresholds] are needed to represent input behavior, the Vth subparameter must be present if the signal is single-ended. Vth is the nominal input threshold voltage at voltage temperature and process conditions that define typical. Vth must match the input buffer timing measurement threshold in the data sheet.",
+        "An example of a technology where [Receiver Thresholds] can be used is the DDR Memory Interface. In DDR, the input threshold voltage is nominally 0.50 * VDDQ. For DDR2, VDDQ is allowed to change from 1.7 to 1.9 V, nominally 1.8 V. In this case Vth would be specified as 0.9 V. IBIS tools will adjust the threshold voltage actually used as some system voltage fluctuates."
+      ],
+      "numeric_level": 3,
+      "optional": false,
+      "section_id": "5.2",
+      "section_title": "Model Switching Behavior Requirements",
+      "ibis_keywords": [
+        "[Receiver Thresholds]"
+      ],
+      "automation": {
+        "class": "manual",
+        "rationale": "Requires datasheet timing threshold and receiver-threshold applicability.",
+        "how": "Decide whether [Receiver Thresholds] are needed for the I/O standard, then compare Vth with the datasheet timing measurement threshold."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.2.10",
+      "level": "LEVEL 3",
+      "title": "[Receiver Thresholds] Vth_min and Vth_max present and match data sheet, if needed",
+      "source_line": 653,
+      "paragraphs": [
+        "Vth_min is the lowest actual input threshold voltage at typical supply voltage, process, and temperature conditions. Likewise, Vth_max is the highest actual input threshold voltage at typical supply voltage, process, and temperature conditions. These are often specified as tolerance values in data sheets, representing an uncertainty as to where Vth actually lies. Threshold changes due to minimum and maximum power supply variation are in addition to the Vth_min and Vth_max values. Vth_min and Vth_max must be present if the data sheet specifies a tolerance for Vth under typical conditions.",
+        "For example, the input threshold voltage for DDR technology is allowed to range from",
+        "0.49 * VDDQ to 0.51 * VDDQ, nominally 0.50 * VDDQ. For DDR2, VDDQ is allowed to change from 1.7 to 1.9 V, nominally 1.8 V. With the above definition of Vth, Vth_min and Vth_max, the values are calculated as follows: Vth = 0.9 V, Vth_min = 0.49 * 1.8 = 0.882 V and",
+        "Vth_max = 0.51 * 1.8 = 0.918 V. As explained above, the variation in Vth only includes the effect of change of process and temperature at nominal voltage, which in this example is 1.8 V."
+      ],
+      "numeric_level": 3,
+      "optional": false,
+      "section_id": "5.2",
+      "section_title": "Model Switching Behavior Requirements",
+      "ibis_keywords": [
+        "[Receiver Thresholds]"
+      ],
+      "automation": {
+        "class": "manual",
+        "rationale": "Requires datasheet Vth tolerance interpretation.",
+        "how": "Compare Vth_min and Vth_max against datasheet typical-condition threshold tolerance, excluding supply variation unless the datasheet defines it that way."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.2.11",
+      "level": "LEVEL 3",
+      "title": "[Receiver Thresholds] Vinh_ac, Vinl_ac present and match data sheet, if needed",
+      "source_line": 663,
+      "paragraphs": [
+        "Vinh_ac, Vinl_ac are the voltages above/below which the input signal must cross before the receiver can be guaranteed to change state. Vinh_ac, Vinl_ac overrides the Vinh and Vinl defined earlier in the [Model] or [Model Spec] section.",
+        "The values given for Vinl_ac and Vinh_ac must match those in the data sheet. Note, however, that these parameters are required to be specified as offsets to Vth in the IBIS model, while they may be given as absolute voltages in the data sheet. Therefore, some conversion may be necessary. For instance, taking the SSTL18 standard as an example, the data sheet might call out 0.9 V for Vth and 1.150 V for Vinh_ac, which would require that Vinh_ac be given the value +250 mV in the IBIS file."
+      ],
+      "numeric_level": 3,
+      "optional": false,
+      "section_id": "5.2",
+      "section_title": "Model Switching Behavior Requirements",
+      "ibis_keywords": [
+        "[Model Spec]",
+        "[Model]",
+        "[Receiver Thresholds]"
+      ],
+      "automation": {
+        "class": "manual",
+        "rationale": "Requires datasheet AC threshold values and offset conversion review.",
+        "how": "Convert datasheet AC thresholds to IBIS offsets from Vth when necessary and compare Vinh_ac/Vinl_ac."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.2.12",
+      "level": "LEVEL 3",
+      "title": "[Receiver Thresholds] Vinh_dc, Vinl_dc present and match data sheet, if needed",
+      "source_line": 673,
+      "paragraphs": [
+        "Vinh_dc and Vinl_dc are DC input voltage thresholds which determine the boundary conditions under which the receiver will NOT change state.",
+        "The values given for Vinl_dc and Vinh_dc must match those in the data sheet. Note, however, that these parameters are required to be specified as offsets to Vth in the IBIS model, while they may be given as absolute voltages in the data sheet. Therefore, some conversion may be necessary. For instance, taking the SSTL18 standard as an example, the data sheet might call out 0.9 V for Vth and 1.0 V for Vinh_dc, which would require that Vinh_dc be given the value +100 mV in the IBIS file."
+      ],
+      "numeric_level": 3,
+      "optional": false,
+      "section_id": "5.2",
+      "section_title": "Model Switching Behavior Requirements",
+      "ibis_keywords": [
+        "[Receiver Thresholds]"
+      ],
+      "automation": {
+        "class": "manual",
+        "rationale": "Requires datasheet DC threshold values and offset conversion review.",
+        "how": "Convert datasheet DC thresholds to IBIS offsets from Vth when necessary and compare Vinh_dc/Vinl_dc."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.2.13",
+      "level": "LEVEL 3",
+      "title": "[Receiver Thresholds] Tslew_ac/Tdiffslew_ac present and match data sheet, if needed",
+      "source_line": 679,
+      "paragraphs": [
+        "If the data sheet specifies a maximum time that an incoming signal may take to transition between Vinl_ac and Vinh_ac, then the [Receiver Thresholds] Tslew_ac parameter should be set to that value. For differential receivers the Tdiffslew_ac parameter should be set to the maximum allowable transition time between -Vdiff_ac and +Vdiff_ac."
+      ],
+      "numeric_level": 3,
+      "optional": false,
+      "section_id": "5.2",
+      "section_title": "Model Switching Behavior Requirements",
+      "ibis_keywords": [
+        "[Receiver Thresholds]"
+      ],
+      "automation": {
+        "class": "manual",
+        "rationale": "Requires datasheet slew-limit values and differential/single-ended applicability.",
+        "how": "Compare Tslew_ac or Tdiffslew_ac to the datasheet maximum input transition time for the applicable single-ended or differential receiver."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.2.14",
+      "level": "LEVEL 3",
+      "title": "[Receiver Thresholds] Threshold_sensitivity and Ext_ref present and match data sheet, if needed",
+      "source_line": 685,
+      "paragraphs": [
+        "If the data sheet indicates that Vth is not a fixed value and depends on some reference voltage such as an external reference source or a supply voltage, then both Threshold_sensitivity and Reference_supply parameters must be present in [Receiver Thresholds]. For example, it is common for HSTL technology to require a Reference_supply value of \"Ext_ref\" and a Threshold_sensitivity value of \"1\"."
+      ],
+      "numeric_level": 3,
+      "optional": false,
+      "section_id": "5.2",
+      "section_title": "Model Switching Behavior Requirements",
+      "ibis_keywords": [
+        "[Receiver Thresholds]"
+      ],
+      "automation": {
+        "class": "manual",
+        "rationale": "Requires datasheet/reference-supply behavior.",
+        "how": "Review datasheet/reference-supply behavior and require Threshold_sensitivity plus Reference_supply/Ext_ref when Vth depends on an external or supply reference."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.3.1",
+      "level": "LEVEL 2",
+      "title": "I-V tables have correct typ/min/max order",
+      "source_line": 705,
+      "paragraphs": [
+        "Inspect every I-V table. Check for proper order of the I-V tables. The order of the column values in the table must be:",
+        "voltage, typical current, minimum current, maximum current",
+        "In most cases the maximum current should be greater than the typical current, which should be greater than the minimum current, in the active region (e.g., where device is not clamping). The most common exception is for compensated devices, where the typical, minimum, and maximum curves may nearly overlay each other. Also, [POWER Clamp] curves may exhibit crossovers due to differences in the voltages at which clamping begins.",
+        "This check is easily accomplished by viewing the curves and checking visually. Checking combined curves is preferred, but checking of individual curves is acceptable."
+      ],
+      "numeric_level": 2,
+      "optional": false,
+      "section_id": "5.3",
+      "section_title": "Model I-V Table Requirements",
+      "ibis_keywords": [
+        "[POWER Clamp]"
+      ],
+      "automation": {
+        "class": "semi_auto",
+        "rationale": "Column order and curve order can be checked; active-region exceptions need review.",
+        "how": "Parse every I-V table, confirm column order, compare typ/min/max curve ordering in the active region, and generate plots/evidence for exceptions."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.3.2",
+      "level": "LEVEL 2",
+      "title": "[Pullup] voltage sweep range is correct",
+      "source_line": 715,
+      "paragraphs": [
+        "The voltage column in the [Pullup] table should extend from -Vcc to +2 * Vcc, For the purpose of this check, Vcc is defined by the [Pullup Reference] keyword for this check, or [Voltage Range] if [Pullup Reference] is not present."
+      ],
+      "numeric_level": 2,
+      "optional": false,
+      "section_id": "5.3",
+      "section_title": "Model I-V Table Requirements",
+      "ibis_keywords": [
+        "[Pullup Reference]",
+        "[Pullup]",
+        "[Voltage Range]"
+      ],
+      "automation": {
+        "class": "auto",
+        "rationale": "Voltage sweep range can be checked from [Pullup Reference] or [Voltage Range].",
+        "how": "Resolve Vcc from [Pullup Reference] or [Voltage Range] and check [Pullup] voltage coverage from -Vcc to +2*Vcc."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.3.3",
+      "level": "LEVEL 2",
+      "title": "[Pulldown] voltage sweep range is correct",
+      "source_line": 719,
+      "paragraphs": [
+        "The voltage column in the [Pulldown] table should extend from -Vcc to +2 * Vcc. For the purpose of this check, Vcc is defined by the [Pullup Reference] keyword for this check, or [Voltage Range] if [Pullup Reference] is not present."
+      ],
+      "numeric_level": 2,
+      "optional": false,
+      "section_id": "5.3",
+      "section_title": "Model I-V Table Requirements",
+      "ibis_keywords": [
+        "[Pulldown]",
+        "[Pullup Reference]",
+        "[Voltage Range]"
+      ],
+      "automation": {
+        "class": "auto",
+        "rationale": "Voltage sweep range can be checked from [Pullup Reference] or [Voltage Range].",
+        "how": "Resolve Vcc from [Pullup Reference] or [Voltage Range] and check [Pulldown] voltage coverage from -Vcc to +2*Vcc."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.3.4",
+      "level": "LEVEL 2",
+      "title": "[POWER Clamp] voltage sweep range is correct",
+      "source_line": 723,
+      "paragraphs": [
+        "The voltage column in the [POWER Clamp] should extend at least from -Vcc to 0 (it is permitted and recommended to extend from -Vcc to +2 * Vcc, particularly where on-die termination is used). For the purpose of this check, Vcc is defined by the [POWER Clamp Reference] keyword for this check, or [Voltage Range] if [POWER Clamp Reference] is not present."
+      ],
+      "numeric_level": 2,
+      "optional": false,
+      "section_id": "5.3",
+      "section_title": "Model I-V Table Requirements",
+      "ibis_keywords": [
+        "[POWER Clamp Reference]",
+        "[POWER Clamp]",
+        "[Voltage Range]"
+      ],
+      "automation": {
+        "class": "auto",
+        "rationale": "Voltage sweep range can be checked from [POWER Clamp Reference] or [Voltage Range].",
+        "how": "Resolve Vcc from [POWER Clamp Reference] or [Voltage Range] and check [POWER Clamp] coverage at least from -Vcc to 0."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.3.5",
+      "level": "LEVEL 2",
+      "title": "[GND Clamp] voltage sweep range is correct",
+      "source_line": 731,
+      "paragraphs": [
+        "The voltage column in the [GND Clamp] should extend at least from -Vcc to +Vcc (it is permitted and recommended to extend from -Vcc to +2 * Vcc, particularly where on-die termination is used). For the purpose of this check, Vcc is defined by the [POWER Clamp Reference] keyword for this check, or [Voltage Range] if [POWER Clamp Reference] is not present."
+      ],
+      "numeric_level": 2,
+      "optional": false,
+      "section_id": "5.3",
+      "section_title": "Model I-V Table Requirements",
+      "ibis_keywords": [
+        "[GND Clamp]",
+        "[POWER Clamp Reference]",
+        "[Voltage Range]"
+      ],
+      "automation": {
+        "class": "auto",
+        "rationale": "Voltage sweep range can be checked from [POWER Clamp Reference] or [Voltage Range].",
+        "how": "Resolve Vcc from [POWER Clamp Reference] or [Voltage Range] and check [GND Clamp] coverage at least from -Vcc to +Vcc."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.3.6",
+      "level": "LEVEL 2",
+      "title": "I-V tables do not exhibit stair-stepping",
+      "source_line": 735,
+      "paragraphs": [
+        "There should be no stair stepping of any I-V tables, with flat sections and abrupt jumps. This is caused by insufficient significant digits in the table current columns. This problem appears in early versions of the s2ibis2 program, originally from North Carolina State University (NCSU). Poor measurement resolution could also cause this effect.",
+        "This check is easily accomplished by viewing the curves and checking visually."
+      ],
+      "numeric_level": 2,
+      "optional": false,
+      "section_id": "5.3",
+      "section_title": "Model I-V Table Requirements",
+      "ibis_keywords": [],
+      "automation": {
+        "class": "semi_auto",
+        "rationale": "Smoothness/stair-step metrics can flag problems, with plot review as backup.",
+        "how": "Run a stair-step or smoothness metric over I-V curves and generate plots so the reviewer can confirm whether flat sections and abrupt jumps are real issues."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.3.7",
+      "level": "LEVEL 2",
+      "title": "Combined I-V tables are monotonic",
+      "source_line": 741,
+      "paragraphs": [
+        "Check that the combined tables are monotonically increasing, i.e., there are no slope reversals in the current values.",
+        "This check is easily accomplished by viewing the curves and checking visually. Alternatively, IBISCHK 4.2.1 or above will perform the same check automatically.",
+        "Note that IBISCHK reports only the first non-monotonic points in each table. After fixing the data IBISCHK should be run again."
+      ],
+      "numeric_level": 2,
+      "optional": false,
+      "section_id": "5.3",
+      "section_title": "Model I-V Table Requirements",
+      "ibis_keywords": [],
+      "automation": {
+        "class": "auto",
+        "rationale": "Combined-table monotonicity can be checked numerically and by IBISCHK.",
+        "how": "Combine I-V tables according to IBIS rules and check for monotonically increasing current with no slope reversals; optionally cross-check with IBISCHK output."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.3.8",
+      "level": "LEVEL 2",
+      "title": "[Pulldown] I-V tables pass through zero/zero",
+      "source_line": 749,
+      "paragraphs": [
+        "Typical, minimum, and maximum [Pulldown] table currents should all pass through approximately 0 mA at the 0 volt point in the voltage column, for full swing technologies such as CMOS. All three current columns should pass through zero current at the zero-volt line in the table, except in special cases (i.e., TTL, PECL, LVDS, or SERDES driver)."
+      ],
+      "numeric_level": 2,
+      "optional": false,
+      "section_id": "5.3",
+      "section_title": "Model I-V Table Requirements",
+      "ibis_keywords": [
+        "[Pulldown]"
+      ],
+      "automation": {
+        "class": "semi_auto",
+        "rationale": "Zero-crossing can be checked; technology exceptions must be documented.",
+        "how": "Interpolate [Pulldown] currents at 0 V and check that typ/min/max are approximately 0 for full-swing technologies, with documented exceptions."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.3.9",
+      "level": "LEVEL 2",
+      "title": "[Pullup] I-V tables pass through zero/zero",
+      "source_line": 753,
+      "paragraphs": [
+        "Typical, minimum, and maximum [Pullup] table currents should all pass through approximately 0 mA at the 0 volt point in the voltage column, for full swing technologies such as CMOS. All three current columns should pass through zero current at the zero-volt line in the table, except in special cases (i.e., TTL, PECL, LVDS, or SERDES driver)."
+      ],
+      "numeric_level": 2,
+      "optional": false,
+      "section_id": "5.3",
+      "section_title": "Model I-V Table Requirements",
+      "ibis_keywords": [
+        "[Pullup]"
+      ],
+      "automation": {
+        "class": "semi_auto",
+        "rationale": "Zero-crossing can be checked; technology exceptions must be documented.",
+        "how": "Interpolate [Pullup] currents at 0 V and check that typ/min/max are approximately 0 for full-swing technologies, with documented exceptions."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.3.10",
+      "level": "LEVEL 2",
+      "title": "No leakage current in clamp I-V tables",
+      "source_line": 757,
+      "paragraphs": [
+        "For models without on-die termination, review each clamp table. The expected currents should be less than 1 uA in the normal operating ranges (typically from 0 to Vcc range in the table). IBISCHK will print a",
+        "warning for clamp tables in which currents are never below 1 uA. If a table is truncated, use the extrapolated values based on the last two points prior to extrapolation. Or use a viewer which can combine the two clamp tables into one. Exceptions can exist for older TTL technologies where several milliamps may be observed and for some ECL and other technologies with which can have internal resistors. Exceptions should be understood and documented."
+      ],
+      "numeric_level": 2,
+      "optional": false,
+      "section_id": "5.3",
+      "section_title": "Model I-V Table Requirements",
+      "ibis_keywords": [],
+      "automation": {
+        "class": "semi_auto",
+        "rationale": "Leakage thresholds can be checked; special technologies and extrapolation need review.",
+        "how": "Measure clamp current in the normal operating range, including extrapolated values where needed, and flag leakage above 1 uA unless technology exceptions are documented."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.3.11",
+      "level": "LEVEL 2",
+      "title": "I-V behavior not double-counted",
+      "source_line": 767,
+      "paragraphs": [
+        "Verify that clamping currents are found only in the [GND Clamp] and [POWER Clamp] I-V tables. Verify that currents that should be found in the [Pullup] and [Pulldown] tables are not found in the [GND Clamp] and [POWER Clamp] I-V tables. Verify that there is no duplication of clamping currents between the [GND Clamp] and [POWER Clamp] tables. If the buffer has on-die termination, verify that termination current is not included in both the [GND Clamp] and [POWER Clamp] tables in such a manner as to cause double counting of the actual current when the clamps are extrapolated and combined.",
+        "NOTE: NCSU s2ibis may not correctly model on-die termination. It places the full termination characteristic in both [POWER Clamp] and [GND Clamp] tables, effectively double counting the termination when these tables are combined by the simulator."
+      ],
+      "numeric_level": 2,
+      "optional": false,
+      "section_id": "5.3",
+      "section_title": "Model I-V Table Requirements",
+      "ibis_keywords": [
+        "[GND Clamp]",
+        "[POWER Clamp]",
+        "[Pulldown]",
+        "[Pullup]"
+      ],
+      "automation": {
+        "class": "manual",
+        "rationale": "Double-counting of clamp, driver, and termination behavior needs curve/context review.",
+        "how": "Review plotted and combined clamp/driver/termination curves to confirm clamping and on-die termination behavior is not duplicated across tables."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.3.12",
+      "level": "LEVEL 2",
+      "title": "On-die termination modeling documented",
+      "source_line": 773,
+      "paragraphs": [
+        "Any IBIS models with on-die termination should be labeled as such using comment lines. On die termination should be modeled in [POWER Clamp] and/or [GND Clamp] tables, and possibly using [Add Submodel] if the termination is active only in non-driving mode. Document the method used to embed the termination into the clamps."
+      ],
+      "numeric_level": 2,
+      "optional": false,
+      "section_id": "5.3",
+      "section_title": "Model I-V Table Requirements",
+      "ibis_keywords": [
+        "[Add Submodel]",
+        "[GND Clamp]",
+        "[POWER Clamp]"
+      ],
+      "automation": {
+        "class": "manual",
+        "rationale": "Requires documentation review for on-die termination modeling method.",
+        "how": "Search comments/[Notes] for on-die termination labeling and modeling method, then have a reviewer confirm the description is sufficient."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.3.13",
+      "level": "LEVEL 2",
+      "title": "ECL models I-V tables swept from -Vcc to +2 * Vcc.",
+      "source_line": 777,
+      "paragraphs": [
+        "I-V tables in ECL models should be swept from -Vcc to +2 * Vcc, where Vcc for ECL is defined as the difference between the most positive supply voltage and the most negative. This is true even though the operating range is narrower. IBIS specifies a fixed 2 V range, but using the actual supply range is a better practice."
+      ],
+      "numeric_level": 2,
+      "optional": false,
+      "section_id": "5.3",
+      "section_title": "Model I-V Table Requirements",
+      "ibis_keywords": [],
+      "automation": {
+        "class": "auto",
+        "rationale": "Conditional ECL sweep range can be checked when model type/supplies are known.",
+        "how": "For ECL model types, resolve the effective supply span and check I-V table voltage coverage from -Vcc to +2*Vcc."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.3.14",
+      "level": "LEVEL 2",
+      "title": "Point distributions in I-V tables should be sufficient",
+      "source_line": 781,
+      "paragraphs": [
+        "We recommend a minimum of 10 data points at points of inflection in I-V tables to prevent interpolation issues in simulations."
+      ],
+      "numeric_level": 2,
+      "optional": false,
+      "section_id": "5.3",
+      "section_title": "Model I-V Table Requirements",
+      "ibis_keywords": [],
+      "automation": {
+        "class": "semi_auto",
+        "rationale": "Point-density and smoothness metrics can flag sparse inflection regions.",
+        "how": "Measure point density near inflection regions and run the smoothness metric from Appendix A to flag undersampled I-V curves."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.4.1",
+      "level": "LEVEL 2",
+      "title": "Output and I/O buffers have sufficient V-T tables",
+      "source_line": 787,
+      "paragraphs": [
+        "Push-pull Output and I/O buffers should have two [Rising Waveform] and two [Falling Waveform] tables. Open-source and Open-drain buffers may have one [Rising Waveform] and one [Falling Waveform] table. If less than four V-T tables are present, then this should be explained in comments.",
+        "The R_fixture value for V-T tables should be close to the characteristic impedance (Z0) of the transmission line for the application system at which the device is expected to operate. R_fixture for most legacy systems is close to 50 ohms:",
+        "R_fixture connected to [Pullup Reference]",
+        "Rising V-T Falling V-T R_fixture connected to = [Pulldown Reference] Rising V-T Falling V-T",
+        "Differential and other terminated technologies may be modeled using two V-T tables by including a V_fixture at the common mode voltage, or close to the region of operation. For example:",
+        "R_fixture to Vcm (Common Mode Voltage) Rising V-T Falling V-T",
+        "For technologies such as LVDS which may not be compatible with the test fixture voltages required for [Ramp] data, at least two waveforms are required."
+      ],
+      "numeric_level": 2,
+      "optional": false,
+      "section_id": "5.4",
+      "section_title": "Model V-T Table Requirements",
+      "ibis_keywords": [
+        "[Falling Waveform]",
+        "[Pulldown Reference]",
+        "[Pullup Reference]",
+        "[Ramp]",
+        "[Rising Waveform]"
+      ],
+      "automation": {
+        "class": "semi_auto",
+        "rationale": "Waveform count and fixture values can be checked; technology sufficiency needs review.",
+        "how": "Count [Rising Waveform] and [Falling Waveform] tables by model type, inspect fixture coverage, and require comments when fewer than the expected tables are present."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.4.2",
+      "level": "LEVEL 2",
+      "title": "V-T tables have reasonable point distribution",
+      "source_line": 807,
+      "paragraphs": [
+        "V-T tables should be well behaved, with continuous second derivative. V-T point density should be sufficient in areas with non-zero second derivative. For example, a low to high state transition should have at least 10 points.",
+        "This check is easily accomplished by viewing the curves and checking visually."
+      ],
+      "numeric_level": 2,
+      "optional": false,
+      "section_id": "5.4",
+      "section_title": "Model V-T Table Requirements",
+      "ibis_keywords": [],
+      "automation": {
+        "class": "semi_auto",
+        "rationale": "Point density and smoothness can be measured, with visual review for curve quality.",
+        "how": "Measure V-T point density and second-derivative smoothness through transitions, and provide plots for reviewer confirmation."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.4.3",
+      "level": "LEVEL 3",
+      "title": "V-T table duration is not excessive",
+      "source_line": 813,
+      "paragraphs": [
+        "To avoid the \"over clocking\" issue, excess V-T points may be removed to match the V-T duration corresponding to the maximum data rate or frequency at which the device is expected to operate. When removing trailing V-T points the final DC value must be achieved, i.e., the ending slope should be very small. Since the two sets of V-T tables describe the relative on and off switching delay between the pullup and pulldown transistors, relative time position between all tables with the same edge direction and corner must be maintained when removing the leading excess V-T points. The number of excess V-T points removed can be different between corners (typical, minimum and maximum) but it is recommended to explain the difference as comments of the IBIS file."
+      ],
+      "numeric_level": 3,
+      "optional": false,
+      "section_id": "5.4",
+      "section_title": "Model V-T Table Requirements",
+      "ibis_keywords": [],
+      "automation": {
+        "class": "semi_auto",
+        "rationale": "Duration and ending slope can be measured; max-rate target may need datasheet input.",
+        "how": "Compare waveform duration to the expected data rate/frequency when available, check final DC settling and ending slope, and preserve relative timing evidence."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.4.4",
+      "level": "LEVEL 2",
+      "title": "V-T table endpoints match fixture voltages",
+      "source_line": 817,
+      "paragraphs": [
+        "If the V_fixture values equal the supply reference voltages for the [Pullup] or [Pulldown] tables, then either the starting or ending points of the V-T tables are expected to equal these V_fixture values. This",
+        "applies to full swing technologies such as CMOS, and not to technologies such as TTL, PECL, LVDS, or SERDES driver, which do not necessarily swing rail to rail. This check does not apply in cases where internal pullups/pulldowns or bias conditions exist such that the combined I-V tables have current flows at the V_fixture voltages.",
+        "For example, for a 3.3 V device with the [Voltage Range] set to 3.3 V, V_fixture = 3.3 V, and R_fixture = 50 ohms, the [Rising Waveform] table should end at 3.3 V, and the [Falling Waveform] table should begin at 3.3 V."
+      ],
+      "numeric_level": 2,
+      "optional": false,
+      "section_id": "5.4",
+      "section_title": "Model V-T Table Requirements",
+      "ibis_keywords": [
+        "[Falling Waveform]",
+        "[Pulldown]",
+        "[Pullup]",
+        "[Rising Waveform]",
+        "[Voltage Range]"
+      ],
+      "automation": {
+        "class": "semi_auto",
+        "rationale": "Endpoint/fixture comparison can be checked; technology exceptions need review.",
+        "how": "Compare V-T start/end voltages against V_fixture when fixture/reference conditions imply rail endpoints, then route technology exceptions to review."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.5.1",
+      "level": "LEVEL 2",
+      "title": "[Ramp] R_load present if value other than 50 ohms",
+      "source_line": 833,
+      "paragraphs": [
+        "If the [Ramp] data was measured using a load resistor other than 50 ohms, the [Ramp] section has an R_load subparameter giving the load resistor value used."
+      ],
+      "numeric_level": 2,
+      "optional": false,
+      "section_id": "5.5",
+      "section_title": "Model [Ramp] Data Requirements",
+      "ibis_keywords": [
+        "[Ramp]"
+      ],
+      "automation": {
+        "class": "auto",
+        "rationale": "Require R_load when [Ramp] load differs from 50 ohms.",
+        "how": "Parse [Ramp] data and require an explicit R_load when the load is not the 50 ohm default."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.5.2",
+      "level": "LEVEL 2",
+      "title": "[Ramp] typ/min/max order is correct",
+      "source_line": 837,
+      "paragraphs": [
+        "The typical, minimum, and maximum [Ramp] values are taken from typical, minimum, and maximum buffer measurements. They are not necessarily sorted by dV, dt, or dV/dt. Although the progression from minimum to maximum usually has dV increasing and dt decreasing, the correct order is actually determined by the test conditions used, the same conditions used to derive typ/min/max I-V tables."
+      ],
+      "numeric_level": 2,
+      "optional": false,
+      "section_id": "5.5",
+      "section_title": "Model [Ramp] Data Requirements",
+      "ibis_keywords": [
+        "[Ramp]"
+      ],
+      "automation": {
+        "class": "semi_auto",
+        "rationale": "The tool can compare ordering to extraction corners; corner intent may need review.",
+        "how": "Compare [Ramp] typ/min/max entries with the extraction corner labels used for I-V data and flag apparent numeric sorting or inconsistent corner order."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.5.3",
+      "level": "LEVEL 2",
+      "title": "[Ramp] dV value is consistent with I-V table calculations",
+      "source_line": 841,
+      "paragraphs": [
+        "The [Ramp] dV values must match values calculated by applying the [Ramp] R_load and fixture voltage values to the I-V tables for typ/min/max conditions. The high and low state voltages are determined using the I-V table calculations, and 60% of the difference between these is compared to each [Ramp] dV value. The error must not exceed 5% of the dV calculated from the I-V tables."
+      ],
+      "numeric_level": 2,
+      "optional": false,
+      "section_id": "5.5",
+      "section_title": "Model [Ramp] Data Requirements",
+      "ibis_keywords": [
+        "[Ramp]"
+      ],
+      "automation": {
+        "class": "auto",
+        "rationale": "Calculate dV from I-V load-line values and compare against the 5 percent tolerance.",
+        "how": "Use [Ramp] R_load and I-V load-line calculations to derive high/low voltages, compute 60 percent dV, and require agreement within 5 percent."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.5.4",
+      "level": "LEVEL 2",
+      "title": "[Ramp] dt is consistent with 20%-80% crossing time",
+      "source_line": 845,
+      "paragraphs": [
+        "Each dt value matches within 10% the difference between the times of crossing the 20% voltage point and the 80% voltage point on the corresponding [Rising Waveform] or [Falling Waveform] with test fixture most similar to the [Ramp] test fixture, if matching V-T tables are present.",
+        "This check is to be performed using V-T tables with V_fixture or R_fixture matching [Ramp] fixture values. The waveform R_fixture must match [Ramp] R_load, or 50 ohms if not specified. The [Rising Waveform] must have V_fixture equal to 0 V. The [Falling Waveform] must have V_fixture, V_fixture_min, and V_fixture_max values must correspond to the [Pullup Reference] or [Voltage Range] typical, minimum, and maximum values, respectively. Reasonably small values of C_fixture, L_fixture,",
+        "R_dut, L_dut, and C_dut parameters in [Rising Waveform] and [Falling Waveform] can be overlooked in the V-T table selection process, although these may degrade the correlation of [Ramp] to V-T table endpoints.",
+        "If suitable waveforms for this check are not present, an appropriate alternate reference for dt may be chosen. This may be simulated or measured waveforms, or a datasheet."
+      ],
+      "numeric_level": 2,
+      "optional": false,
+      "section_id": "5.5",
+      "section_title": "Model [Ramp] Data Requirements",
+      "ibis_keywords": [
+        "[Falling Waveform]",
+        "[Pullup Reference]",
+        "[Ramp]",
+        "[Rising Waveform]",
+        "[Voltage Range]"
+      ],
+      "automation": {
+        "class": "semi_auto",
+        "rationale": "20-80 percent crossing can be measured when matching V-T tables exist; alternate references need review.",
+        "how": "Select matching V-T fixtures when present, measure 20-80 percent crossing times, compare dt within 10 percent, and document any alternate reference."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.6.1",
+      "level": "LEVEL 3",
+      "title": "[Model Spec] Vmeas and Vref used if typ/min/max variation",
+      "source_line": 861,
+      "paragraphs": [
+        "Usually, Vref and Vmeas have the same value for push-pull technologies and are specified to vary in proportion to supply voltage for typ/min/max conditions. Vmeas and Vref parameters in a [Model Spec] keyword would be used to convey any typ/min/max variation of these."
+      ],
+      "numeric_level": 3,
+      "optional": false,
+      "section_id": "5.6",
+      "section_title": "Output Timing Checks",
+      "ibis_keywords": [
+        "[Model Spec]"
+      ],
+      "automation": {
+        "class": "manual",
+        "rationale": "Requires deciding whether Vmeas/Vref variation exists across corners.",
+        "how": "Review whether Vref/Vmeas should vary across typ/min/max conditions and confirm [Model Spec] represents that variation when needed."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.6.2",
+      "level": "LEVEL 3",
+      "title": "Vref consistent for Open-drain, Open-source, and ECL Model_types",
+      "source_line": 865,
+      "paragraphs": [
+        "For Open-drain models [Model] or [Model Spec] Vref must be above Vmeas, and it is usually set to the [Pullup Reference] voltage. For Open-source and Open-sink models Vref must be below Vmeas, and it is usually set to the [Pulldown Reference] voltage, typically zero. For ECL models Vref must be below Vmeas and is usually 2 V below [Pullup Reference]."
+      ],
+      "numeric_level": 3,
+      "optional": false,
+      "section_id": "5.6",
+      "section_title": "Output Timing Checks",
+      "ibis_keywords": [
+        "[Model Spec]",
+        "[Model]",
+        "[Pulldown Reference]",
+        "[Pullup Reference]"
+      ],
+      "automation": {
+        "class": "semi_auto",
+        "rationale": "Model-type reference-voltage rules can be checked, with exceptions reviewed.",
+        "how": "Check Vref relative to Vmeas and pullup/pulldown references for Open-drain, Open-source/Open-sink, and ECL model types."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.7.1",
+      "level": "LEVEL 4",
+      "title": "All output-capable models include [ISSO PU] and [ISSO PD] tables",
+      "source_line": 871,
+      "paragraphs": [
+        "The ISSO table data must correlate with the associated pullup and pulldown curves. IBISCHK7 checks the conditions:",
+        "``` Isso_pd(0) = Ipd(Vcc) ```",
+        "``` Isso_pu(0) = Ipu(Vcc) Isso_pd(Vcc) = 0 Isso_pu(Vcc) = 0 ```"
+      ],
+      "numeric_level": 4,
+      "optional": false,
+      "section_id": "5.7",
+      "section_title": "Model ISSO Table Requirements",
+      "ibis_keywords": [
+        "[ISSO PD]",
+        "[ISSO PU]"
+      ],
+      "automation": {
+        "class": "semi_auto",
+        "rationale": "ISSO table presence and IBISCHK correlation equations can be checked; curve correlation may need review.",
+        "how": "For every output-capable model, require [ISSO PU] and [ISSO PD] tables and check IBISCHK endpoint correlation equations against pullup/pulldown curves."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.7.2",
+      "level": "LEVEL 4",
+      "title": "ISSO tables have correct typ/min/max order",
+      "source_line": 883,
+      "paragraphs": [
+        "Generally, the current values for each voltage point in the [ISSO PU] and [ISSO PD] tables should have the value in the minimum column less than the value in the typical column, which is less than the value in the maximum column. Viewed as a curve, these curves might cross each other for short ranges, but the order should apply generally; |Imin| < |Ityp| < |Imax|."
+      ],
+      "numeric_level": 4,
+      "optional": false,
+      "section_id": "5.7",
+      "section_title": "Model ISSO Table Requirements",
+      "ibis_keywords": [
+        "[ISSO PD]",
+        "[ISSO PU]"
+      ],
+      "automation": {
+        "class": "semi_auto",
+        "rationale": "Typ/min/max order can be checked numerically; short curve crossovers need review.",
+        "how": "Compare ISSO typ/min/max current magnitudes across voltage points and flag sustained violations while allowing reviewer-approved short crossovers."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.7.3",
+      "level": "LEVEL 4",
+      "title": "ISSO tables have sufficient point distribution",
+      "source_line": 891,
+      "paragraphs": [
+        "We recommend a minimum of 10 data points at points of inflection in I-V tables to prevent interpolation issues in simulations. The table data viewed as a curve should not have sharp changes of the slope of the curve. See appendix A (Smoothness) for a possible checking algorithm."
+      ],
+      "numeric_level": 4,
+      "optional": false,
+      "section_id": "5.7",
+      "section_title": "Model ISSO Table Requirements",
+      "ibis_keywords": [],
+      "automation": {
+        "class": "semi_auto",
+        "rationale": "Point-density and smoothness metrics can flag sparse inflection regions.",
+        "how": "Measure ISSO point density near inflection regions and run smoothness checks to flag interpolation risks."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.7.4",
+      "level": "LEVEL 4",
+      "title": "ISSO tables voltage sweep range is correct",
+      "source_line": 895,
+      "paragraphs": [
+        "The [ISSO PU] and [ISSO PD] tables should span voltage range +/- VCC. Ibischk7 checks the correlation of the current at Vtable = +VCC, so that point is required. On the negative voltage side, the modulation behavior might break down and show 0 amps before the table voltage reaches -VCC. In this situation, it seems sufficient for the table to include the voltages down to the point where the current reaches 0 amps, but IBIS Specification version 7.1, page 91 states, \"Each of the tables are aligned with and span the typical -Vcc to Vcc voltages.\""
+      ],
+      "numeric_level": 4,
+      "optional": false,
+      "section_id": "5.7",
+      "section_title": "Model ISSO Table Requirements",
+      "ibis_keywords": [
+        "[ISSO PD]",
+        "[ISSO PU]"
+      ],
+      "automation": {
+        "class": "semi_auto",
+        "rationale": "Sweep coverage can be checked; negative-side breakdown exceptions need review.",
+        "how": "Check [ISSO PU]/[ISSO PD] sweep coverage against +/- Vcc and require the +Vcc endpoint; route negative-side breakdown exceptions to review."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.8.1",
+      "level": "LEVEL 4",
+      "title": "Each [Rising Waveform] and [Falling Waveform] table includes a [Composite Current] table",
+      "source_line": 901,
+      "paragraphs": [
+        "The [Composite Current] table is subordinate to the V-T waveforms and represents important current sink behavior that is important for power-aware simulation."
+      ],
+      "numeric_level": 4,
+      "optional": false,
+      "section_id": "5.8",
+      "section_title": "Model I-T Table Requirements",
+      "ibis_keywords": [
+        "[Composite Current]",
+        "[Falling Waveform]",
+        "[Rising Waveform]"
+      ],
+      "automation": {
+        "class": "auto",
+        "rationale": "Require [Composite Current] under each rising/falling waveform.",
+        "how": "Walk each [Rising Waveform] and [Falling Waveform] table and require a subordinate [Composite Current] table."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.8.2",
+      "level": "LEVEL 4",
+      "title": "[Composite Current] waveform data points cover the same time range as the corresponding V-T waveforms",
+      "source_line": 905,
+      "paragraphs": [
+        "The first time point in a [Composite Current] table must be the same as the first time point in the parent waveform table. The last time point in a [Composite Current] table must be the same as the last time point in the parent waveform table."
+      ],
+      "numeric_level": 4,
+      "optional": false,
+      "section_id": "5.8",
+      "section_title": "Model I-T Table Requirements",
+      "ibis_keywords": [
+        "[Composite Current]"
+      ],
+      "automation": {
+        "class": "auto",
+        "rationale": "Compare first/last time points against the parent V-T waveform.",
+        "how": "Compare first and last time points of each [Composite Current] table to the parent waveform time range."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.8.3",
+      "level": "LEVEL 4",
+      "title": "[Composite Current] waveforms must be time-aligned with corresponding V-T waveforms",
+      "source_line": 909,
+      "paragraphs": [
+        "Each time point in the [Composite Current] table shows the current associated with the same time point (actual or interpolated) in the associated rising or falling waveform table. An indication of this being correct is that the maximum current value in a column (typ, min, max) is at a time point near the middle of the transition (high to low or low to high) of the parent waveform table."
+      ],
+      "numeric_level": 4,
+      "optional": false,
+      "section_id": "5.8",
+      "section_title": "Model I-T Table Requirements",
+      "ibis_keywords": [
+        "[Composite Current]"
+      ],
+      "automation": {
+        "class": "semi_auto",
+        "rationale": "Time alignment can be measured, but expected current peak shape may need review.",
+        "how": "Interpolate composite-current and V-T data onto a common time grid, verify current peaks align with the transition region, and plot evidence."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.8.4",
+      "level": "LEVEL 4",
+      "title": "[Composite Current] includes pre-driver behavior",
+      "source_line": 913,
+      "paragraphs": [
+        "This requirement applies when the pre-driver draws current from the Pullup Reference node, the same power supply as the main driver. In keeping with the check for time-correlated current and voltage, the",
+        "rising and falling waveform tables might need to be delayed with some inactive section at the beginning to allow time in the [Composite Current] table to represent the activity of the pre-driver circuit. This requirement can be checked by looking for significant changes in the [Composite Current] curve before the associated voltage waveform shows its transition."
+      ],
+      "numeric_level": 4,
+      "optional": false,
+      "section_id": "5.8",
+      "section_title": "Model I-T Table Requirements",
+      "ibis_keywords": [
+        "[Composite Current]"
+      ],
+      "automation": {
+        "class": "manual",
+        "rationale": "Pre-driver current inclusion requires circuit/extraction knowledge.",
+        "how": "Review extraction/circuit documentation and waveform timing to determine whether pre-driver current is included when it draws from the pullup reference rail."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.8.5",
+      "level": "LEVEL 4",
+      "title": "Start and end points [Composite Current] values correlate with pullup and pulldown tables",
+      "source_line": 923,
+      "paragraphs": [
+        "Like the start and end voltage values that ibischk7 calculates for rising and falling waveforms, the calculated current values from the load-line evaluation should match the start and end current values of the [Composite Current] tables.",
+        "The requirement might not apply in all models since the [Composite Current] is measured at the Pullup Reference node and the pullup and pulldown currents are measured at the signal pin. If the currents are not equal, the model should include a comment to explain why the model is still correct. Such a comment waives this requirement."
+      ],
+      "numeric_level": 4,
+      "optional": false,
+      "section_id": "5.8",
+      "section_title": "Model I-T Table Requirements",
+      "ibis_keywords": [
+        "[Composite Current]"
+      ],
+      "automation": {
+        "class": "semi_auto",
+        "rationale": "Endpoint current load-line checks can be computed; waived cases need comments.",
+        "how": "Compute load-line endpoint currents from pullup/pulldown tables and compare with [Composite Current] start/end values; require comments for waived cases."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.8.6",
+      "level": "LEVEL 4",
+      "title": "[Composite Current] data includes current from correct voltage rails",
+      "source_line": 929,
+      "paragraphs": [
+        "When a buffer circuit has more than one voltage supply node connected to [Pullup Reference] or [Voltage Range], the multiple currents into the circuit must be added to produce the values in the [Composite Current] table. The [Composite Current] table values do not include current from the [POWER Clamp Reference] node when the [Pin Mapping] data specifies a different bus_label for the power-clamp reference bus.",
+        "This requirement cannot be checked from the data in the IBIS file. The connections or assumptions of the data extraction should be documented in the file."
+      ],
+      "numeric_level": 4,
+      "optional": false,
+      "section_id": "5.8",
+      "section_title": "Model I-T Table Requirements",
+      "ibis_keywords": [
+        "[Composite Current]",
+        "[POWER Clamp Reference]",
+        "[Pin Mapping]",
+        "[Pullup Reference]",
+        "[Voltage Range]"
+      ],
+      "automation": {
+        "class": "manual",
+        "rationale": "Correct supply-rail aggregation cannot be proven from the IBIS file alone.",
+        "how": "Review extraction documentation for multi-rail current aggregation and confirm excluded rails match [Pin Mapping] bus-label intent."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.8.7",
+      "level": "LEVEL 4",
+      "title": "[Composite Current] curve is flat at start and end",
+      "source_line": 935,
+      "paragraphs": [
+        "The start and end values of a [Composite Current] table might be non-zero, but the derivative of the curve should be 0. A non-zero derivative at the start or end of the curve indicates that some activity was not captured in the time range of the waveform."
+      ],
+      "numeric_level": 4,
+      "optional": false,
+      "section_id": "5.8",
+      "section_title": "Model I-T Table Requirements",
+      "ibis_keywords": [
+        "[Composite Current]"
+      ],
+      "automation": {
+        "class": "semi_auto",
+        "rationale": "Start/end derivative flatness can be measured numerically.",
+        "how": "Estimate the derivative of [Composite Current] at the start and end of each table and flag non-flat endpoints."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.8.8",
+      "level": "LEVEL 4",
+      "title": "[Composite Current] table values should start or end at 0 when V_fixture = 0",
+      "source_line": 939,
+      "paragraphs": [
+        "If V_fixture = 0 in a [Falling Waveform] table, then the [Composite Current] table should end with a value of 0 amps. If V_fixture = 0 in a [Rising Waveform] table, then the [Composite Current] table should start with a value of 0 amps. Even very small current values can add up to an erroneous current flow in a multi-buffer simulation."
+      ],
+      "numeric_level": 4,
+      "optional": false,
+      "section_id": "5.8",
+      "section_title": "Model I-T Table Requirements",
+      "ibis_keywords": [
+        "[Composite Current]",
+        "[Falling Waveform]",
+        "[Rising Waveform]"
+      ],
+      "automation": {
+        "class": "auto",
+        "rationale": "V_fixture=0 start/end zero-current rules can be checked from waveform data.",
+        "how": "When V_fixture = 0, check that falling-waveform composite current ends at 0 A and rising-waveform composite current starts at 0 A."
+      }
+    }
+  ],
+  "workbook": {
+    "sheets": [
+      "summary",
+      "components()",
+      "models()"
+    ],
+    "checklist_entries": [
+      {
+        "sheet": "summary",
+        "row": 32,
+        "spec_ref": "3.0",
+        "level": "LEVEL 0",
+        "description": "IBIS file passes IBISCHK",
+        "default_result": "---"
+      },
+      {
+        "sheet": "components()",
+        "row": 16,
+        "spec_ref": "3.1.1",
+        "level": "LEVEL 2",
+        "description": "[Package] must have typ/min/max values",
+        "default_result": "---"
+      },
+      {
+        "sheet": "components()",
+        "row": 17,
+        "spec_ref": "3.1.2",
+        "level": "LEVEL 2",
+        "description": "[Package] parasitics must be reasonable",
+        "default_result": "---"
+      },
+      {
+        "sheet": "components()",
+        "row": 18,
+        "spec_ref": "3.1.3",
+        "level": "LEVEL 4",
+        "description": "Package model includes power and ground pins",
+        "default_result": "---"
+      },
+      {
+        "sheet": "components()",
+        "row": 19,
+        "spec_ref": "3.1.4",
+        "level": "LEVEL 4",
+        "description": "On-die and on-package decoupling included",
+        "default_result": "---"
+      },
+      {
+        "sheet": "components()",
+        "row": 20,
+        "spec_ref": "3.2.1",
+        "level": "LEVEL 2",
+        "description": "[Pin] section complete",
+        "default_result": "---"
+      },
+      {
+        "sheet": "components()",
+        "row": 21,
+        "spec_ref": "3.2.2",
+        "level": "LEVEL 3",
+        "description": "[Pin] RLC parasitics are present and reasonable",
+        "default_result": "---"
+      },
+      {
+        "sheet": "components()",
+        "row": 22,
+        "spec_ref": "3.3.1",
+        "level": "LEVEL 2",
+        "description": "[Diff Pin] referenced pin models matched",
+        "default_result": "---"
+      },
+      {
+        "sheet": "components()",
+        "row": 23,
+        "spec_ref": "3.3.2",
+        "level": "LEVEL 3",
+        "description": "[Diff Pin] Vdiff and Tdelay_* complete and reasonable",
+        "default_result": "---"
+      },
+      {
+        "sheet": "components()",
+        "row": 24,
+        "spec_ref": "3.4.1",
+        "level": "LEVEL 4",
+        "description": "[Pin Mapping] section is included for each component",
+        "default_result": "---"
+      },
+      {
+        "sheet": "components()",
+        "row": 25,
+        "spec_ref": "3.4.2",
+        "level": "LEVEL 4",
+        "description": "[Pin Mapping] table includes power and ground pins",
+        "default_result": "---"
+      },
+      {
+        "sheet": "components()",
+        "row": 26,
+        "spec_ref": "3.4.3",
+        "level": "LEVEL 4",
+        "description": "If the package model merges pins, then the [Merged Pins] keyword must be defined",
+        "default_result": "---"
+      },
+      {
+        "sheet": "components()",
+        "row": 27,
+        "spec_ref": "4.1",
+        "level": "LEVEL 2",
+        "description": "[Model Selector] entries have reasonable descriptions",
+        "default_result": "---"
+      },
+      {
+        "sheet": "components()",
+        "row": 28,
+        "spec_ref": "4.2",
+        "level": "LEVEL 2",
+        "description": "Default [Model Selector] entries are consistent",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 16,
+        "spec_ref": "5.1.1",
+        "level": "LEVEL 2",
+        "description": "[Model] parameters have correct typ/min/max order",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 17,
+        "spec_ref": "5.1.2",
+        "level": "LEVEL 2",
+        "description": "[Model] C_comp is reasonable",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 18,
+        "spec_ref": "5.1.3",
+        "level": "LEVEL 2",
+        "description": "[Temperature Range] is reasonable",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 19,
+        "spec_ref": "5.1.4",
+        "level": "LEVEL 2",
+        "description": "[Voltage Range] or [* Reference] is reasonable",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 20,
+        "spec_ref": "5.2.1",
+        "level": "LEVEL 3",
+        "description": "[Model] Vinl and Vinh reasonable",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 21,
+        "spec_ref": "5.2.2",
+        "level": "LEVEL 3",
+        "description": "[Model Spec] Vinl and Vinh reasonable",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 22,
+        "spec_ref": "5.2.3",
+        "level": "LEVEL 3",
+        "description": "[Model Spec] Vinl+/- and Vinh+/- complete and reasonable",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 23,
+        "spec_ref": "5.2.5",
+        "level": "LEVEL 2",
+        "description": "[Model Spec] S_Overshoot subparameters complete and match data sheet",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 24,
+        "spec_ref": "5.2.6",
+        "level": "LEVEL 2",
+        "description": "[Model Spec] S_Overshoot subparameters track typ/min/max",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 25,
+        "spec_ref": "5.2.7",
+        "level": "LEVEL 2",
+        "description": "[Model Spec] D_Overshoot_* subparameters complete and match data sheet",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 26,
+        "spec_ref": "5.2.8",
+        "level": "LEVEL 2",
+        "description": "[Model Spec] D_Overshoot_* subparameters track typ/min/max",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 27,
+        "spec_ref": "5.2.9",
+        "level": "LEVEL 3",
+        "description": "[Receiver Thresholds] Vth present and matches data sheet, if needed",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 28,
+        "spec_ref": "5.2.10",
+        "level": "LEVEL 3",
+        "description": "[Receiver Thresholds] Vth_min and Vth_max present and match data sheet, if needed",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 29,
+        "spec_ref": "5.2.11",
+        "level": "LEVEL 3",
+        "description": "[Receiver Thresholds] Vinh_ac, Vinl_ac present and match data sheet, if needed",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 30,
+        "spec_ref": "5.2.12",
+        "level": "LEVEL 3",
+        "description": "[Receiver Thresholds] Vinh_dc, Vinl_dc present and match data sheet, if needed",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 31,
+        "spec_ref": "5.2.13",
+        "level": "LEVEL 3",
+        "description": "[Receiver Thresholds] Tslew_ac/Tdiffslew_ac present and match data sheet, if needed",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 32,
+        "spec_ref": "5.2.14",
+        "level": "LEVEL 3",
+        "description": "[Receiver Thresholds] Threshold_sensitivity and Ext_ref present and match data sheet, if needed",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 33,
+        "spec_ref": "5.3.1",
+        "level": "LEVEL 2",
+        "description": "I-V tables have correct typ/min/max order",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 34,
+        "spec_ref": "5.3.2",
+        "level": "LEVEL 2",
+        "description": "[Pullup] voltage sweep range is correct",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 35,
+        "spec_ref": "5.3.3",
+        "level": "LEVEL 2",
+        "description": "[Pulldown] voltage sweep range is correct",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 36,
+        "spec_ref": "5.3.4",
+        "level": "LEVEL 2",
+        "description": "[POWER Clamp] voltage sweep range is correct",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 37,
+        "spec_ref": "5.3.5",
+        "level": "LEVEL 2",
+        "description": "[GND Clamp] voltage sweep range is correct",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 38,
+        "spec_ref": "5.3.6",
+        "level": "LEVEL 2",
+        "description": "I-V tables do not exhibit stair-stepping",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 39,
+        "spec_ref": "5.3.7",
+        "level": "LEVEL 2",
+        "description": "Combined I-V tables are monotonic",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 40,
+        "spec_ref": "5.3.8",
+        "level": "LEVEL 2",
+        "description": "[Pulldown] I-V tables pass through zero/zero",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 41,
+        "spec_ref": "5.3.9",
+        "level": "LEVEL 2",
+        "description": "[Pullup] I-V tables pass through zero/zero",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 42,
+        "spec_ref": "5.3.10",
+        "level": "LEVEL 2",
+        "description": "No leakage current in clamp I-V tables",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 43,
+        "spec_ref": "5.3.11",
+        "level": "LEVEL 2",
+        "description": "I-V behavior not double-counted",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 44,
+        "spec_ref": "5.3.12",
+        "level": "LEVEL 2",
+        "description": "On-die termination modeling documented",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 45,
+        "spec_ref": "5.3.13",
+        "level": "LEVEL 2",
+        "description": "ECL models I-V tables swept from -Vcc to +2 * Vcc.",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 46,
+        "spec_ref": "5.3.14",
+        "level": "LEVEL 2",
+        "description": "Point distributions in I-V tables should be sufficient",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 47,
+        "spec_ref": "5.4.1",
+        "level": "LEVEL 2",
+        "description": "Output and I/O buffers have sufficient V-T tables",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 48,
+        "spec_ref": "5.4.2",
+        "level": "LEVEL 2",
+        "description": "V-T tables have reasonable point distribution",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 49,
+        "spec_ref": "5.4.3",
+        "level": "LEVEL 3",
+        "description": "V-T table duration is not excessive",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 50,
+        "spec_ref": "5.4.4",
+        "level": "LEVEL 2",
+        "description": "V-T table endpoints match fixture voltages",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 51,
+        "spec_ref": "5.5.1",
+        "level": "LEVEL 2",
+        "description": "[Ramp] R_load present if value other than 50 ohms",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 52,
+        "spec_ref": "5.5.2",
+        "level": "LEVEL 2",
+        "description": "[Ramp] typ/min/max order is correct",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 53,
+        "spec_ref": "5.5.3",
+        "level": "LEVEL 2",
+        "description": "[Ramp] dV consistent with I-V table calculations",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 54,
+        "spec_ref": "5.5.4",
+        "level": "LEVEL 2",
+        "description": "[Ramp] dt is consistent with 20%-80% crossing time",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 55,
+        "spec_ref": "5.6.1",
+        "level": "LEVEL 3",
+        "description": "[Model Spec] Vmeas and Vref used if typ/min/max variation",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 56,
+        "spec_ref": "5.6.2",
+        "level": "LEVEL 3",
+        "description": "Vref consistent for Open-drain, Open-source, and ECL Model_types",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 57,
+        "spec_ref": "5.7.1",
+        "level": "LEVEL 4",
+        "description": "All output-capable models include [ISSO PU] and [ISSO PD] tables",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 58,
+        "spec_ref": "5.7.2",
+        "level": "LEVEL 4",
+        "description": "ISSO tables have correct typ/min/max order",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 59,
+        "spec_ref": "5.7.3",
+        "level": "LEVEL 4",
+        "description": "ISSO tables have sufficient point distribution",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 60,
+        "spec_ref": "5.7.4",
+        "level": "LEVEL 4",
+        "description": "ISSO tables voltage sweep range is correct",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 61,
+        "spec_ref": "5.8.1",
+        "level": "LEVEL 4",
+        "description": "Each [Rising Waveform] and [Falling Waveform] table includes a [Composite Current] table",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 62,
+        "spec_ref": "5.8.2",
+        "level": "LEVEL 4",
+        "description": "[Composite Current] waveform data points cover the same time range as the corresponding V-T waveforms",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 63,
+        "spec_ref": "5.8.3",
+        "level": "LEVEL 4",
+        "description": "[Composite Current] waveforms must be time-aligned with corresponding V-T waveforms",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 64,
+        "spec_ref": "5.8.4",
+        "level": "LEVEL 4",
+        "description": "[Composite Current] includes pre-driver behavior",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 65,
+        "spec_ref": "5.8.5",
+        "level": "LEVEL 4",
+        "description": "Start and end points [Composite Current] values correlate with pullup and pulldown tables",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 66,
+        "spec_ref": "5.8.6",
+        "level": "LEVEL 4",
+        "description": "[Composite Current] data includes current from correct voltage rails",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 67,
+        "spec_ref": "5.8.7",
+        "level": "LEVEL 4",
+        "description": "[Composite Current] curve is flat at start and end",
+        "default_result": "---"
+      },
+      {
+        "sheet": "models()",
+        "row": 68,
+        "spec_ref": "5.8.8",
+        "level": "LEVEL 4",
+        "description": "[Composite Current] table values should start or end at 0 when V_fixture = 0",
+        "default_result": "---"
+      }
+    ]
+  },
+  "coverage": {
+    "spec_check_count": 68,
+    "workbook_check_count": 67,
+    "spec_check_ids": [
+      "2.1",
+      "3.1.1",
+      "3.1.2",
+      "3.1.3",
+      "3.1.4",
+      "3.2.1",
+      "3.2.2",
+      "3.3.1",
+      "3.3.2",
+      "3.4.1",
+      "3.4.2",
+      "3.4.3",
+      "4.1",
+      "4.2",
+      "5.1.1",
+      "5.1.2",
+      "5.1.3",
+      "5.1.4",
+      "5.2.1",
+      "5.2.2",
+      "5.2.3",
+      "5.2.4",
+      "5.2.5",
+      "5.2.6",
+      "5.2.7",
+      "5.2.8",
+      "5.2.9",
+      "5.2.10",
+      "5.2.11",
+      "5.2.12",
+      "5.2.13",
+      "5.2.14",
+      "5.3.1",
+      "5.3.2",
+      "5.3.3",
+      "5.3.4",
+      "5.3.5",
+      "5.3.6",
+      "5.3.7",
+      "5.3.8",
+      "5.3.9",
+      "5.3.10",
+      "5.3.11",
+      "5.3.12",
+      "5.3.13",
+      "5.3.14",
+      "5.4.1",
+      "5.4.2",
+      "5.4.3",
+      "5.4.4",
+      "5.5.1",
+      "5.5.2",
+      "5.5.3",
+      "5.5.4",
+      "5.6.1",
+      "5.6.2",
+      "5.7.1",
+      "5.7.2",
+      "5.7.3",
+      "5.7.4",
+      "5.8.1",
+      "5.8.2",
+      "5.8.3",
+      "5.8.4",
+      "5.8.5",
+      "5.8.6",
+      "5.8.7",
+      "5.8.8"
+    ],
+    "workbook_check_ids": [
+      "3.0",
+      "3.1.1",
+      "3.1.2",
+      "3.1.3",
+      "3.1.4",
+      "3.2.1",
+      "3.2.2",
+      "3.3.1",
+      "3.3.2",
+      "3.4.1",
+      "3.4.2",
+      "3.4.3",
+      "4.1",
+      "4.2",
+      "5.1.1",
+      "5.1.2",
+      "5.1.3",
+      "5.1.4",
+      "5.2.1",
+      "5.2.2",
+      "5.2.3",
+      "5.2.5",
+      "5.2.6",
+      "5.2.7",
+      "5.2.8",
+      "5.2.9",
+      "5.2.10",
+      "5.2.11",
+      "5.2.12",
+      "5.2.13",
+      "5.2.14",
+      "5.3.1",
+      "5.3.2",
+      "5.3.3",
+      "5.3.4",
+      "5.3.5",
+      "5.3.6",
+      "5.3.7",
+      "5.3.8",
+      "5.3.9",
+      "5.3.10",
+      "5.3.11",
+      "5.3.12",
+      "5.3.13",
+      "5.3.14",
+      "5.4.1",
+      "5.4.2",
+      "5.4.3",
+      "5.4.4",
+      "5.5.1",
+      "5.5.2",
+      "5.5.3",
+      "5.5.4",
+      "5.6.1",
+      "5.6.2",
+      "5.7.1",
+      "5.7.2",
+      "5.7.3",
+      "5.7.4",
+      "5.8.1",
+      "5.8.2",
+      "5.8.3",
+      "5.8.4",
+      "5.8.5",
+      "5.8.6",
+      "5.8.7",
+      "5.8.8"
+    ],
+    "in_spec_not_workbook": [
+      "5.2.4"
+    ],
+    "in_workbook_not_spec": [
+      "3.0"
+    ],
+    "known_mismatches": [
+      {
+        "type": "reference_id",
+        "workbook_ref": "3.0",
+        "spec_ref": "2.1",
+        "description": "Workbook summary uses 3.0 for 'IBIS file passes IBISCHK'; the PDF section is 2.1."
+      },
+      {
+        "type": "missing_optional",
+        "spec_ref": "5.2.4",
+        "description": "The PDF has an OPTIONAL Pulse subparameter check that is not present in the workbook checklist."
+      }
+    ]
+  }
+}
