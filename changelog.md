@@ -15,6 +15,7 @@
 - Kept the existing top-level `results` array for backward compatibility, now enriched with `scope`, `component_name`, `model_name`, and `package_model_name`.
 - Added `tools/render_qa_methods.py` so `docs/qa-methods.md` can be regenerated from `data/ibis_quality_spec_3_0.json` without rebuilding or overwriting the manually edited JSON.
 - Made `tools/render_qa_methods.py` report output paths correctly even when `--output` points outside the repository.
+- Implemented check `5.3.1` for I-V table row shape and active-region typ/min/max current ordering.
 
 ### Tested
 
@@ -22,11 +23,12 @@
 
 | File | PASS | FAIL | WARN | NA | ERROR |
 |---|---:|---:|---:|---:|---:|
-| `y32a.ibs` | 307 | 106 | 7 | 270 | 0 |
-| `z41c.ibs` | 239 | 83 | 7 | 184 | 0 |
-| `z41c_it.ibs` | 245 | 77 | 7 | 184 | 0 |
+| `y32a.ibs` | 446 | 106 | 7 | 270 | 0 |
+| `z41c.ibs` | 336 | 83 | 7 | 184 | 0 |
+| `z41c_it.ibs` | 342 | 77 | 7 | 184 | 0 |
 
 - IBISCHK reported `0 errors, 0 warning(s)` for all three Micron files.
+- Check `5.3.1` produced no failures for the Micron files.
 - All Micron report results were classified into file, component, model, or package-model scopes; `ungrouped_results` is empty for all three reports.
 
 ### Updated Artifacts

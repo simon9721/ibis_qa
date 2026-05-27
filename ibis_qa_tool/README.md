@@ -18,13 +18,13 @@ how much can be verified from the IBIS file alone:
 
 | Class | Count | Meaning |
 |-------|------:|---------|
-| `auto` | 17 | Fully deterministic — parser rules and numeric checks, no reviewer needed |
-| `semi_auto` | 30 | Tool computes evidence; reviewer confirms edge cases or technology exceptions |
+| `auto` | 22 | Fully deterministic — parser rules and numeric checks, no reviewer needed |
+| `semi_auto` | 25 | Tool computes evidence; reviewer confirms edge cases or technology exceptions |
 | `manual` | 20 | Requires external data — datasheet, SPICE model, or extraction documentation |
 | `optional` | 1 | Good practice; does not affect the IQ score |
 
-This tool currently implements **22 of the 17 `auto` checks** (all of them,
-plus a few partially-automatable `semi_auto` checks) and produces a
+This tool currently implements all **22 `auto` checks** plus the auto portion
+of a few `semi_auto` checks, and produces a
 structured report that surfaces evidence for the remaining checks so a
 reviewer can work efficiently.
 
@@ -102,7 +102,7 @@ ibis_qa/
     ├── c2_1_ibischk.py          Check 2.1
     ├── c3_1_package.py          Checks 3.1.1, 3.1.2
     ├── c3_component_structural.py   Checks 3.2.2, 3.3.1, 3.3.2, 3.4.1, 3.4.3
-    ├── c5_3_iv_tables.py        Checks 5.3.2–5.3.9, 5.3.13, 5.3.7
+    ├── c5_3_iv_tables.py        Checks 5.3.1–5.3.9, 5.3.13
     ├── c5_ramp_waveform.py      Checks 5.5.1, 5.5.3, 5.8.1, 5.8.2, 5.8.8
     └── c5_7_isso.py             Check 5.7.1
 ```
@@ -146,7 +146,7 @@ unresolved warnings.
 | 5.2.6 | `[Model Spec]` S_Overshoot track typ/min/max | `semi_auto` | ⬜ not yet |
 | 5.2.7 | `[Model Spec]` D_Overshoot complete and match datasheet | `manual` | — out of scope |
 | 5.2.8 | `[Model Spec]` D_Overshoot track typ/min/max | `semi_auto` | ⬜ not yet |
-| 5.3.1 | I-V tables have correct typ/min/max order | `semi_auto` | ⬜ not yet |
+| 5.3.1 | I-V tables have correct typ/min/max order | `auto` | ✅ implemented |
 | 5.3.2 | `[Pullup]` voltage sweep range is correct | `auto` | ✅ implemented |
 | 5.3.3 | `[Pulldown]` voltage sweep range is correct | `auto` | ✅ implemented |
 | 5.3.4 | `[POWER Clamp]` voltage sweep range is correct | `auto` | ✅ implemented |

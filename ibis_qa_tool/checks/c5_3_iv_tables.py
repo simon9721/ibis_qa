@@ -16,7 +16,8 @@ from typing import Optional, TYPE_CHECKING
 
 from checks.base import CheckModule, CheckResult, Status
 from config import (
-    IV_RANGE_TOLERANCE, MONO_TOLERANCE_A,
+    IV_RANGE_TOLERANCE, IV_ORDER_ABS_TOL_A, IV_ORDER_REL_TOL,
+    MONO_TOLERANCE_A,
     ZERO_CROSS_TOL_A, ZERO_CROSS_EXCEPTIONS, ECL_TYPES,
     OUTPUT_TYPES, INPUT_TYPES
 )
@@ -26,8 +27,8 @@ if TYPE_CHECKING:
 
 
 class Check5_3_IVSweep(CheckModule):
-    """Checks 5.3.2–5.3.5, 5.3.8, 5.3.9, 5.3.13, 5.3.7"""
-    check_ids  = ["5.3.2", "5.3.3", "5.3.4", "5.3.5",
+    """Checks 5.3.1–5.3.5, 5.3.7–5.3.9, 5.3.13"""
+    check_ids  = ["5.3.1", "5.3.2", "5.3.3", "5.3.4", "5.3.5",
                   "5.3.7", "5.3.8", "5.3.9", "5.3.13"]
     iq_level   = "LEVEL 2"
     auto_class = "auto"
@@ -44,6 +45,9 @@ class Check5_3_IVSweep(CheckModule):
         subj = model.name
         vcc = model.resolve_vcc()
         pwr_vcc = model.resolve_power_clamp_vcc()
+
+        # 5.3.1: I-V column order and typ/min/max current ordering
+        results.extend(self._check_iv_table_order(subj, model))
 
         # ── 5.3.2: [Pullup] sweep ────────────────────────────────────────────
         if model.pullup is not None and vcc is not None:
@@ -117,6 +121,80 @@ class Check5_3_IVSweep(CheckModule):
         else:
             # Only emit NA if the model has I-V tables (otherwise too noisy)
             pass
+
+        return results
+
+    def _check_iv_table_order(self, subj: str, model: "Model") -> list[CheckResult]:
+        results = []
+        tables = {
+            "[Pulldown]": model.pulldown,
+            "[Pullup]": model.pullup,
+            "[GND Clamp]": model.gnd_clamp,
+            "[POWER Clamp]": model.power_clamp,
+        }
+
+        for label, table in tables.items():
+            if table is None:
+                continue
+            if not table.rows:
+                results.append(self._error("5.3.1", subj,
+                    f"{label}: table is empty",
+                    spec_ref="Quality Spec §5.3.1"))
+                continue
+
+            malformed = []
+            ordering_issues = []
+            for row_index, row in enumerate(table.rows, start=1):
+                if len(row) < 4 or any(value is None for value in row[:4]):
+                    malformed.append(f"Row {row_index}: expected voltage typ min max")
+                    continue
+
+                if label not in ("[Pulldown]", "[Pullup]"):
+                    continue
+
+                voltage, typ, min_current, max_current = row[:4]
+                vcc = model.resolve_vcc()
+                if vcc is None or not (0.0 < voltage < vcc):
+                    continue
+
+                min_abs = abs(min_current)
+                typ_abs = abs(typ)
+                max_abs = abs(max_current)
+                peak = max(min_abs, typ_abs, max_abs)
+                tolerance = max(IV_ORDER_ABS_TOL_A, peak * IV_ORDER_REL_TOL)
+                nearly_overlay = max(min_abs, typ_abs, max_abs) - min(min_abs, typ_abs, max_abs) <= tolerance
+                if nearly_overlay:
+                    continue
+
+                if typ_abs + tolerance < min_abs or max_abs + tolerance < typ_abs:
+                    ordering_issues.append(
+                        f"Row {row_index} V={voltage:.4g}: "
+                        f"|min|={min_abs:.4g}A, |typ|={typ_abs:.4g}A, "
+                        f"|max|={max_abs:.4g}A")
+
+            if malformed:
+                results.append(self._fail("5.3.1", subj,
+                    f"{label} row format is not voltage/typ/min/max",
+                    details=malformed[:10],
+                    spec_ref="Quality Spec §5.3.1"))
+            elif ordering_issues and label == "[POWER Clamp]":
+                results.append(self._warn("5.3.1", subj,
+                    f"{label} typ/min/max ordering has clamp-region crossover(s)",
+                    details=ordering_issues[:10],
+                    spec_ref="Quality Spec §5.3.1"))
+            elif ordering_issues:
+                results.append(self._fail("5.3.1", subj,
+                    f"{label} typ/min/max current ordering violated",
+                    details=ordering_issues[:10],
+                    spec_ref="Quality Spec §5.3.1"))
+            else:
+                if label in ("[Pulldown]", "[Pullup]"):
+                    msg = f"{label} rows are voltage/typ/min/max with expected active-region corner ordering"
+                else:
+                    msg = f"{label} rows are voltage/typ/min/max"
+                results.append(self._pass("5.3.1", subj,
+                    msg,
+                    spec_ref="Quality Spec §5.3.1"))
 
         return results
 

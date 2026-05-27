@@ -28,6 +28,9 @@ IV_RANGE_TOLERANCE = 0.02      # 2% of Vcc allowed shortfall at endpoints
 MONO_TOLERANCE_A   = 1e-9      # 1 nA — current differences smaller than this
                                 # are treated as equal (floating-point noise)
 
+IV_ORDER_ABS_TOL_A = 1e-9      # 1 nA absolute tolerance for near-overlay curves
+IV_ORDER_REL_TOL   = 0.01      # 1% relative tolerance for corner ordering
+
 # ── 5.3.8 / 5.3.9 Zero-crossing tolerance ────────────────────────────────────
 ZERO_CROSS_TOL_A   = 1e-6      # 1 µA — max |I| at 0V for PASS
 
