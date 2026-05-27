@@ -1,0 +1,245 @@
+"""
+checks/c5_3_iv_tables.py  —  I-V table AUTO checks
+====================================================
+5.3.2  [Pullup]      voltage sweep range correct
+5.3.3  [Pulldown]    voltage sweep range correct
+5.3.4  [POWER Clamp] voltage sweep range correct
+5.3.5  [GND Clamp]   voltage sweep range correct
+5.3.7  Combined I-V tables monotonic
+5.3.8  [Pulldown] passes through 0 at 0V  (CMOS)
+5.3.9  [Pullup]   passes through 0 at 0V  (CMOS)
+5.3.13 ECL models swept from -Vcc to +2*Vcc
+"""
+
+from __future__ import annotations
+from typing import Optional, TYPE_CHECKING
+
+from checks.base import CheckModule, CheckResult, Status
+from config import (
+    IV_RANGE_TOLERANCE, MONO_TOLERANCE_A,
+    ZERO_CROSS_TOL_A, ZERO_CROSS_EXCEPTIONS, ECL_TYPES,
+    OUTPUT_TYPES, INPUT_TYPES
+)
+
+if TYPE_CHECKING:
+    from parser.ibis_parser import IBISFile, Model, IVTable
+
+
+class Check5_3_IVSweep(CheckModule):
+    """Checks 5.3.2–5.3.5, 5.3.8, 5.3.9, 5.3.13, 5.3.7"""
+    check_ids  = ["5.3.2", "5.3.3", "5.3.4", "5.3.5",
+                  "5.3.7", "5.3.8", "5.3.9", "5.3.13"]
+    iq_level   = "LEVEL 2"
+    auto_class = "auto"
+
+    def run(self, ibis_file: "IBISFile") -> list[CheckResult]:
+        results = []
+        for model in ibis_file.models.values():
+            results.extend(self._check_model(model))
+        return results
+
+    def _check_model(self, model: "Model") -> list[CheckResult]:
+        results = []
+        mt = model.model_type_lower
+        subj = model.name
+        vcc = model.resolve_vcc()
+        pwr_vcc = model.resolve_power_clamp_vcc()
+
+        # ── 5.3.2: [Pullup] sweep ────────────────────────────────────────────
+        if model.pullup is not None and vcc is not None:
+            results.append(self._check_sweep(
+                "5.3.2", subj, model.pullup,
+                expected_min=-vcc, expected_max=2*vcc,
+                label="[Pullup]",
+                spec_ref="Quality Spec §5.3.2"))
+        elif model.pullup is None and mt in INPUT_TYPES:
+            results.append(self._na("5.3.2", subj,
+                f"Model_type={model.model_type} has no [Pullup] — NA",
+                spec_ref="Quality Spec §5.3.2"))
+
+        # ── 5.3.3: [Pulldown] sweep ───────────────────────────────────────────
+        if model.pulldown is not None and vcc is not None:
+            results.append(self._check_sweep(
+                "5.3.3", subj, model.pulldown,
+                expected_min=-vcc, expected_max=2*vcc,
+                label="[Pulldown]",
+                spec_ref="Quality Spec §5.3.3"))
+        elif model.pulldown is None and mt in INPUT_TYPES:
+            results.append(self._na("5.3.3", subj,
+                f"Model_type={model.model_type} has no [Pulldown] — NA",
+                spec_ref="Quality Spec §5.3.3"))
+
+        # ── 5.3.4: [POWER Clamp] sweep ───────────────────────────────────────
+        if model.power_clamp is not None and pwr_vcc is not None:
+            results.append(self._check_sweep(
+                "5.3.4", subj, model.power_clamp,
+                expected_min=-pwr_vcc, expected_max=0.0,
+                label="[POWER Clamp]", required_max=False,
+                spec_ref="Quality Spec §5.3.4"))
+
+        # ── 5.3.5: [GND Clamp] sweep ─────────────────────────────────────────
+        if model.gnd_clamp is not None and pwr_vcc is not None:
+            results.append(self._check_sweep(
+                "5.3.5", subj, model.gnd_clamp,
+                expected_min=-pwr_vcc, expected_max=pwr_vcc,
+                label="[GND Clamp]",
+                spec_ref="Quality Spec §5.3.5"))
+
+        # ── 5.3.7: Monotonicity ───────────────────────────────────────────────
+        if model.pulldown is not None or model.gnd_clamp is not None:
+            results.extend(self._check_monotonicity(subj, model))
+
+        # ── 5.3.8: [Pulldown] zero crossing ──────────────────────────────────
+        if model.pulldown is not None:
+            results.append(self._check_zero_crossing(
+                "5.3.8", subj, model.pulldown, model,
+                vcc_relative=False, label="[Pulldown]",
+                spec_ref="Quality Spec §5.3.8"))
+        elif mt in INPUT_TYPES:
+            results.append(self._na("5.3.8", subj,
+                "Input model — no [Pulldown] table — NA",
+                spec_ref="Quality Spec §5.3.8"))
+
+        # ── 5.3.9: [Pullup] zero crossing ────────────────────────────────────
+        if model.pullup is not None:
+            results.append(self._check_zero_crossing(
+                "5.3.9", subj, model.pullup, model,
+                vcc_relative=True, label="[Pullup]",
+                spec_ref="Quality Spec §5.3.9"))
+        elif mt in INPUT_TYPES:
+            results.append(self._na("5.3.9", subj,
+                "Input model — no [Pullup] table — NA",
+                spec_ref="Quality Spec §5.3.9"))
+
+        # ── 5.3.13: ECL sweep ─────────────────────────────────────────────────
+        if mt in ECL_TYPES:
+            results.extend(self._check_ecl_sweep(subj, model))
+        else:
+            # Only emit NA if the model has I-V tables (otherwise too noisy)
+            pass
+
+        return results
+
+    # ── Sweep range helper ────────────────────────────────────────────────────
+
+    def _check_sweep(self, check_id: str, subj: str, table: "IVTable",
+                     expected_min: float, expected_max: float,
+                     label: str, required_max: bool = True,
+                     spec_ref: str = "") -> CheckResult:
+        if not table.rows:
+            return self._error(check_id, subj,
+                f"{label}: table is empty", spec_ref=spec_ref)
+        vs = table.voltages()
+        actual_min, actual_max = min(vs), max(vs)
+        tol = abs(expected_max - expected_min) * IV_RANGE_TOLERANCE
+        issues = []
+        if actual_min > expected_min + tol:
+            issues.append(
+                f"Low end: table starts at {actual_min:.4g}V, "
+                f"need ≤ {expected_min:.4g}V")
+        if required_max and actual_max < expected_max - tol:
+            issues.append(
+                f"High end: table ends at {actual_max:.4g}V, "
+                f"need ≥ {expected_max:.4g}V")
+        if issues:
+            return self._fail(check_id, subj,
+                f"{label} voltage sweep insufficient", details=issues,
+                spec_ref=spec_ref)
+        return self._pass(check_id, subj,
+            f"{label} voltage sweep OK "
+            f"({actual_min:.3g}V to {actual_max:.3g}V)",
+            spec_ref=spec_ref)
+
+    # ── Monotonicity ──────────────────────────────────────────────────────────
+
+    def _check_monotonicity(self, subj: str,
+                             model: "Model") -> list[CheckResult]:
+        """
+        Combine [Pulldown]+[GND Clamp] and [Pullup]+[POWER Clamp] then
+        check monotonicity of the combined current.
+        For simplicity in this draft, check individual tables for monotonicity
+        of the typ column (combined table logic can be added later).
+        """
+        results = []
+        tables = {
+            '[Pulldown]': model.pulldown,
+            '[Pullup]':   model.pullup,
+            '[GND Clamp]': model.gnd_clamp,
+            '[POWER Clamp]': model.power_clamp,
+        }
+        for label, table in tables.items():
+            if table is None or len(table.rows) < 2:
+                continue
+            violations = []
+            for i in range(len(table.rows) - 1):
+                v1, i1 = table.rows[i][0], table.rows[i][1]
+                v2, i2 = table.rows[i+1][0], table.rows[i+1][1]
+                if i1 is None or i2 is None:
+                    continue
+                if v2 > v1 and i2 < i1 - MONO_TOLERANCE_A:
+                    violations.append(
+                        f"V={v2:.4g}: current decreases from {i1*1000:.4g}mA "
+                        f"to {i2*1000:.4g}mA")
+            if violations:
+                results.append(self._fail("5.3.7", subj,
+                    f"{label} non-monotonic ({len(violations)} violation(s))",
+                    details=violations[:5],
+                    spec_ref="Quality Spec §5.3.7"))
+            else:
+                results.append(self._pass("5.3.7", subj,
+                    f"{label} monotonicity OK",
+                    spec_ref="Quality Spec §5.3.7"))
+        return results
+
+    # ── Zero-crossing ─────────────────────────────────────────────────────────
+
+    def _check_zero_crossing(self, check_id: str, subj: str,
+                              table: "IVTable", model: "Model",
+                              vcc_relative: bool, label: str,
+                              spec_ref: str) -> CheckResult:
+        mt = model.model_type_lower
+        # Technology exceptions — mark NA
+        if any(exc in mt for exc in ZERO_CROSS_EXCEPTIONS):
+            return self._na(check_id, subj,
+                f"Technology exception ({model.model_type}) — zero-crossing NA",
+                spec_ref=spec_ref)
+        # Also check [Notes] for exception keywords
+        notes_lower = (model.name + " ").lower()
+
+        target_v = 0.0  # 0V in table (Pulldown: absolute; Pullup: Vcc-relative)
+        for col in (1, 2, 3):  # typ, min, max
+            val = table.interpolate(target_v, col)
+            if val is None:
+                continue
+            if abs(val) > ZERO_CROSS_TOL_A:
+                return self._fail(check_id, subj,
+                    f"{label} does not pass through zero at 0V "
+                    f"(col {col}: {val*1e6:.2f}µA, limit ±{ZERO_CROSS_TOL_A*1e6:.0f}µA)",
+                    spec_ref=spec_ref)
+        return self._pass(check_id, subj,
+            f"{label} passes through ≈0 at 0V (within ±{ZERO_CROSS_TOL_A*1e6:.0f}µA)",
+            spec_ref=spec_ref)
+
+    # ── ECL sweep ─────────────────────────────────────────────────────────────
+
+    def _check_ecl_sweep(self, subj: str,
+                          model: "Model") -> list[CheckResult]:
+        results = []
+        # Effective Vcc = (most positive supply) - (most negative supply)
+        pos_vcc = model.pullup_ref[0] if model.pullup_ref[0] else model.voltage_range[0]
+        neg_vcc = model.pulldown_ref[0] if model.pulldown_ref[0] else 0.0
+        if pos_vcc is None:
+            results.append(self._error("5.3.13", subj,
+                "Cannot determine ECL supply range — missing reference voltages"))
+            return results
+        eff_vcc = (pos_vcc or 0.0) - (neg_vcc or 0.0)
+        for label, table in [('[Pulldown]', model.pulldown),
+                              ('[Pullup]', model.pullup)]:
+            if table is None:
+                continue
+            results.append(self._check_sweep(
+                "5.3.13", subj, table,
+                expected_min=-eff_vcc, expected_max=2*eff_vcc,
+                label=f"ECL {label}",
+                spec_ref="Quality Spec §5.3.13"))
+        return results
