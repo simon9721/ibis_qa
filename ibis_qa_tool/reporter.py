@@ -99,10 +99,13 @@ class Reporter:
 
     # ── JSON report ───────────────────────────────────────────────────────────
 
-    def as_json(self) -> str:
+    def as_dict(self) -> dict:
         f = self.ibis_file
-        scoped_results = [self._result_to_dict(r) for r in self.results]
-        out = {
+        scoped_results = [
+            self._result_to_dict(r, result_index)
+            for result_index, r in enumerate(self.results)
+        ]
+        return {
             "file": str(f.path),
             "ibis_ver": f.ibis_ver,
             "file_rev": f.file_rev,
@@ -120,12 +123,25 @@ class Reporter:
                 if r["scope"] == "unknown"
             ],
             "results": scoped_results,
+            "review_queue": [
+                r for r in scoped_results
+                if r["review_required"]
+            ],
             "summary": {
                 s.value: sum(1 for r in self.results if r.status == s)
                 for s in Status
-            }
+            },
+            "review_summary": {
+                "review_required": sum(1 for r in scoped_results if r["review_required"]),
+                "semi_auto_results": sum(
+                    1 for r in scoped_results
+                    if r["automation_class"] == "semi_auto"
+                ),
+            },
         }
-        return json.dumps(out, indent=2)
+
+    def as_json(self) -> str:
+        return json.dumps(self.as_dict(), indent=2)
 
     # ── Helpers ───────────────────────────────────────────────────────────────
 
@@ -160,9 +176,10 @@ class Reporter:
             "package_model_count": len(f.pkg_models),
         }
 
-    def _result_to_dict(self, r: CheckResult) -> dict:
+    def _result_to_dict(self, r: CheckResult, result_index: int) -> dict:
         scope_info = self._scope_for_subject(r.subject)
         return {
+            "result_id": f"R{result_index:05d}",
             "check_id": r.check_id,
             "status": r.status.value,
             "scope": scope_info["scope"],

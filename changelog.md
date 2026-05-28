@@ -18,6 +18,8 @@
 - Implemented check `5.3.1` for I-V table row shape and active-region typ/min/max current ordering.
 - Added semi-auto evidence collectors for all 25 `semi_auto` checks in `data/ibis_quality_spec_3_0.json`, including structural, I-V, V-T, Ramp, ISSO, and Composite Current evidence.
 - Added `automation_class` and `review_required` fields to JSON result entries.
+- Added stable `result_id`, top-level `review_queue`, and `review_summary` fields to JSON reports so semi-auto review decisions can be tied back to specific generated findings.
+- Added a standard-library Tkinter GUI at `ibis_qa_tool/gui.py` for choosing an IBIS file, running QA, reviewing semi-auto evidence, entering reviewer comments, choosing decisions, and exporting separate `*.review.json` decision files.
 - Configured CLI stdout/stderr as UTF-8 on Python builds that support stream reconfiguration, preventing Windows text-report encoding errors.
 
 ### Tested
@@ -38,6 +40,7 @@
   - `z41c_it.ibs`: 28 review items
 - Judgment note: semi-auto evidence uses `WARN` with `review_required=true` instead of hard `FAIL` unless a finding is already covered by an auto check, because these checks depend on technology intent, datasheet comparison, or visual/engineering review.
 - All Micron report results were classified into file, component, model, or package-model scopes; `ungrouped_results` is empty for all three reports.
+- Verified the new GUI module imports cleanly and the CLI JSON output includes the new review workflow fields.
 
 ### Updated Artifacts
 

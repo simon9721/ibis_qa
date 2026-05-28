@@ -49,7 +49,24 @@ python ibis_qa.py my_model.ibs --verbose
 
 # Structured JSON output for downstream tooling
 python ibis_qa.py my_model.ibs --json > report.json
+
+# Simple GUI for running QA and recording semi-auto review decisions
+python gui.py
 ```
+
+From the repository root, launch the same GUI with:
+
+```powershell
+python ibis_qa_tool\gui.py
+```
+
+### GUI review workflow
+
+The GUI lets a reviewer choose an IBIS file, run the same parser/checker
+pipeline as the CLI, inspect non-passing findings, and work through the
+semi-auto `review_required` queue. Reviewer decisions are saved separately
+as `*.review.json`, preserving the generated QA report and attaching each
+comment/decision to a stable `result_id`.
 
 ### Sample output
 
@@ -91,6 +108,7 @@ SUMMARY
 ```
 ibis_qa/
 ├── ibis_qa.py                   Entry point (CLI)
+├── gui.py                       Tkinter GUI for QA review workflow
 ├── config.py                    All numeric tolerances — tune here
 ├── runner.py                    Auto-discovers and runs all check modules
 ├── reporter.py                  Text and JSON output formatting
