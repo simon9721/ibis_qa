@@ -47,8 +47,16 @@ def parse_si(s: str) -> Optional[float]:
     return mantissa * _SI.get(prefix, 1.0)
 
 
+def strip_assignment(tokens: list[str]) -> list[str]:
+    """Allow IBIS scalar forms such as ``Vref = 1.2V`` and ``Vref 1.2V``."""
+    if tokens and tokens[0] == "=":
+        return tokens[1:]
+    return tokens
+
+
 def parse_typ_min_max(tokens: list[str]) -> tuple[Optional[float], Optional[float], Optional[float]]:
     """Parse up to 3 whitespace-separated values as (typ, min, max)."""
+    tokens = strip_assignment(tokens)
     vals = [parse_si(t) for t in tokens[:3]]
     while len(vals) < 3:
         vals.append(None)
@@ -241,6 +249,7 @@ class Model:
     model_spec:     Optional[ModelSpec]         = None
     receiver_thresholds: Optional[ReceiverThresholds] = None
     add_submodels:  list[str]                   = field(default_factory=list)
+    commented_model_spec_fields: set[str]       = field(default_factory=set)
     # Derived helpers
     model_type_lower: str                       = ""
 
@@ -362,6 +371,25 @@ class IBISParser:
             m = re.search(r'ibischk\s+v?(\d[\d.]+)', line, re.IGNORECASE)
             if m:
                 self._ibis.ibischk_ver_in_file = m.group(1)
+        self._scan_commented_model_spec(line)
+
+    def _scan_commented_model_spec(self, line: str):
+        """Record commented [Model Spec] rows as evidence, without parsing as data."""
+        if not self._cur_model:
+            return
+        toks = line.lstrip("|").split("|")[0].split()
+        if not toks:
+            return
+        key = toks[0].lower()
+        model_spec_keys = {
+            "vinl", "vinh", "vref", "vmeas",
+            "s_overshoot_high", "s_overshoot_low",
+            "d_overshoot_high", "d_overshoot_low", "d_overshoot_time",
+            "d_overshoot_ampl_h", "d_overshoot_ampl_l",
+            "d_overshoot_area_h", "d_overshoot_area_l",
+        }
+        if key in model_spec_keys:
+            self._cur_model.commented_model_spec_fields.add(key)
 
     # ── Keyword dispatcher ────────────────────────────────────────────────────
 
@@ -677,7 +705,7 @@ class IBISParser:
         if not toks:
             return
         key = toks[0].lower()
-        rest_toks = toks[1:]
+        rest_toks = strip_assignment(toks[1:])
 
         scalar_map = {
             'model_type': lambda: setattr(m, 'model_type', ' '.join(rest_toks)) or setattr(m, 'model_type_lower', m.model_type.lower()),
@@ -797,8 +825,9 @@ class IBISParser:
                 )
         elif key == 'r_load':
             parts = toks.split()
-            if len(parts) >= 2:
-                ramp.r_load = parse_si(parts[1])
+            value_parts = strip_assignment(parts[1:])
+            if value_parts:
+                ramp.r_load = parse_si(value_parts[0])
 
     # ── Waveform data rows ────────────────────────────────────────────────────
 
@@ -852,7 +881,8 @@ class IBISParser:
             return
         rt = self._cur_model.receiver_thresholds
         key = toks[0].lower()
-        val = parse_si(toks[1]) if len(toks) > 1 else None
+        value_toks = strip_assignment(toks[1:])
+        val = parse_si(value_toks[0]) if value_toks else None
         attr_map = {
             'vth': 'vth', 'vth_min': 'vth_min', 'vth_max': 'vth_max',
             'vinh_ac': 'vinh_ac', 'vinl_ac': 'vinl_ac',
@@ -863,7 +893,7 @@ class IBISParser:
         if key in attr_map:
             setattr(rt, attr_map[key], val)
         elif key == 'reference_supply':
-            rt.reference_supply = toks[1] if len(toks) > 1 else None
+            rt.reference_supply = value_toks[0] if value_toks else None
 
     # ── Package model data ────────────────────────────────────────────────────
 

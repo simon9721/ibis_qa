@@ -5,7 +5,7 @@ Entry point. Parse one or more .ibs files, run all AUTO checks,
 and emit a structured report.
 
 Usage:
-    python ibis_qa.py <file.ibs> [--json] [--verbose]
+    python ibis_qa.py <file.ibs> [--json | --markdown | --html] [--verbose]
 
 Architecture overview
 ---------------------
@@ -66,6 +66,7 @@ from pathlib import Path
 from parser.ibis_parser import IBISParser
 from runner import CheckRunner
 from reporter import Reporter
+from spreadsheet import write_spreadsheet_report
 
 
 def main():
@@ -76,7 +77,19 @@ def main():
 
     ap = argparse.ArgumentParser(description="IBIS Quality Spec v3.0 AUTO checker")
     ap.add_argument("ibis_file", help="Path to .ibs file")
-    ap.add_argument("--json", action="store_true", help="Output JSON report")
+    output = ap.add_mutually_exclusive_group()
+    output.add_argument("--json", action="store_true", help="Output JSON report")
+    output.add_argument("--markdown", action="store_true", help="Output Markdown report")
+    output.add_argument("--html", action="store_true", help="Output HTML report")
+    ap.add_argument("--spreadsheet", help="Write an .xlsx spreadsheet report to this path")
+    ap.add_argument("--max-level", "--target-level", dest="max_level",
+                    type=int, choices=[1, 2, 3, 4],
+                    default=3,
+                    help="Run and report only checks up to the requested IQ level (default: 3)")
+    ap.add_argument("--review", help="Apply a GUI *.review.json decision overlay to the spreadsheet")
+    ap.add_argument("--plot-dir", help="Write SVG visual-curve assets to this directory")
+    ap.add_argument("--zout-rload", type=float, default=50.0,
+                    help="Load impedance in ohms for reported Zout estimates (default: 50)")
     ap.add_argument("--verbose", "-v", action="store_true", help="Show NA results too")
     args = ap.parse_args()
 
@@ -91,15 +104,45 @@ def main():
     ibis_file = parser.parse(path)
     print(f"  {len(ibis_file.components)} component(s), "
           f"{len(ibis_file.models)} model(s)", file=sys.stderr)
+    print(f"  Target level IQ{args.max_level}: skipping higher-level checks", file=sys.stderr)
 
     # 2. Run checks
-    runner = CheckRunner()
+    runner = CheckRunner(max_level=args.max_level)
     results = runner.run(ibis_file)
 
     # 3. Report
-    reporter = Reporter(results, ibis_file, verbose=args.verbose)
+    reporter = Reporter(
+        results,
+        ibis_file,
+        verbose=args.verbose,
+        max_level=args.max_level,
+        zout_rload_ohm=args.zout_rload,
+    )
+    report_dict = None
+    if args.spreadsheet:
+        report_dict = reporter.as_dict()
+        spreadsheet_path = write_spreadsheet_report(
+            report_dict,
+            args.spreadsheet,
+            target_level=args.max_level,
+            review_decisions=args.review,
+        )
+        print(f"Wrote spreadsheet report: {spreadsheet_path}", file=sys.stderr)
+
     if args.json:
-        print(reporter.as_json())
+        print(json.dumps(report_dict or reporter.as_dict(), indent=2))
+    elif args.markdown:
+        if report_dict is None:
+            print(reporter.as_markdown(args.plot_dir))
+        else:
+            from reporter import render_markdown_report
+            print(render_markdown_report(report_dict, args.plot_dir))
+    elif args.html:
+        if report_dict is None:
+            print(reporter.as_html(args.plot_dir))
+        else:
+            from reporter import render_html_report
+            print(render_html_report(report_dict, args.plot_dir))
     else:
         print(reporter.as_text())
 

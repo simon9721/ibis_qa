@@ -27,7 +27,7 @@ IBISCHK
 Switching Coefficient Extraction & Analysis
 Tx drive strength / Rx termination (ohms)
 IBIS V/T curve vs. simulated curve (under same termination) correlation
-Visual waveform examination (may not be practical?)
+Visual waveform/current examination (now supported as generated report visual curves where waveform and current tables exist)
 
 Timeline for IBIS QA:
 Week of May 25: Gather & brainstorm QA methods. Create a new document and record findings
@@ -44,6 +44,11 @@ Current structured source files:
 - `docs/spec-tree.md`: generated tree view of the structured spec.
 - `docs/automation-categories.md`: generated auto/semi-auto/manual/optional catalog with why/how notes.
 - `docs/quality-levels.md`: generated catalog of checks grouped by IQ level.
+- `docs/implemented-checks.md`: detailed implementation reference for every auto and semi-auto check item.
+- `docs/manual-checks.md`: detailed rationale and reviewer evidence guide for every manual check item.
+- `docs/todo-review.md`: current review of open engineering todo items and their implementation status.
+- `docs/z41c-checklist-comparison.md`: comparison between Micron's completed z41c checklist and the generated spreadsheet.
+- `docs/z41c-micron-comparison-report.md`: human-readable baseline/fixed comparison report for the z41c Micron checklist review.
 - `tools/build_spec_data.py`: generator that rebuilds the JSON and method map from the Markdown and workbook.
 - `tools/render_spec_tree.py`: generator that renders the spec JSON as a Markdown tree.
 - `tools/render_automation_catalog.py`: generator that renders the automation category catalog.

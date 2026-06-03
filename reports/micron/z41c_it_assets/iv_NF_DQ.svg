@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="560" viewBox="0 0 800 560">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="78" y="25" font-family="Arial, sans-serif" font-size="16" font-weight="700">NF_DQ I-V Clamp Curves</text>
+<rect x="78" y="52" width="694" height="348" fill="#fbfbfb" stroke="#c8c8c8"/>
+<line x1="78.00" y1="52" x2="78.00" y2="400" stroke="#ececec"/>
+<text x="78.00" y="422" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">-1.3</text>
+<line x1="216.80" y1="52" x2="216.80" y2="400" stroke="#ececec"/>
+<text x="216.80" y="422" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">-0.523</text>
+<line x1="355.60" y1="52" x2="355.60" y2="400" stroke="#ececec"/>
+<text x="355.60" y="422" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">0.226</text>
+<line x1="494.40" y1="52" x2="494.40" y2="400" stroke="#ececec"/>
+<text x="494.40" y="422" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">0.974</text>
+<line x1="633.20" y1="52" x2="633.20" y2="400" stroke="#ececec"/>
+<text x="633.20" y="422" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">1.7</text>
+<line x1="772.00" y1="52" x2="772.00" y2="400" stroke="#ececec"/>
+<text x="772.00" y="422" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">2.5</text>
+<line x1="78" y1="400.00" x2="772" y2="400.00" stroke="#ececec"/>
+<text x="70" y="404.00" text-anchor="end" font-family="Arial, sans-serif" font-size="11">-0.146</text>
+<line x1="78" y1="330.40" x2="772" y2="330.40" stroke="#ececec"/>
+<text x="70" y="334.40" text-anchor="end" font-family="Arial, sans-serif" font-size="11">-0.114</text>
+<line x1="78" y1="260.80" x2="772" y2="260.80" stroke="#ececec"/>
+<text x="70" y="264.80" text-anchor="end" font-family="Arial, sans-serif" font-size="11">-0.0822</text>
+<line x1="78" y1="191.20" x2="772" y2="191.20" stroke="#ececec"/>
+<text x="70" y="195.20" text-anchor="end" font-family="Arial, sans-serif" font-size="11">-0.0503</text>
+<line x1="78" y1="121.60" x2="772" y2="121.60" stroke="#ececec"/>
+<text x="70" y="125.60" text-anchor="end" font-family="Arial, sans-serif" font-size="11">-0.0183</text>
+<line x1="78" y1="52.00" x2="772" y2="52.00" stroke="#ececec"/>
+<text x="70" y="56.00" text-anchor="end" font-family="Arial, sans-serif" font-size="11">0.0136</text>
+<line x1="313.78" y1="52" x2="313.78" y2="400" stroke="#777" stroke-dasharray="4 4"/>
+<line x1="78" y1="81.61" x2="772" y2="81.61" stroke="#777" stroke-dasharray="4 4"/>
+<line x1="91.35" y1="52" x2="91.35" y2="400" stroke="#555" stroke-dasharray="2 4"/>
+<text x="95.35" y="66" font-family="Arial, sans-serif" font-size="11" fill="#555">-Vcc</text>
+<line x1="536.22" y1="52" x2="536.22" y2="400" stroke="#555" stroke-dasharray="2 4"/>
+<text x="540.22" y="66" font-family="Arial, sans-serif" font-size="11" fill="#555">Vcc</text>
+<line x1="758.65" y1="52" x2="758.65" y2="400" stroke="#555" stroke-dasharray="2 4"/>
+<text x="762.65" y="66" font-family="Arial, sans-serif" font-size="11" fill="#555">2Vcc</text>
+<polyline fill="none" stroke="#0f766e" stroke-width="2.8" opacity="0.95" stroke-dasharray="6 3" points="91.35,376.00 93.01,365.27 94.68,354.61 96.35,344.02 98.02,333.52 99.13,326.56 100.24,319.65 101.36,312.78 102.47,305.94 103.58,299.16 104.69,292.42 105.80,285.73 106.92,279.12 107.47,275.81 108.03,272.53 109.14,266.03 109.70,262.79 110.25,259.59 110.81,256.41 111.37,253.22 111.92,250.06 112.48,246.94 113.03,243.82 113.59,240.70 114.70,234.60 115.26,231.55 116.37,225.59 116.93,222.62 117.48,219.67 118.04,216.80 119.15,211.05 119.71,208.25 120.82,202.71 121.38,199.97 122.49,194.66 123.04,192.00 124.16,186.94 124.71,184.41 125.27,181.99 125.82,179.70 126.38,177.41 126.94,175.12 127.49,172.82 128.60,168.24 129.16,166.15 130.27,162.24 131.38,158.34 132.50,154.44 133.05,152.76 133.61,151.20 135.28,146.49 135.83,144.92 136.39,143.35 137.50,140.90 138.61,138.51 140.28,134.92 140.84,134.03 141.95,132.26 143.62,129.60 144.17,128.74 145.84,126.74 146.96,125.41 148.07,124.11 148.62,123.58 150.85,121.48 151.96,120.46 153.63,119.14 155.85,117.42 158.08,115.90 158.63,115.52 160.86,114.12 163.64,112.44 168.09,110.01 170.31,108.86 170.87,108.57 177.54,105.36 181.43,103.56 186.99,101.08 193.11,98.43 199.23,95.89 203.68,94.12 209.79,91.78 216.47,89.42 221.47,87.81 224.81,86.83 228.14,85.90 232.04,84.97 234.26,84.46 238.15,83.73 240.93,83.29 243.71,82.90 248.16,82.45 253.17,82.09 259.84,81.81 269.85,81.66 295.43,81.61 313.78,81.61 758.65,81.61"/>
+<polyline fill="none" stroke="#7c2d12" stroke-width="2.8" opacity="0.95" stroke-dasharray="6 3" points="91.35,76.00 92.27,76.01 95.98,76.04 100.61,76.08 105.25,76.13 109.88,76.17 114.52,76.22 122.86,76.30 129.35,76.37 136.76,76.44 145.10,76.51 153.44,76.59 164.56,76.70 174.76,76.80 184.03,76.90 191.44,76.99 197.00,77.05 202.56,77.13 208.13,77.21 209.98,77.24 213.69,77.29 217.39,77.36 219.25,77.39 223.88,77.49 224.81,77.51 228.51,77.60 229.44,77.62 230.37,77.64 233.15,77.73 236.86,77.84 237.78,77.87 239.64,77.93 244.27,78.11 246.12,78.19 247.98,78.26 249.83,78.35 251.69,78.43 253.54,78.52 255.39,78.60 258.17,78.74 261.88,78.93 266.51,79.17 283.20,80.05 293.39,80.58 301.73,81.00 309.15,81.38 313.78,81.61 323.05,82.07 331.39,82.48 335.10,82.66 338.81,82.83 351.78,83.45 355.49,83.62 368.46,84.20 370.32,84.29 372.17,84.37 386.07,84.95 387.93,85.03 388.85,85.07 402.76,85.61 405.54,85.72 420.37,86.27 423.15,86.37 437.98,86.87 439.83,86.94 443.54,87.05 452.80,87.34 458.37,87.51 468.56,87.80 475.97,88.01 477.83,88.05 484.32,88.21 493.58,88.44 497.29,88.52 500.07,88.58 511.19,88.83 514.90,88.90 522.32,89.05 528.80,89.18 531.58,89.23 536.22,89.32 546.41,89.50 555.68,89.66 564.95,89.81 576.07,89.99 582.56,90.09 594.61,90.27 602.95,90.40 616.85,90.59 636.31,90.86 657.63,91.14 681.73,91.46 709.53,91.81 746.61,92.27 758.65,92.43"/>
+<line x1="88" y1="70" x2="110" y2="70" stroke="#0f766e" stroke-width="2.8" stroke-dasharray="6 3"/>
+<text x="116" y="74" font-family="Arial, sans-serif" font-size="12">[GND Clamp]</text>
+<line x1="88" y1="88" x2="110" y2="88" stroke="#7c2d12" stroke-width="2.8" stroke-dasharray="6 3"/>
+<text x="116" y="92" font-family="Arial, sans-serif" font-size="12">[POWER Clamp]</text>
+<text x="425.00" y="444.00" text-anchor="middle" font-family="Arial, sans-serif" font-size="12">Table voltage (V)</text>
+<text transform="translate(18 226.00) rotate(-90)" text-anchor="middle" font-family="Arial, sans-serif" font-size="12">Current (A)</text>
+<text x="420" y="42" font-family="Arial, sans-serif" font-size="11" fill="#555">thick dashed=combined typ curves</text>
+</svg>

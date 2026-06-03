@@ -2,9 +2,10 @@
 checks/c2_1_ibischk.py  —  Check 2.1: IBIS file passes IBISCHK
 ================================================================
 Quality Spec §2.1, §1.4
-AUTO check — two sub-checks:
-  a) Run IBISCHK and verify zero errors
-  b) Verify IQ score tag present in the .ibs file itself
+AUTO check — three sub-checks:
+  a) Report any existing IQ score tag in the .ibs file
+  b) Report any existing IBISCHK version documentation in the file
+  c) Run IBISCHK and verify zero errors
 """
 
 from __future__ import annotations
@@ -28,7 +29,7 @@ class Check2_1(CheckModule):
     def run(self, ibis_file: "IBISFile") -> list[CheckResult]:
         results = []
 
-        # ── Sub-check A: IQ score in file (§1.4) ─────────────────────────────
+        # ── Sub-check A: IQ score writeback note (§1.4) ─────────────────────
         if ibis_file.iq_score_in_file:
             results.append(self._pass(
                 "2.1", ibis_file.file_name,
@@ -36,15 +37,15 @@ class Check2_1(CheckModule):
                 spec_ref="Quality Spec §1.4"
             ))
         else:
-            results.append(self._fail(
+            results.append(self._pass(
                 "2.1", ibis_file.file_name,
-                "No '|IQ Score:' tag found inside the .ibs file. "
-                "§1.4 requires the IQ score to be written in [Notes] or a comment line, "
-                "not only in an external quality report.",
+                "No existing '|IQ Score:' tag found inside the .ibs file. "
+                "This is reported as a writeback note only; it does not fail the quality check "
+                "because this tool is intended to help assign the score.",
                 spec_ref="Quality Spec §1.4"
             ))
 
-        # ── Sub-check B: IBISCHK version documented in file ──────────────────
+        # ── Sub-check B: IBISCHK version documentation note ──────────────────
         if ibis_file.ibischk_ver_in_file:
             results.append(self._pass(
                 "2.1", ibis_file.file_name,
@@ -52,10 +53,10 @@ class Check2_1(CheckModule):
                 spec_ref="Quality Spec §2.1"
             ))
         else:
-            results.append(self._warn(
+            results.append(self._pass(
                 "2.1", ibis_file.file_name,
                 "IBISCHK version not found documented inside the .ibs file. "
-                "Recommended: document 'Checked with IBISCHK vX.Y.Z' in [Notes].",
+                "This is reported as a documentation note only; it does not block Level 1.",
                 spec_ref="Quality Spec §2.1"
             ))
 
@@ -70,11 +71,27 @@ class Check2_1(CheckModule):
                 output = proc.stdout + proc.stderr
                 errors   = len(re.findall(r'\bERROR\b', output, re.IGNORECASE))
                 warnings = len(re.findall(r'\bWARNING\b', output, re.IGNORECASE))
+                cautions = len(re.findall(r'\bCAUTION\b', output, re.IGNORECASE))
+                version_match = re.search(
+                    r'\bIBISCHK\S*\s+V?([0-9][0-9.]+)',
+                    output,
+                    re.IGNORECASE,
+                )
+                ibischk_data = {
+                    "path": ibischk_path,
+                    "returncode": proc.returncode,
+                    "version": version_match.group(1) if version_match else None,
+                    "errors": errors,
+                    "warnings": warnings,
+                    "cautions": cautions,
+                    "output": output,
+                }
                 if errors == 0:
                     results.append(self._pass(
                         "2.1", ibis_file.file_name,
                         f"IBISCHK: 0 errors, {warnings} warning(s)",
                         details=[f"IBISCHK path: {ibischk_path}"],
+                        data={"ibischk": ibischk_data},
                         spec_ref="Quality Spec §2.1"
                     ))
                 else:
@@ -82,6 +99,7 @@ class Check2_1(CheckModule):
                         "2.1", ibis_file.file_name,
                         f"IBISCHK: {errors} error(s), {warnings} warning(s)",
                         details=output.splitlines()[:20],
+                        data={"ibischk": ibischk_data},
                         spec_ref="Quality Spec §2.1"
                     ))
             except subprocess.TimeoutExpired:

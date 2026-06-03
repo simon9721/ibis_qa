@@ -52,52 +52,117 @@ class Check5_5_Ramp(CheckModule):
                     spec_ref="Quality Spec §5.5.3"))
                 continue
 
-            v_fixture_rise = 0.0    # rising waveform: V_fixture = GND = 0V
-            v_fixture_fall = vcc    # falling waveform: V_fixture = Vcc
-
-            # For rising: output transitions from 0 toward Vcc into R_load to GND
-            # Vhigh = load-line intersection of Pullup vs R_load to V_fixture=0
-            # Vlow  = load-line intersection of Pulldown vs R_load to V_fixture=0
-            v_high = self._loadline_voltage(model.pullup, r_load, v_fixture_rise, vcc, vcc_relative=True)
-            v_low  = self._loadline_voltage(model.pulldown, r_load, v_fixture_rise, 0.0, vcc_relative=False)
-
-            if v_high is None or v_low is None:
+            issues, evidence, missing = self._ramp_dv_evidence(model, r_load, vcc)
+            if missing:
                 results.append(self._warn("5.5.3", subj,
                     "Could not compute load-line intersection for dV check "
-                    "(missing [Pullup] or [Pulldown] table)",
+                    "(missing [Pullup]/[Pulldown] data or no intersection)",
+                    details=missing + evidence,
                     spec_ref="Quality Spec §5.5.3"))
                 continue
-
-            expected_dv = RAMP_DV_FRACTION * (v_high - v_low)
-
-            issues = []
-            for corner_idx, corner_name in enumerate(['typ', 'min', 'max']):
-                ramp_dv = ramp.dv_r[corner_idx] if ramp.dv_r[corner_idx] is not None else None
-                if ramp_dv is None:
-                    continue
-                if expected_dv > 0:
-                    err = abs(ramp_dv - expected_dv) / expected_dv
-                    if err > RAMP_DV_TOLERANCE:
-                        issues.append(
-                            f"Rise dV/{corner_name}: ramp={ramp_dv:.4g}V, "
-                            f"expected≈{expected_dv:.4g}V ({err*100:.1f}% error)")
-
             if issues:
                 results.append(self._fail("5.5.3", subj,
                     f"[Ramp] dV inconsistent with I-V load-line ({len(issues)} corner(s))",
-                    details=issues, spec_ref="Quality Spec §5.5.3"))
+                    details=issues + evidence, spec_ref="Quality Spec §5.5.3"))
             else:
                 results.append(self._pass("5.5.3", subj,
-                    f"[Ramp] dV consistent with I-V load-line "
-                    f"(Vhigh={v_high:.3f}V, Vlow={v_low:.3f}V, "
-                    f"60%·ΔV≈{expected_dv:.3f}V)",
+                    "[Ramp] rising/falling dV values are consistent with per-corner I-V load-line estimates",
+                    details=evidence,
                     spec_ref="Quality Spec §5.5.3"))
+            continue
 
         return results
 
+    def _ramp_dv_evidence(
+            self,
+            model: "Model",
+            r_load: float,
+            vcc: float) -> tuple[list[str], list[str], list[str]]:
+        issues = []
+        evidence = []
+        missing = []
+        corner_names = ["typ", "min", "max"]
+        directions = [
+            ("Rise", model.ramp.dv_r, "rise"),
+            ("Fall", model.ramp.dv_f, "fall"),
+        ]
+
+        for direction, ramp_dvs, edge in directions:
+            for corner_idx, corner_name in enumerate(corner_names, start=1):
+                ramp_dv = ramp_dvs[corner_idx - 1]
+                if ramp_dv is None:
+                    continue
+                span = self._ramp_dv_span(model, r_load, vcc, edge, corner_idx)
+                if span is None:
+                    missing.append(
+                        f"{direction} dV/{corner_name}: unable to compute "
+                        "load-line high/low state voltages")
+                    continue
+                v_high, v_low, span_note = span
+                if v_high is None or v_low is None:
+                    missing.append(
+                        f"{direction} dV/{corner_name}: unable to compute "
+                        "load-line high/low state voltages")
+                    continue
+                expected_dv = RAMP_DV_FRACTION * abs(v_high - v_low)
+                if expected_dv <= 0:
+                    missing.append(
+                        f"{direction} dV/{corner_name}: computed load-line voltage swing is zero")
+                    continue
+                err = abs(abs(ramp_dv) - expected_dv) / expected_dv
+                evidence.append(
+                    f"{direction} dV/{corner_name}: ramp={ramp_dv:.4g}V, "
+                    f"expected≈{expected_dv:.4g}V from Vhigh={v_high:.4g}V, "
+                    f"Vlow={v_low:.4g}V, error={err*100:.1f}% ({span_note})")
+                if err > RAMP_DV_TOLERANCE:
+                    issues.append(
+                        f"{direction} dV/{corner_name}: ramp={ramp_dv:.4g}V, "
+                        f"expected≈{expected_dv:.4g}V ({err*100:.1f}% error, "
+                        f"limit {RAMP_DV_TOLERANCE*100:.1f}%)")
+
+        if not evidence and not missing:
+            missing.append("No Ramp dV_r or dV_f corner values parsed")
+        return issues, evidence, missing
+
+    def _ramp_dv_span(
+            self,
+            model: "Model",
+            r_load: float,
+            vcc: float,
+            edge: str,
+            col: int) -> Optional[tuple[float, float, str]]:
+        """Return high/low steady-state voltages used for the Ramp dV check."""
+        has_pullup = model.pullup is not None and bool(model.pullup.rows)
+        has_pulldown = model.pulldown is not None and bool(model.pulldown.rows)
+
+        if has_pullup and has_pulldown:
+            v_fixture = 0.0 if edge == "rise" else vcc
+            v_high = self._loadline_voltage(
+                model.pullup, r_load, v_fixture, vcc,
+                vcc_relative=True, col=col)
+            v_low = self._loadline_voltage(
+                model.pulldown, r_load, v_fixture, 0.0,
+                vcc_relative=False, col=col)
+            return v_high, v_low, f"push-pull fixture={v_fixture:.4g}V"
+
+        if has_pulldown:
+            v_low = self._loadline_voltage(
+                model.pulldown, r_load, vcc, 0.0,
+                vcc_relative=False, col=col)
+            return vcc, v_low, "single-ended pulldown with external pullup to Vcc"
+
+        if has_pullup:
+            v_high = self._loadline_voltage(
+                model.pullup, r_load, 0.0, vcc,
+                vcc_relative=True, col=col)
+            return v_high, 0.0, "single-ended pullup with external pulldown to ground"
+
+        return None
+
     def _loadline_voltage(self, table: Optional["IVTable"],
                           r_load: float, v_fixture: float,
-                          v_ref: float, vcc_relative: bool) -> Optional[float]:
+                          v_ref: float, vcc_relative: bool,
+                          col: int = 1) -> Optional[float]:
         """
         Find the DC output voltage where the device I-V curve intersects
         the resistive load line: I_load = (V - V_fixture) / R_load
@@ -114,10 +179,12 @@ class Check5_5_Ramp(CheckModule):
             return None
 
         for i in range(len(table.rows) - 1):
+            if len(table.rows[i]) <= col or len(table.rows[i + 1]) <= col:
+                continue
             v_tab_a = table.rows[i][0]
             v_tab_b = table.rows[i + 1][0]
-            i_dev_a = table.rows[i][1]    # typ column
-            i_dev_b = table.rows[i + 1][1]
+            i_dev_a = table.rows[i][col]
+            i_dev_b = table.rows[i + 1][col]
             if i_dev_a is None or i_dev_b is None:
                 continue
 
@@ -133,9 +200,9 @@ class Check5_5_Ramp(CheckModule):
             i_load_a = (vout_a - v_fixture) / r_load
             i_load_b = (vout_b - v_fixture) / r_load
 
-            # Check for sign change between device current and load current
-            diff_a = i_dev_a - i_load_a
-            diff_b = i_dev_b - i_load_b
+            # IBIS device-table current balances the fixture current.
+            diff_a = i_dev_a + i_load_a
+            diff_b = i_dev_b + i_load_b
             if diff_a * diff_b <= 0:  # sign change — intersection
                 # Linear interpolation
                 if abs(diff_b - diff_a) < 1e-15:

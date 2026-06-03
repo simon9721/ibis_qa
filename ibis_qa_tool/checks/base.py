@@ -37,6 +37,7 @@ class CheckResult:
     spec_ref:   str                    = ""   # Quality Spec section
     automation_class: str              = "auto"
     review_required: bool              = False
+    data:       dict                   = field(default_factory=dict)
 
 
 class CheckModule:
@@ -52,9 +53,16 @@ class CheckModule:
     check_ids: list[str] = []
     iq_level:  str = ""     # "LEVEL 1", "LEVEL 2", etc.
     auto_class: str = "auto"
+    enabled_check_ids: set[str] | None = None
 
     def run(self, ibis_file: "IBISFile") -> list[CheckResult]:
         raise NotImplementedError
+
+    def is_check_enabled(self, check_id: str) -> bool:
+        return (
+            self.enabled_check_ids is None
+            or check_id in self.enabled_check_ids
+        )
 
     # ── Convenience helpers ───────────────────────────────────────────────────
 

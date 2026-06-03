@@ -28,6 +28,12 @@ collectors for all **25 `semi_auto` checks**, and produces a
 structured report that surfaces evidence for the remaining checks so a
 reviewer can work efficiently.
 
+For the detailed item-by-item implementation reference, including exact
+thresholds, PASS/FAIL/WARN/NA behavior, review flags, and known judgement
+calls, see [`../docs/implemented-checks.md`](../docs/implemented-checks.md).
+For manual items that still require datasheet, extraction, package, or circuit
+review, see [`../docs/manual-checks.md`](../docs/manual-checks.md).
+
 ---
 
 ## Requirements
@@ -41,14 +47,38 @@ reviewer can work efficiently.
 ## Quick Start
 
 ```bash
-# Default: show failures, warnings, and errors only
+# Default: run through IQ3 and show failures, warnings, and errors only
 python ibis_qa.py my_model.ibs
 
-# Show everything including PASS and NA
+# Run through IQ3 and show everything including PASS and NA
 python ibis_qa.py my_model.ibs --verbose
 
 # Structured JSON output for downstream tooling
 python ibis_qa.py my_model.ibs --json > report.json
+
+# JSON with a non-default load impedance for reported Zout estimates
+python ibis_qa.py my_model.ibs --json --zout-rload 40 > report.json
+
+# Model-maker-facing Markdown report
+python ibis_qa.py my_model.ibs --markdown > report.md
+
+# Model-maker-facing Markdown report with per-model SVG visual curves
+python ibis_qa.py my_model.ibs --markdown --plot-dir report_assets > report.md
+
+# Standalone shareable HTML report with embedded SVG visual curves
+python ibis_qa.py my_model.ibs --html --plot-dir report_assets > report.html
+
+# Explicitly run and report only checks up to IQ3
+python ibis_qa.py my_model.ibs --max-level 3 --markdown --plot-dir report_assets > report.md
+
+# Include IQ4 checks
+python ibis_qa.py my_model.ibs --max-level 4 --markdown --plot-dir report_assets > report.md
+
+# Spreadsheet checklist report, compatible with Excel
+python ibis_qa.py my_model.ibs --spreadsheet report.xlsx
+
+# IQ3 run with saved GUI review decisions applied to the spreadsheet
+python ibis_qa.py my_model.ibs --spreadsheet report.xlsx --max-level 3 --review report.review.json
 
 # Simple GUI for running QA and recording semi-auto review decisions
 python gui.py
@@ -68,6 +98,52 @@ semi-auto `review_required` queue. Reviewer decisions are saved separately
 as `*.review.json`, preserving the generated QA report and attaching each
 comment/decision to a stable `result_id`.
 
+Spreadsheet generation can optionally apply that `*.review.json` overlay.
+Accepted items render as `PASS`, exceptions render as `EXCEPTION`, rejected
+items remain blocking, and not-applicable decisions render as `NA`. By default,
+CLI and GUI runs target IQ3. Use
+`--max-level 1|2|3|4` to run and report only checks up to the requested target
+IQ level. The older `--target-level` spelling is kept as a CLI alias. For
+example, `--max-level 3` skips IQ4 checks entirely, omits IQ4 results from JSON,
+Markdown, and spreadsheet outputs, and caps candidate scores at IQ3. Use
+`--max-level 4` when IQ4 evidence should be generated.
+
+Each JSON result includes `check_id`, `iq_level`, and `numeric_level` so
+findings and review decisions preserve the originating IQ quality level.
+Each JSON model entry also includes a `zout` block with typ/min/max
+Pullup/Pulldown load-line output-impedance estimates when the model has usable
+driver I-V tables. The same Zout summary appears in the Markdown, HTML, and
+spreadsheet reports, and Markdown/HTML visual assets include per-model Zout
+load-line plots with operating-point markers. These values are characterization
+data and do not affect PASS/FAIL status or candidate IQ scoring.
+When saving a QA report from the GUI, the tool writes `*.qa.json`, a matching
+model-maker-facing `*.qa.md` report, a `*_assets/` folder of per-model SVG
+visual curves, a shareable `*.qa.html` report, and a checklist-style `*.qa.xlsx`
+spreadsheet report. The SVG
+assets include broad overview plots for I-V, ISSO, and V-T/Composite Current
+tables when the source model contains that data. The plots include relevant
+FAIL/WARN/ERROR attention callouts when a related visual-family check needs
+review. I-V output is split into a main figure that shows the actual available
+combined or clamp/driver curves, a clamp-only detail figure for `5.3.10`
+leakage review, and a pullup/pulldown zero-current detail figure for
+`5.3.8`/`5.3.9` review. Zout output is shown as a separate load-line figure
+for each model with usable Pullup/Pulldown driver tables.
+WARN/FAIL QA rows link to the relevant curve figure, and each linked figure
+links back to the related QA item. The Markdown
+report omits local file paths and tool workflow fields,
+adds a table of contents, lists every required check item by IQ level and
+scope/type, includes IBISCHK execution evidence under check `2.1`, shows
+per-model candidate scores with visual curves, and keeps IQ level and special
+designator explanations in appendices.
+The HTML report embeds those SVG curves directly as data URIs, so the `.html`
+file can be shared by itself; the asset folder is still written for the
+Markdown report and for inspection/debugging.
+
+Candidate scores are intentionally optimistic: they report the highest
+implemented IQ level with no `FAIL` or `ERROR`. `WARN`/review-required items do
+not lower the candidate score by themselves, but they remain visible and require
+reviewer acceptance before a final IQ score is assigned.
+
 ### Sample output
 
 ```
@@ -78,9 +154,9 @@ IBIS Ver: 5.0   File Rev: 2.3   Date: 6/19/2022
 IQ Score in file: (not found)
 ========================================================================
 
-[2.1] ✗  (1 fail, 1 pass, 0 NA, total 3)
-  ✗ [z41c.ibs] No '|IQ Score:' tag found inside the .ibs file.
-  ⚠ [z41c.ibs] IBISCHK not found on PATH — skipping execution check.
+[2.1] ✓  (0 fail, 3 pass, 0 NA, total 3)
+  ✓ [z41c.ibs] No existing '|IQ Score:' tag found inside the .ibs file.
+  ✓ [z41c.ibs] IBISCHK: 0 errors, 0 warning(s)
 
 [3.1.1] ✓  (0 fail, 3 pass, 3 NA, total 6)
 
@@ -89,7 +165,7 @@ IQ Score in file: (not found)
 
 ========================================================================
 SUMMARY
-  FAIL  : 83   WARN  : 8   PASS  : 238   NA  : 184   ERROR : 0
+  FAIL  : 34   WARN  : 100   PASS  : 633   NA  : 735   ERROR : 0
 ========================================================================
 ```
 
@@ -111,7 +187,10 @@ ibis_qa/
 ├── gui.py                       Tkinter GUI for QA review workflow
 ├── config.py                    All numeric tolerances — tune here
 ├── runner.py                    Auto-discovers and runs all check modules
-├── reporter.py                  Text and JSON output formatting
+├── reporter.py                  Text, JSON, and Markdown output formatting
+├── plotting.py                  SVG plot generation for report visual curves
+├── spreadsheet.py               Excel .xlsx checklist report generation
+├── zout.py                      Pullup/Pulldown load-line Zout estimates
 ├── ibis_quality_spec_3_0.json   Canonical check definitions (source of truth)
 ├── parser/
 │   └── ibis_parser.py           Single-pass IBIS tokeniser → IBISFile object
@@ -143,9 +222,13 @@ ibis_qa/
 fail on any error, and require `[Notes]`/comments plus the X designator for
 unresolved warnings.
 
-> **Note on §1.4 (IQ score in file):** The spec requires the IQ score string
-> to be written inside the `.ibs` file itself, not only in an external quality
-> report. This tool checks for the `|IQ Score:` tag as part of check 2.1.
+> **Note on §1.4 (IQ score in file):** The spec requires the final IQ score
+> string to be written inside the `.ibs` file itself, not only in an external
+> quality report. Because this tool is intended to help assign that score,
+> a missing existing `|IQ Score:` tag is reported as a writeback note and does
+> not fail check 2.1.
+> Missing in-file IBISCHK version documentation is also reported as a note,
+> not as a Level 1 blocker.
 
 ---
 
@@ -250,9 +333,12 @@ unresolved warnings.
 failure and does not block any IQ level claim. Key NA conditions:
 
 - **Bare-die components** (stub `[Package]` values ≈0.001nH/pF): checks
-  3.1.1, 3.1.2, 3.4.1 are NA
+  3.1.1, 3.1.2, 3.2.2, 3.4.1 are NA
 - **Input-only models** (no `[Pullup]`/`[Pulldown]` tables): checks 5.3.2,
   5.3.3, 5.3.8, 5.3.9, 5.7.1 are NA
+- **Single-ended open models**: open-drain/open-sink models without
+  `[Pullup]` and open-source models without `[Pulldown]` report NA for the
+  corresponding I-V sweep and zero-crossing rows
 - **ECL models**: check 5.7.1 (ISSO) is NA
 - **Components without `[Diff Pin]`**: checks 3.3.1, 3.3.2 are NA
 - **Technology exceptions** for zero-crossing (TTL, PECL, LVDS, SERDES):
@@ -314,13 +400,13 @@ authoritative implementation guidance for each check ID.
 
 Findings from running against Micron DDR4 z41c (reference file, IBIS 5.0):
 
-| Check | Observation | Fix needed |
-|-------|-------------|-----------|
-| 3.2.2 | Bare-die pins are numbered differently and have no RLC — flagged incorrectly | Add bare-die NA to per-pin loop |
-| 3.3.2 | Inverting pin model type looked up via non-inverting pin — CLKIN misclassified | Look up `inv_pin` model separately |
-| 5.5.3 | Load-line intersection fails for DDR4 (Vcc-relative convention not fully applied before solving) | Apply Vcc offset before intersection |
-| 5.7.1 | ISSO PU voltage axis mismatch for some model types | Align ISSO PU axis with [Pullup] convention |
-| 5.8.8 | ±1µA tolerance is borderline for DDR4 ODT models (1.1–1.3µA observed) | Raise to ±2µA or make technology-conditional |
+| Check | Observation | Current status |
+|-------|-------------|----------------|
+| 3.2.2 | Bare-die pins are numbered differently and have no packaged per-pin RLC | Bare-die components now report NA |
+| 3.3.2 | Micron uses input differential `Tdelay_typ=0ns` rows that the strict rule treated as failures | Zero-valued input-side `Tdelay_typ` now passes; hard Vdiff issues still fail and nonzero input Tdelay remains review evidence |
+| 5.3.8/5.3.9 | ±1µA zero-current tolerance is borderline for some DDR4 rows and the spec allows special cases | Any over-limit zero-current row now reports review-required WARN instead of FAIL |
+| 5.7.1 | ISSO PU voltage axis mismatch for DQ/DQS models | Endpoint comparison now uses `Ipu(Vcc)` |
+| 5.8.8 | ±1µA tolerance is borderline for DDR4 ODT models (1.1–1.3µA observed) | Still pending calibration |
 
 ---
 

@@ -25,10 +25,14 @@ class Check5SemiAutoOrdering(CheckModule):
     def run(self, ibis_file: "IBISFile") -> list[CheckResult]:
         results = []
         for model in ibis_file.models.values():
-            results.extend(self._check_model_params(model))
-            results.extend(self._check_model_spec_overshoot(model))
-            results.extend(self._check_ramp_order(model))
-            results.extend(self._check_isso_order(model))
+            if self.is_check_enabled("5.1.1"):
+                results.extend(self._check_model_params(model))
+            if self.is_check_enabled("5.2.6") or self.is_check_enabled("5.2.8"):
+                results.extend(self._check_model_spec_overshoot(model))
+            if self.is_check_enabled("5.5.2"):
+                results.extend(self._check_ramp_order(model))
+            if self.is_check_enabled("5.7.2"):
+                results.extend(self._check_isso_order(model))
         return results
 
     def _pass_sa(self, check_id: str, subject: str, msg: str, **kw) -> CheckResult:
@@ -86,6 +90,24 @@ class Check5SemiAutoOrdering(CheckModule):
 
     def _check_model_spec_overshoot(self, model: "Model") -> list[CheckResult]:
         if model.model_spec is None:
+            commented_fields = getattr(model, "commented_model_spec_fields", set())
+            if commented_fields:
+                return [
+                    self._commented_model_spec_evidence(
+                        "5.2.6", model.name,
+                        ["s_overshoot_high", "s_overshoot_low"],
+                        commented_fields,
+                        "Only commented S_Overshoot [Model Spec] rows were found"),
+                    self._commented_model_spec_evidence(
+                        "5.2.8", model.name,
+                        [
+                            "d_overshoot_high", "d_overshoot_low", "d_overshoot_time",
+                            "d_overshoot_ampl_h", "d_overshoot_ampl_l",
+                            "d_overshoot_area_h", "d_overshoot_area_l",
+                        ],
+                        commented_fields,
+                        "Only commented D_Overshoot [Model Spec] rows were found"),
+                ]
             return [
                 self._na_sa("5.2.6", model.name, "No [Model Spec] S_Overshoot data parsed",
                     spec_ref="Quality Spec §5.2.6"),
@@ -94,8 +116,8 @@ class Check5SemiAutoOrdering(CheckModule):
             ]
 
         ms = model.model_spec
-        return [
-            self._check_tuple_family(
+        commented_fields = getattr(model, "commented_model_spec_fields", set())
+        s_result = self._check_tuple_family(
                 "5.2.6", model.name,
                 {
                     "S_overshoot_high": ms.s_overshoot_high,
@@ -105,8 +127,8 @@ class Check5SemiAutoOrdering(CheckModule):
                 "S_Overshoot typ/min/max tracking evidence is ordered",
                 "No complete S_Overshoot typ/min/max values parsed",
                 "Quality Spec §5.2.6",
-            ),
-            self._check_tuple_family(
+            )
+        d_result = self._check_tuple_family(
                 "5.2.8", model.name,
                 {
                     "D_overshoot_high": ms.d_overshoot_high,
@@ -117,8 +139,48 @@ class Check5SemiAutoOrdering(CheckModule):
                 "D_Overshoot typ/min/max tracking evidence is ordered",
                 "No complete D_Overshoot typ/min/max values parsed",
                 "Quality Spec §5.2.8",
-            ),
-        ]
+            )
+        if s_result.status == "NA":
+            s_result = self._commented_model_spec_evidence(
+                "5.2.6", model.name,
+                ["s_overshoot_high", "s_overshoot_low"],
+                commented_fields,
+                "Only commented S_Overshoot [Model Spec] rows were found",
+                fallback=s_result)
+        if d_result.status == "NA":
+            d_result = self._commented_model_spec_evidence(
+                "5.2.8", model.name,
+                [
+                    "d_overshoot_high", "d_overshoot_low", "d_overshoot_time",
+                    "d_overshoot_ampl_h", "d_overshoot_ampl_l",
+                    "d_overshoot_area_h", "d_overshoot_area_l",
+                ],
+                commented_fields,
+                "Only commented D_Overshoot [Model Spec] rows were found",
+                fallback=d_result)
+        return [s_result, d_result]
+
+    def _commented_model_spec_evidence(
+        self,
+        check_id: str,
+        subject: str,
+        field_names: list[str],
+        commented_fields: set[str],
+        msg: str,
+        fallback: CheckResult | None = None,
+    ) -> CheckResult:
+        present = [name for name in field_names if name in commented_fields]
+        if not present:
+            if fallback is not None:
+                return fallback
+            return self._na_sa(check_id, subject,
+                "No parsed or commented [Model Spec] overshoot evidence found",
+                spec_ref=f"Quality Spec §{check_id}")
+        return self._warn_sa(check_id, subject,
+            msg,
+            details=[f"{name}: commented row found; reviewer must confirm it is intentional documentation" for name in present],
+            spec_ref=f"Quality Spec §{check_id}",
+            data={"commented_model_spec_fields": present})
 
     def _check_ramp_order(self, model: "Model") -> list[CheckResult]:
         if model.ramp is None:

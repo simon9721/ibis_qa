@@ -17,9 +17,12 @@ class Check3SemiAutoStructural(CheckModule):
     def run(self, ibis_file: "IBISFile") -> list[CheckResult]:
         results = []
         for comp in ibis_file.components:
-            results.append(self._check_pin_completeness(ibis_file, comp))
-            results.append(self._check_pin_mapping_rails(comp))
-        results.extend(self._check_model_selector_descriptions(ibis_file))
+            if self.is_check_enabled("3.2.1"):
+                results.append(self._check_pin_completeness(ibis_file, comp))
+            if self.is_check_enabled("3.4.2"):
+                results.append(self._check_pin_mapping_rails(comp))
+        if self.is_check_enabled("4.1"):
+            results.extend(self._check_model_selector_descriptions(ibis_file))
         return results
 
     def _pass_sa(self, check_id: str, subject: str, msg: str, **kw) -> CheckResult:

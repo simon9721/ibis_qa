@@ -50,15 +50,18 @@ class Check5_3_IVSweep(CheckModule):
         results.extend(self._check_iv_table_order(subj, model))
 
         # ── 5.3.2: [Pullup] sweep ────────────────────────────────────────────
+        pullup_not_required = mt in INPUT_TYPES or mt in {"open_drain", "open_sink"}
+        pulldown_not_required = mt in INPUT_TYPES or mt == "open_source"
+
         if model.pullup is not None and vcc is not None:
             results.append(self._check_sweep(
                 "5.3.2", subj, model.pullup,
                 expected_min=-vcc, expected_max=2*vcc,
                 label="[Pullup]",
                 spec_ref="Quality Spec §5.3.2"))
-        elif model.pullup is None and mt in INPUT_TYPES:
+        elif model.pullup is None and pullup_not_required:
             results.append(self._na("5.3.2", subj,
-                f"Model_type={model.model_type} has no [Pullup] — NA",
+                f"Model_type={model.model_type} has no required [Pullup] table - NA",
                 spec_ref="Quality Spec §5.3.2"))
 
         # ── 5.3.3: [Pulldown] sweep ───────────────────────────────────────────
@@ -68,24 +71,24 @@ class Check5_3_IVSweep(CheckModule):
                 expected_min=-vcc, expected_max=2*vcc,
                 label="[Pulldown]",
                 spec_ref="Quality Spec §5.3.3"))
-        elif model.pulldown is None and mt in INPUT_TYPES:
+        elif model.pulldown is None and pulldown_not_required:
             results.append(self._na("5.3.3", subj,
-                f"Model_type={model.model_type} has no [Pulldown] — NA",
+                f"Model_type={model.model_type} has no required [Pulldown] table - NA",
                 spec_ref="Quality Spec §5.3.3"))
 
         # ── 5.3.4: [POWER Clamp] sweep ───────────────────────────────────────
         if model.power_clamp is not None and pwr_vcc is not None:
             results.append(self._check_sweep(
                 "5.3.4", subj, model.power_clamp,
-                expected_min=-pwr_vcc, expected_max=0.0,
-                label="[POWER Clamp]", required_max=False,
+                expected_min=-pwr_vcc, expected_max=2*pwr_vcc,
+                label="[POWER Clamp]",
                 spec_ref="Quality Spec §5.3.4"))
 
         # ── 5.3.5: [GND Clamp] sweep ─────────────────────────────────────────
         if model.gnd_clamp is not None and pwr_vcc is not None:
             results.append(self._check_sweep(
                 "5.3.5", subj, model.gnd_clamp,
-                expected_min=-pwr_vcc, expected_max=pwr_vcc,
+                expected_min=-pwr_vcc, expected_max=2*pwr_vcc,
                 label="[GND Clamp]",
                 spec_ref="Quality Spec §5.3.5"))
 
@@ -99,9 +102,9 @@ class Check5_3_IVSweep(CheckModule):
                 "5.3.8", subj, model.pulldown, model,
                 vcc_relative=False, label="[Pulldown]",
                 spec_ref="Quality Spec §5.3.8"))
-        elif mt in INPUT_TYPES:
+        elif pulldown_not_required:
             results.append(self._na("5.3.8", subj,
-                "Input model — no [Pulldown] table — NA",
+                f"Model_type={model.model_type} has no required [Pulldown] table - NA",
                 spec_ref="Quality Spec §5.3.8"))
 
         # ── 5.3.9: [Pullup] zero crossing ────────────────────────────────────
@@ -110,9 +113,9 @@ class Check5_3_IVSweep(CheckModule):
                 "5.3.9", subj, model.pullup, model,
                 vcc_relative=True, label="[Pullup]",
                 spec_ref="Quality Spec §5.3.9"))
-        elif mt in INPUT_TYPES:
+        elif pullup_not_required:
             results.append(self._na("5.3.9", subj,
-                "Input model — no [Pullup] table — NA",
+                f"Model_type={model.model_type} has no required [Pullup] table - NA",
                 spec_ref="Quality Spec §5.3.9"))
 
         # ── 5.3.13: ECL sweep ─────────────────────────────────────────────────
@@ -230,46 +233,79 @@ class Check5_3_IVSweep(CheckModule):
 
     # ── Monotonicity ──────────────────────────────────────────────────────────
 
+    # ── Zero-crossing ─────────────────────────────────────────────────────────
+
     def _check_monotonicity(self, subj: str,
                              model: "Model") -> list[CheckResult]:
         """
-        Combine [Pulldown]+[GND Clamp] and [Pullup]+[POWER Clamp] then
-        check monotonicity of the combined current.
-        For simplicity in this draft, check individual tables for monotonicity
-        of the typ column (combined table logic can be added later).
+        Combine [Pulldown]+[GND Clamp] and [Pullup]+[POWER Clamp], then
+        check monotonicity of each combined current curve.
         """
         results = []
-        tables = {
-            '[Pulldown]': model.pulldown,
-            '[Pullup]':   model.pullup,
-            '[GND Clamp]': model.gnd_clamp,
-            '[POWER Clamp]': model.power_clamp,
-        }
-        for label, table in tables.items():
-            if table is None or len(table.rows) < 2:
+        groups = [
+            ("[Pulldown] + [GND Clamp]", [model.pulldown, model.gnd_clamp], "nondecreasing"),
+            ("[Pullup] + [POWER Clamp]", [model.pullup, model.power_clamp], "nonincreasing"),
+        ]
+        for label, tables, direction in groups:
+            present = [table for table in tables if table is not None and len(table.rows) >= 2]
+            if not present:
                 continue
-            violations = []
-            for i in range(len(table.rows) - 1):
-                v1, i1 = table.rows[i][0], table.rows[i][1]
-                v2, i2 = table.rows[i+1][0], table.rows[i+1][1]
-                if i1 is None or i2 is None:
-                    continue
-                if v2 > v1 and i2 < i1 - MONO_TOLERANCE_A:
-                    violations.append(
-                        f"V={v2:.4g}: current decreases from {i1*1000:.4g}mA "
-                        f"to {i2*1000:.4g}mA")
+            points = self._combined_curve_points(present)
+            if len(points) < 2:
+                results.append(self._error("5.3.7", subj,
+                    f"{label}: insufficient combined I-V data for monotonicity",
+                    spec_ref="Quality Spec §5.3.7"))
+                continue
+            violations = self._monotonicity_violations(points, direction)
             if violations:
                 results.append(self._fail("5.3.7", subj,
-                    f"{label} non-monotonic ({len(violations)} violation(s))",
-                    details=violations[:5],
+                    f"{label} combined curve non-monotonic ({len(violations)} violation(s))",
+                    details=violations[:10],
                     spec_ref="Quality Spec §5.3.7"))
             else:
                 results.append(self._pass("5.3.7", subj,
-                    f"{label} monotonicity OK",
+                    f"{label} combined curve monotonicity OK ({direction}, {len(points)} sample point(s))",
                     spec_ref="Quality Spec §5.3.7"))
         return results
 
-    # ── Zero-crossing ─────────────────────────────────────────────────────────
+    def _combined_curve_points(self, tables: list["IVTable"]) -> list[tuple[float, float]]:
+        voltages = sorted({
+            row[0]
+            for table in tables
+            for row in table.rows
+            if row and row[0] is not None
+        })
+        points = []
+        for voltage in voltages:
+            current = 0.0
+            used = False
+            for table in tables:
+                value = table.interpolate(voltage, col=1)
+                if value is None:
+                    continue
+                current += value
+                used = True
+            if used:
+                points.append((voltage, current))
+        return points
+
+    def _monotonicity_violations(
+            self,
+            points: list[tuple[float, float]],
+            direction: str) -> list[str]:
+        violations = []
+        for (v1, i1), (v2, i2) in zip(points, points[1:]):
+            if direction == "nonincreasing":
+                bad = v2 > v1 and i2 > i1 + MONO_TOLERANCE_A
+                wording = "increases"
+            else:
+                bad = v2 > v1 and i2 < i1 - MONO_TOLERANCE_A
+                wording = "decreases"
+            if bad:
+                violations.append(
+                    f"V={v2:.4g}: combined current {wording} from {i1*1000:.4g}mA "
+                    f"to {i2*1000:.4g}mA")
+        return violations
 
     def _check_zero_crossing(self, check_id: str, subj: str,
                               table: "IVTable", model: "Model",
@@ -281,21 +317,26 @@ class Check5_3_IVSweep(CheckModule):
             return self._na(check_id, subj,
                 f"Technology exception ({model.model_type}) — zero-crossing NA",
                 spec_ref=spec_ref)
-        # Also check [Notes] for exception keywords
-        notes_lower = (model.name + " ").lower()
-
         target_v = 0.0  # 0V in table (Pulldown: absolute; Pullup: Vcc-relative)
+        review_issues = []
         for col in (1, 2, 3):  # typ, min, max
             val = table.interpolate(target_v, col)
             if val is None:
                 continue
             if abs(val) > ZERO_CROSS_TOL_A:
-                return self._fail(check_id, subj,
-                    f"{label} does not pass through zero at 0V "
-                    f"(col {col}: {val*1e6:.2f}µA, limit ±{ZERO_CROSS_TOL_A*1e6:.0f}µA)",
-                    spec_ref=spec_ref)
+                issue = (
+                    f"col {col}: {val*1e6:.2f}uA, pass limit +/-{ZERO_CROSS_TOL_A*1e6:.0f}uA"
+                )
+                review_issues.append(issue)
+        if review_issues:
+            return self._warn(check_id, subj,
+                f"{label} zero-current condition at 0V needs review",
+                details=review_issues,
+                spec_ref=spec_ref,
+                automation_class="semi_auto",
+                review_required=True)
         return self._pass(check_id, subj,
-            f"{label} passes through ≈0 at 0V (within ±{ZERO_CROSS_TOL_A*1e6:.0f}µA)",
+            f"{label} passes through near 0 at 0V (within +/-{ZERO_CROSS_TOL_A*1e6:.0f}uA)",
             spec_ref=spec_ref)
 
     # ── ECL sweep ─────────────────────────────────────────────────────────────

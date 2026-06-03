@@ -33,6 +33,13 @@ class Check3_2_2_PinRLC(CheckModule):
                          for comp in ibis_file.components}
 
         for comp in ibis_file.components:
+            subj = comp.name
+            if comp.is_bare_die:
+                results.append(self._na("3.2.2", subj,
+                    "Bare-die component - per-pin package RLC completeness is not required",
+                    spec_ref="Quality Spec §3.2.2"))
+                continue
+
             issues = []
             for pin in comp.pins:
                 if pin.model_name.lower() in RESERVED:
@@ -56,7 +63,6 @@ class Check3_2_2_PinRLC(CheckModule):
                         issues.append(
                             f"Pin {pin.pin_name}: Z0={z0:.1f}Ω > {PIN_Z0_MAX_OHM:.0f}Ω limit")
 
-            subj = comp.name
             if issues:
                 results.append(self._fail("3.2.2", subj,
                     f"{len(issues)} pin RLC issue(s)",
@@ -117,6 +123,7 @@ class Check3_3_DiffPin(CheckModule):
 
             # ── 3.3.2: Vdiff / Tdelay rules ──────────────────────────────────
             rule_issues = []
+            review_issues = []
             for dp in comp.diff_pins:
                 model = ibis_file.models.get(pin_model.get(dp.pin_name, ""))
                 if not model:
@@ -131,8 +138,9 @@ class Check3_3_DiffPin(CheckModule):
                         rule_issues.append(f"Pin {dp.pin_name}: Input — Vdiff must be defined")
                     elif dp.vdiff <= 0:
                         rule_issues.append(f"Pin {dp.pin_name}: Input — Vdiff must be positive")
-                    if dp.tdelay_typ is not None:
-                        rule_issues.append(f"Pin {dp.pin_name}: Input — Tdelay must be NA")
+                    if dp.tdelay_typ is not None and dp.tdelay_typ != 0:
+                        review_issues.append(
+                            f"Pin {dp.pin_name}: Input Tdelay is nonzero; confirm intent")
 
                 elif is_output:
                     if dp.vdiff is not None:
@@ -150,6 +158,13 @@ class Check3_3_DiffPin(CheckModule):
                 results.append(self._fail("3.3.2", subj,
                     f"{len(rule_issues)} Vdiff/Tdelay rule violation(s)",
                     details=rule_issues, spec_ref="Quality Spec §3.3.2"))
+            elif review_issues:
+                results.append(self._warn("3.3.2", subj,
+                    f"{len(review_issues)} input Tdelay item(s) need review",
+                    details=review_issues,
+                    spec_ref="Quality Spec §3.3.2",
+                    automation_class="semi_auto",
+                    review_required=True))
             else:
                 results.append(self._pass("3.3.2", subj,
                     "All [Diff Pin] Vdiff/Tdelay values consistent with model type",

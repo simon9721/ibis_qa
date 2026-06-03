@@ -7,6 +7,7 @@ Runs them in check_id order and collects results.
 
 from __future__ import annotations
 import importlib
+import json
 import pkgutil
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -15,6 +16,8 @@ from checks.base import CheckModule, CheckResult
 
 if TYPE_CHECKING:
     from parser.ibis_parser import IBISFile
+
+_SPEC_PATH = Path(__file__).resolve().parent.parent / "data" / "ibis_quality_spec_3_0.json"
 
 
 class CheckRunner:
@@ -26,7 +29,9 @@ class CheckRunner:
     class inheriting from CheckModule. It will be picked up automatically.
     """
 
-    def __init__(self):
+    def __init__(self, max_level: int | None = None):
+        self.max_level = max_level
+        self._check_levels = self._load_check_levels()
         self._modules: list[CheckModule] = []
         self._discover()
 
@@ -51,7 +56,15 @@ class CheckRunner:
                         and cls is not CheckModule
                         and cls not in seen_classes
                         and cls.check_ids):
-                    self._modules.append(cls())
+                    enabled_ids = [
+                        check_id for check_id in cls.check_ids
+                        if self._check_enabled(check_id)
+                    ]
+                    if not enabled_ids:
+                        continue
+                    module_instance = cls()
+                    module_instance.enabled_check_ids = set(enabled_ids)
+                    self._modules.append(module_instance)
                     seen_classes.add(cls)
 
         # Sort by first check_id for deterministic ordering
@@ -65,11 +78,34 @@ class CheckRunner:
         except ValueError:
             return (999,)
 
+    @staticmethod
+    def _load_check_levels() -> dict[str, int | None]:
+        if not _SPEC_PATH.exists():
+            return {}
+        try:
+            data = json.loads(_SPEC_PATH.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return {}
+        return {
+            item["id"]: item.get("numeric_level")
+            for item in data.get("checks", [])
+            if item.get("id")
+        }
+
+    def _check_enabled(self, check_id: str) -> bool:
+        if self.max_level is None:
+            return True
+        numeric_level = self._check_levels.get(check_id)
+        return numeric_level is None or numeric_level <= self.max_level
+
     def run(self, ibis_file: "IBISFile") -> list[CheckResult]:
         results = []
         for module in self._modules:
             try:
-                results.extend(module.run(ibis_file))
+                results.extend(
+                    result for result in module.run(ibis_file)
+                    if self._check_enabled(result.check_id)
+                )
             except Exception as e:
                 from checks.base import Status
                 results.append(CheckResult(

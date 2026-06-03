@@ -7,6 +7,8 @@ from checks.base import CheckModule, CheckResult
 from config import (
     CLAMP_LEAKAGE_TOL_A,
     CC_FLAT_SLOPE_TOL_A,
+    IV_ORDER_ABS_TOL_A,
+    IV_ORDER_REL_TOL,
     IV_RANGE_TOLERANCE,
     MIN_TABLE_POINTS,
     MIN_WAVEFORM_POINTS,
@@ -32,14 +34,22 @@ class Check5SemiAutoQuality(CheckModule):
     def run(self, ibis_file: "IBISFile") -> list[CheckResult]:
         results = []
         for model in ibis_file.models.values():
-            results.append(self._check_c_comp(model))
-            results.append(self._check_voltage_refs(model))
-            results.extend(self._check_iv_quality(model))
-            results.extend(self._check_vt_quality(model))
-            results.append(self._check_ramp_dt(model))
-            results.append(self._check_vref_consistency(model))
-            results.extend(self._check_isso_quality(model))
-            results.extend(self._check_composite_current_quality(model))
+            if self.is_check_enabled("5.1.2"):
+                results.append(self._check_c_comp(model))
+            if self.is_check_enabled("5.1.4"):
+                results.append(self._check_voltage_refs(model))
+            if any(self.is_check_enabled(check_id) for check_id in ("5.3.6", "5.3.10", "5.3.14")):
+                results.extend(self._check_iv_quality(model))
+            if any(self.is_check_enabled(check_id) for check_id in ("5.4.1", "5.4.2", "5.4.3", "5.4.4")):
+                results.extend(self._check_vt_quality(model))
+            if self.is_check_enabled("5.5.4"):
+                results.append(self._check_ramp_dt(model))
+            if self.is_check_enabled("5.6.2"):
+                results.append(self._check_vref_consistency(model))
+            if any(self.is_check_enabled(check_id) for check_id in ("5.7.3", "5.7.4")):
+                results.extend(self._check_isso_quality(model))
+            if any(self.is_check_enabled(check_id) for check_id in ("5.8.3", "5.8.5", "5.8.7")):
+                results.extend(self._check_composite_current_quality(model))
         return results
 
     def _pass_sa(self, check_id: str, subject: str, msg: str, **kw) -> CheckResult:
@@ -89,30 +99,67 @@ class Check5SemiAutoQuality(CheckModule):
             spec_ref="Quality Spec §5.1.2")
 
     def _check_voltage_refs(self, model: "Model") -> CheckResult:
-        fields = {
+        explicit_fields = {
             "Voltage Range": model.voltage_range,
             "Pullup Reference": model.pullup_ref,
             "Pulldown Reference": model.pulldown_ref,
             "POWER Clamp Reference": model.power_clamp_ref,
             "GND Clamp Reference": model.gnd_clamp_ref,
         }
-        present = []
+        resolved_fields = {
+            "Voltage Range": (model.voltage_range, "explicit"),
+            "Pullup Reference": (
+                model.pullup_ref if model.pullup_ref[0] is not None else model.voltage_range,
+                "explicit" if model.pullup_ref[0] is not None else "default from Voltage Range",
+            ),
+            "Pulldown Reference": (
+                model.pulldown_ref if model.pulldown_ref[0] is not None else (0.0, 0.0, 0.0),
+                "explicit" if model.pulldown_ref[0] is not None else "default 0 V",
+            ),
+            "POWER Clamp Reference": (
+                model.power_clamp_ref if model.power_clamp_ref[0] is not None else model.voltage_range,
+                "explicit" if model.power_clamp_ref[0] is not None else "default from Voltage Range",
+            ),
+            "GND Clamp Reference": (
+                model.gnd_clamp_ref if model.gnd_clamp_ref[0] is not None else (0.0, 0.0, 0.0),
+                "explicit" if model.gnd_clamp_ref[0] is not None else "default 0 V",
+            ),
+        }
+        details = []
         issues = []
-        for name, values in fields.items():
+        for name, values in explicit_fields.items():
             vals = [value for value in values[:3] if value is not None]
             if not vals:
                 continue
-            present.append(name)
+            order_issue = self._tuple_order_issue(values)
+            if order_issue:
+                issues.append(f"{name}: {order_issue}")
             if name in ("Voltage Range", "Pullup Reference", "POWER Clamp Reference") and any(value <= 0 for value in vals):
                 issues.append(f"{name}: expected positive supply/reference values, got {values}")
+        for name, (values, source) in resolved_fields.items():
+            if values[0] is None:
+                details.append(f"{name}: unresolved ({source})")
+            else:
+                details.append(f"{name}: {self._format_tuple(values)} ({source})")
+        vcc_typ = resolved_fields["Voltage Range"][0][0]
+        for name in ("Pullup Reference", "POWER Clamp Reference"):
+            ref_typ = resolved_fields[name][0][0]
+            if vcc_typ is None or ref_typ is None:
+                continue
+            tol = max(1e-3, abs(vcc_typ) * 0.01)
+            if abs(ref_typ - vcc_typ) > tol:
+                issues.append(
+                    f"{name}: typ={ref_typ:.4g}V differs from Voltage Range typ={vcc_typ:.4g}V "
+                    f"by more than {tol:.4g}V; confirm this is intentional"
+                )
         if issues:
             return self._warn_sa("5.1.4", model.name,
                 "Voltage/reference evidence needs review",
-                details=issues, spec_ref="Quality Spec §5.1.4")
-        if present:
+                details=issues + details, spec_ref="Quality Spec §5.1.4")
+        if any(values[0] is not None for values, _source in resolved_fields.values()):
             return self._pass_sa("5.1.4", model.name,
-                "Voltage/reference evidence parsed and basic polarity looks reasonable",
-                details=present, spec_ref="Quality Spec §5.1.4")
+                "Voltage/reference evidence parsed, defaults resolved, and basic consistency looks reasonable",
+                details=details, spec_ref="Quality Spec §5.1.4")
         return self._na_sa("5.1.4", model.name,
             "No voltage/reference values parsed",
             spec_ref="Quality Spec §5.1.4")
@@ -299,6 +346,30 @@ class Check5SemiAutoQuality(CheckModule):
             return 0.0
         max_step = max(abs(currents[i + 1] - currents[i]) for i in range(len(currents) - 1))
         return max_step / abs(span)
+
+    def _tuple_order_issue(self, values: tuple) -> str | None:
+        if len(values) < 3 or any(value is None for value in values[:3]):
+            return None
+        typ, min_val, max_val = values[:3]
+        tolerance = max(
+            IV_ORDER_ABS_TOL_A,
+            max(abs(typ), abs(min_val), abs(max_val)) * IV_ORDER_REL_TOL,
+        )
+        if max_val - min_val <= tolerance:
+            return None
+        if typ + tolerance < min_val or max_val + tolerance < typ:
+            return (
+                f"typ/min/max order needs review "
+                f"({self._format_tuple(values)}, tolerance={tolerance:.4g})"
+            )
+        return None
+
+    def _format_tuple(self, values: tuple) -> str:
+        names = ("typ", "min", "max")
+        parts = []
+        for name, value in zip(names, values[:3]):
+            parts.append(f"{name}={'NA' if value is None else f'{value:.4g}V'}")
+        return ", ".join(parts)
 
     def _crossing_span_20_80(self, wf: "Waveform") -> float | None:
         rows = wf.vt.rows

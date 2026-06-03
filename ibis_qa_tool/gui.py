@@ -18,7 +18,8 @@ if str(APP_DIR) not in sys.path:
 
 from parser.ibis_parser import IBISParser
 from runner import CheckRunner
-from reporter import Reporter
+from reporter import Reporter, render_html_report, render_markdown_report
+from spreadsheet import write_spreadsheet_report
 
 
 DECISIONS = [
@@ -28,13 +29,14 @@ DECISIONS = [
     "Rejected",
     "Not Applicable",
 ]
+MAX_LEVEL_CHOICES = ["IQ1", "IQ2", "IQ3", "IQ4"]
 
 
-def run_qa_report(path: Path) -> dict:
+def run_qa_report(path: Path, max_level: int | None = 3) -> dict:
     """Run the existing parser/checker/reporter pipeline and return a report dict."""
     ibis_file = IBISParser().parse(path)
-    results = CheckRunner().run(ibis_file)
-    return Reporter(results, ibis_file, verbose=True).as_dict()
+    results = CheckRunner(max_level=max_level).run(ibis_file)
+    return Reporter(results, ibis_file, verbose=True, max_level=max_level).as_dict()
 
 
 class IbisQaGui(tk.Tk):
@@ -51,6 +53,7 @@ class IbisQaGui(tk.Tk):
         self.selected_review_id: str | None = None
 
         self.path_var = tk.StringVar()
+        self.max_level_var = tk.StringVar(value="IQ3")
         self.status_var = tk.StringVar(value="Choose an IBIS file to begin.")
         self.summary_vars = {
             key: tk.StringVar(value=f"{key}: 0")
@@ -75,18 +78,27 @@ class IbisQaGui(tk.Tk):
 
         self.path_entry = ttk.Entry(file_bar, textvariable=self.path_var)
         self.path_entry.grid(row=0, column=0, sticky="ew", padx=(0, 8))
+        ttk.Label(file_bar, text="Max Level").grid(row=0, column=1, padx=(0, 4))
+        self.max_level_combo = ttk.Combobox(
+            file_bar,
+            textvariable=self.max_level_var,
+            values=MAX_LEVEL_CHOICES,
+            width=6,
+            state="readonly",
+        )
+        self.max_level_combo.grid(row=0, column=2, padx=(0, 8))
         self.browse_button = ttk.Button(file_bar, text="Browse", command=self._browse)
-        self.browse_button.grid(row=0, column=1, padx=(0, 8))
+        self.browse_button.grid(row=0, column=3, padx=(0, 8))
         self.run_button = ttk.Button(file_bar, text="Run QA", command=self._run_qa)
-        self.run_button.grid(row=0, column=2, padx=(0, 8))
+        self.run_button.grid(row=0, column=4, padx=(0, 8))
         self.save_report_button = ttk.Button(
             file_bar, text="Save Report", command=self._save_report, state=tk.DISABLED
         )
-        self.save_report_button.grid(row=0, column=3, padx=(0, 8))
+        self.save_report_button.grid(row=0, column=5, padx=(0, 8))
         self.save_review_button = ttk.Button(
             file_bar, text="Save Review", command=self._save_review, state=tk.DISABLED
         )
-        self.save_review_button.grid(row=0, column=4)
+        self.save_review_button.grid(row=0, column=6)
 
         ttk.Label(root, textvariable=self.status_var).grid(
             row=1, column=0, sticky="ew", pady=(8, 4)
@@ -104,27 +116,29 @@ class IbisQaGui(tk.Tk):
         notebook = ttk.Notebook(panes)
         self.results_tree = self._make_tree(
             notebook,
-            ("result_id", "check_id", "status", "scope", "subject", "message"),
+            ("result_id", "check_id", "iq_level", "status", "scope", "subject", "message"),
             {
                 "result_id": 74,
                 "check_id": 72,
+                "iq_level": 76,
                 "status": 68,
                 "scope": 96,
-                "subject": 170,
-                "message": 430,
+                "subject": 150,
+                "message": 400,
             },
         )
         self.review_tree = self._make_tree(
             notebook,
-            ("result_id", "check_id", "status", "scope", "subject", "decision", "message"),
+            ("result_id", "check_id", "iq_level", "status", "scope", "subject", "decision", "message"),
             {
                 "result_id": 74,
                 "check_id": 72,
+                "iq_level": 76,
                 "status": 68,
                 "scope": 90,
-                "subject": 140,
+                "subject": 130,
                 "decision": 118,
-                "message": 360,
+                "message": 330,
             },
         )
         self.review_tree.bind("<<TreeviewSelect>>", self._on_review_select)
@@ -210,14 +224,16 @@ class IbisQaGui(tk.Tk):
         self.selected_review_id = None
         self._clear_trees()
         self._set_busy(True)
-        self.status_var.set(f"Running QA for {path.name} ...")
+        max_level = self._selected_max_level()
+        target = f"IQ{max_level}" if max_level else "all implemented levels"
+        self.status_var.set(f"Running QA for {path.name} up to {target} ...")
 
-        thread = threading.Thread(target=self._worker_run, args=(path,), daemon=True)
+        thread = threading.Thread(target=self._worker_run, args=(path, max_level), daemon=True)
         thread.start()
 
-    def _worker_run(self, path: Path) -> None:
+    def _worker_run(self, path: Path, max_level: int | None) -> None:
         try:
-            self.work_queue.put(("report", run_qa_report(path)))
+            self.work_queue.put(("report", run_qa_report(path, max_level=max_level)))
         except Exception as exc:
             self.work_queue.put(("error", exc))
 
@@ -242,6 +258,7 @@ class IbisQaGui(tk.Tk):
         state = tk.DISABLED if busy else tk.NORMAL
         self.browse_button.configure(state=state)
         self.run_button.configure(state=state)
+        self.max_level_combo.configure(state=tk.DISABLED if busy else "readonly")
         if busy or self.report is None:
             self.save_report_button.configure(state=tk.DISABLED)
             self.save_review_button.configure(state=tk.DISABLED)
@@ -276,6 +293,7 @@ class IbisQaGui(tk.Tk):
             values = (
                 result.get("result_id", ""),
                 result.get("check_id", ""),
+                result.get("iq_level", ""),
                 result.get("status", ""),
                 result.get("scope", ""),
                 result.get("subject", ""),
@@ -292,6 +310,7 @@ class IbisQaGui(tk.Tk):
             values = (
                 result_id,
                 item.get("check_id", ""),
+                item.get("iq_level", ""),
                 item.get("status", ""),
                 item.get("scope", ""),
                 item.get("subject", ""),
@@ -301,7 +320,9 @@ class IbisQaGui(tk.Tk):
             self.review_tree.insert("", tk.END, iid=result_id, values=values)
 
         file_name = Path(report.get("file", "")).name or "IBIS file"
-        self.status_var.set(f"Finished {file_name}. {review_count} item(s) need review.")
+        max_level = report.get("max_level")
+        target = f"IQ{max_level}" if max_level else "all implemented levels"
+        self.status_var.set(f"Finished {file_name} up to {target}. {review_count} item(s) need review.")
         self._set_busy(False)
 
     def _on_review_select(self, _event=None) -> None:
@@ -339,6 +360,7 @@ class IbisQaGui(tk.Tk):
         lines = [
             f"Result ID: {result.get('result_id', '')}",
             f"Check: {result.get('check_id', '')}",
+            f"IQ Level: {result.get('iq_level', '')}",
             f"Status: {result.get('status', '')}",
             f"Scope: {result.get('scope', '')}",
             f"Subject: {result.get('subject', '')}",
@@ -373,8 +395,8 @@ class IbisQaGui(tk.Tk):
         }
 
         values = list(self.review_tree.item(self.selected_review_id, "values"))
-        if len(values) >= 6:
-            values[5] = decision
+        if len(values) >= 7:
+            values[6] = decision
             self.review_tree.item(self.selected_review_id, values=values)
 
         if not silent:
@@ -394,40 +416,45 @@ class IbisQaGui(tk.Tk):
         if not path:
             return
 
-        Path(path).write_text(json.dumps(self.report, indent=2), encoding="utf-8")
-        self.status_var.set(f"Saved QA report to {path}.")
+        json_path = Path(path)
+        markdown_path = json_path.with_suffix(".md")
+        html_path = json_path.with_suffix(".html")
+        spreadsheet_path = json_path.with_suffix(".xlsx")
+        asset_dir = markdown_path.with_name(f"{markdown_path.stem}_assets")
+        self._apply_decision(silent=True)
+        json_path.write_text(json.dumps(self.report, indent=2), encoding="utf-8")
+        markdown_path.write_text(
+            render_markdown_report(
+                self.report,
+                asset_dir=asset_dir,
+                asset_ref_prefix=asset_dir.name,
+            ),
+            encoding="utf-8",
+        )
+        html_path.write_text(
+            render_html_report(
+                self.report,
+                asset_dir=asset_dir,
+                asset_ref_prefix=asset_dir.name,
+            ),
+            encoding="utf-8",
+        )
+        write_spreadsheet_report(
+            self.report,
+            spreadsheet_path,
+            target_level=self.report.get("max_level"),
+            review_decisions=self._review_payload(),
+        )
+        self.status_var.set(
+            f"Saved QA report to {json_path}, Markdown to {markdown_path}, HTML to {html_path}, curves to {asset_dir}, and spreadsheet to {spreadsheet_path}."
+        )
 
     def _save_review(self) -> None:
         if self.report is None:
             return
 
         self._apply_decision(silent=True)
-        decisions = []
-        for item in self.report.get("review_queue", []):
-            result_id = item.get("result_id", "")
-            review = self.review_decisions.get(
-                result_id,
-                {"decision": DECISIONS[0], "comment": ""},
-            )
-            decisions.append({
-                "result_id": result_id,
-                "check_id": item.get("check_id", ""),
-                "scope": item.get("scope", ""),
-                "subject": item.get("subject", ""),
-                "decision": review.get("decision", DECISIONS[0]),
-                "comment": review.get("comment", ""),
-                "source_result": item,
-            })
-
-        payload = {
-            "schema_version": 1,
-            "generated_at": datetime.now().astimezone().isoformat(timespec="seconds"),
-            "ibis_file": self.report.get("file", ""),
-            "summary": self.report.get("summary", {}),
-            "review_summary": self.report.get("review_summary", {}),
-            "decision_summary": dict(Counter(d["decision"] for d in decisions)),
-            "decisions": decisions,
-        }
+        payload = self._review_payload()
 
         default_name = self._default_output_name(".review.json")
         path = filedialog.asksaveasfilename(
@@ -442,12 +469,54 @@ class IbisQaGui(tk.Tk):
         Path(path).write_text(json.dumps(payload, indent=2), encoding="utf-8")
         self.status_var.set(f"Saved review decisions to {path}.")
 
+    def _review_payload(self) -> dict:
+        if self.report is None:
+            return {"schema_version": 1, "decisions": []}
+
+        decisions = []
+        for item in self.report.get("review_queue", []):
+            result_id = item.get("result_id", "")
+            review = self.review_decisions.get(
+                result_id,
+                {"decision": DECISIONS[0], "comment": ""},
+            )
+            decisions.append({
+                "result_id": result_id,
+                "check_id": item.get("check_id", ""),
+                "iq_level": item.get("iq_level", ""),
+                "numeric_level": item.get("numeric_level"),
+                "scope": item.get("scope", ""),
+                "subject": item.get("subject", ""),
+                "decision": review.get("decision", DECISIONS[0]),
+                "comment": review.get("comment", ""),
+                "source_result": item,
+            })
+
+        return {
+            "schema_version": 1,
+            "generated_at": datetime.now().astimezone().isoformat(timespec="seconds"),
+            "ibis_file": self.report.get("file", ""),
+            "summary": self.report.get("summary", {}),
+            "review_summary": self.report.get("review_summary", {}),
+            "decision_summary": dict(Counter(d["decision"] for d in decisions)),
+            "decisions": decisions,
+        }
+
     def _default_output_name(self, suffix: str) -> str:
         if self.ibis_path is not None:
             return f"{self.ibis_path.stem}{suffix}"
         if self.report is not None and self.report.get("file"):
             return f"{Path(self.report['file']).stem}{suffix}"
         return f"ibis{suffix}"
+
+    def _selected_max_level(self) -> int | None:
+        value = self.max_level_var.get()
+        if value.startswith("IQ"):
+            try:
+                return int(value[2:])
+            except ValueError:
+                return None
+        return None
 
 
 def main() -> None:
