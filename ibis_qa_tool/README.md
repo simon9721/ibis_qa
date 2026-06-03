@@ -80,6 +80,18 @@ python ibis_qa.py my_model.ibs --spreadsheet report.xlsx
 # IQ3 run with saved GUI review decisions applied to the spreadsheet
 python ibis_qa.py my_model.ibs --spreadsheet report.xlsx --max-level 3 --review report.review.json
 
+# Generate a pending review template for semi-auto and manual review items
+python ibis_qa.py my_model.ibs --max-level 3 --review-template report.review.json
+
+# Apply review decisions to JSON, Markdown, HTML, console signoff, and spreadsheet output
+python ibis_qa.py my_model.ibs --markdown --review report.review.json > report.reviewed.md
+
+# Enter review decisions from the terminal and save the overlay
+python ibis_qa.py my_model.ibs --review-interactive --review-out report.review.json --reviewer "Reviewer Name"
+
+# Compare a new run against a previous QA JSON report
+python ibis_qa.py my_model.ibs --markdown --compare-report previous.qa.json > report.diff.md
+
 # Simple GUI for running QA and recording semi-auto review decisions
 python gui.py
 ```
@@ -90,18 +102,24 @@ From the repository root, launch the same GUI with:
 python ibis_qa_tool\gui.py
 ```
 
-### GUI review workflow
+### Review workflow
 
-The GUI lets a reviewer choose an IBIS file, run the same parser/checker
-pipeline as the CLI, inspect non-passing findings, and work through the
-semi-auto `review_required` queue. Reviewer decisions are saved separately
-as `*.review.json`, preserving the generated QA report and attaching each
-comment/decision to a stable `result_id`.
+The CLI and GUI let a reviewer choose an IBIS file, run the same parser/checker
+pipeline, inspect non-passing findings, and work through both the semi-auto
+`review_required` queue and the manual-review queue. Reviewer decisions are
+saved separately as `*.review.json`, preserving the generated QA evidence and
+attaching each comment/decision to a deterministic stable `review_key`.
 
-Spreadsheet generation can optionally apply that `*.review.json` overlay.
-Accepted items render as `PASS`, exceptions render as `EXCEPTION`, rejected
-items remain blocking, and not-applicable decisions render as `NA`. By default,
-CLI and GUI runs target IQ3. Use
+Review exports include reviewer name, organization, approval date, decision,
+comment, external evidence, datasheet/reference section, and model-maker action
+fields. The GUI supports loading existing review files, batch accepting or
+marking selected rows as not applicable, and requires a comment for exceptions.
+
+All report formats can apply that `*.review.json` overlay. Accepted items render
+as `PASS`, exceptions render as `EXCEPTION`, rejected items become blocking
+`FAIL`, and not-applicable decisions render as `NA`. JSON, Markdown, standalone
+HTML, spreadsheet, and console signoff output include review-adjusted summaries
+alongside the raw generated evidence. By default, CLI and GUI runs target IQ3. Use
 `--max-level 1|2|3|4` to run and report only checks up to the requested target
 IQ level. The older `--target-level` spelling is kept as a CLI alias. For
 example, `--max-level 3` skips IQ4 checks entirely, omits IQ4 results from JSON,

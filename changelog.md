@@ -4,6 +4,12 @@
 
 ### Added
 
+- Added a shared review-decision layer for semi-auto and manual review workflows. Reports now include deterministic stable review keys, raw and review-adjusted statuses, manual review queues, review overlay metadata, and final signoff summaries.
+- Added CLI review workflow options: `--review-template`, `--review-out`, `--review-interactive`, `--reviewer`, `--reviewer-org`, and `--approval-date`. The existing `--review` option now applies the overlay to JSON, Markdown, HTML, console signoff output, and spreadsheet reports.
+- Added CLI/report diff support via `--compare-report`, with diff data in JSON and a human-readable Report Diff section in Markdown/HTML.
+- Added GUI review improvements: reviewer metadata fields, load-review support, combined semi-auto/manual review queue, external evidence/reference/action fields, multi-row selection, batch accept, batch mark-not-applicable, and required comments for exceptions.
+- Added a `Manual Review` spreadsheet sheet and review-adjusted status columns in the raw results sheet.
+- Added `docs/ibis-qa-tool-demo.md`, a boss/colleague-facing demo brief that covers the tool flow, IBIS Quality Specification coverage, Zout additions, report formats, CLI/GUI usage, and the current review-queue workflow with recommended polish items.
 - Added `ibis_qa_tool/zout.py`, a package-level Zout estimator based on the Westerhoff load-line method from the root `ibis_zout_report.py` prototype.
 - Added per-model `zout` data to JSON reports, including typ/min/max Pullup/Pulldown estimates, operating-point voltage/current, load connection, and R_series estimates.
 - Added a report-level `zout_summary` block and a human-readable `Zout Estimates` section in Markdown and standalone HTML reports.
@@ -13,10 +19,19 @@
 
 ### Changed
 
+- Markdown and standalone HTML reports now consume saved review overlays and show a Review Signoff Summary plus Manual Review Items section.
+- JSON reports now preserve legacy run-order IDs as `legacy_result_id` while using deterministic stable `result_id`/`review_key` values for review reuse.
 - Moved Zout from a standalone root prototype into the normal QA reporting pipeline. Zout is treated as characterization data, not a QA PASS/FAIL item, so it does not affect candidate IQ scoring or review queues.
 
 ### Tested
 
+- Verified Python compilation for the full `ibis_qa_tool` package after adding shared review workflow support.
+- Verified CLI help exposes the new review workflow options.
+- Generated a z41c IQ3 JSON report and pending review template; confirmed stable review keys, 107 semi-auto review rows, 636 manual review rows, review summaries, and signoff summary fields.
+- Applied a sample review overlay with one accepted semi-auto item and one accepted manual item; verified JSON, Markdown, standalone HTML, and spreadsheet outputs all reflect the accepted decisions and reviewer metadata.
+- Verified the reviewed standalone HTML embeds SVG images as data URIs and has no external `.svg` image references.
+- Verified the reviewed `.xlsx` workbook remains a valid spreadsheet zip package and includes the added manual-review sheet.
+- Verified `--compare-report` adds report-diff data to generated JSON/Markdown output.
 - Verified Python compilation for the full `ibis_qa_tool` package after adding Zout integration.
 - Regenerated Micron IQ3 JSON, Markdown, standalone HTML, spreadsheet, and SVG-asset reports with Zout data included.
 - Verified generated JSON is UTF-8 and includes `zout_summary` plus per-model `zout` blocks.

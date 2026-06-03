@@ -66,6 +66,14 @@ from pathlib import Path
 from parser.ibis_parser import IBISParser
 from runner import CheckRunner
 from reporter import Reporter
+from review import (
+    apply_review_decisions,
+    compare_reports,
+    load_review_decisions,
+    make_review_payload,
+    run_cli_review,
+    write_review_payload,
+)
 from spreadsheet import write_spreadsheet_report
 
 
@@ -86,7 +94,15 @@ def main():
                     type=int, choices=[1, 2, 3, 4],
                     default=3,
                     help="Run and report only checks up to the requested IQ level (default: 3)")
-    ap.add_argument("--review", help="Apply a GUI *.review.json decision overlay to the spreadsheet")
+    ap.add_argument("--review", help="Apply a *.review.json decision overlay to all generated reports")
+    ap.add_argument("--review-template", help="Write a pending review template JSON to this path")
+    ap.add_argument("--review-out", help="Write review decisions/template to this path")
+    ap.add_argument("--review-interactive", action="store_true",
+                    help="Prompt for semi-auto and manual review decisions in the terminal")
+    ap.add_argument("--reviewer", default="", help="Reviewer name for review exports")
+    ap.add_argument("--reviewer-org", default="", help="Reviewer organization for review exports")
+    ap.add_argument("--approval-date", default="", help="Approval date for review exports")
+    ap.add_argument("--compare-report", help="Compare this run against a previous QA JSON report")
     ap.add_argument("--plot-dir", help="Write SVG visual-curve assets to this directory")
     ap.add_argument("--zout-rload", type=float, default=50.0,
                     help="Load impedance in ohms for reported Zout estimates (default: 50)")
@@ -117,34 +133,80 @@ def main():
         verbose=args.verbose,
         max_level=args.max_level,
         zout_rload_ohm=args.zout_rload,
+        review_decisions=args.review,
     )
-    report_dict = None
+    report_dict = reporter.as_dict()
+    active_review_decisions = args.review
+
+    if args.review_interactive:
+        existing = load_review_decisions(args.review)
+        payload = run_cli_review(
+            report_dict,
+            existing_decisions=existing,
+            reviewer=args.reviewer,
+            organization=args.reviewer_org,
+            approval_date=args.approval_date,
+        )
+        report_dict = apply_review_decisions(report_dict, payload)
+        active_review_decisions = payload
+        if args.review_out:
+            review_path = write_review_payload(payload, args.review_out)
+            print(f"Wrote review decisions: {review_path}", file=sys.stderr)
+
+    if args.review_template:
+        payload = make_review_payload(
+            report_dict,
+            load_review_decisions(args.review),
+            reviewer=args.reviewer,
+            organization=args.reviewer_org,
+            approval_date=args.approval_date,
+        )
+        review_path = write_review_payload(payload, args.review_template)
+        print(f"Wrote review template: {review_path}", file=sys.stderr)
+
+    if args.review_out and not args.review_interactive:
+        payload = make_review_payload(
+            report_dict,
+            load_review_decisions(args.review),
+            reviewer=args.reviewer,
+            organization=args.reviewer_org,
+            approval_date=args.approval_date,
+        )
+        review_path = write_review_payload(payload, args.review_out)
+        print(f"Wrote review decisions: {review_path}", file=sys.stderr)
+
+    if args.compare_report:
+        report_dict["report_diff"] = compare_reports(report_dict, args.compare_report)
+
     if args.spreadsheet:
-        report_dict = reporter.as_dict()
         spreadsheet_path = write_spreadsheet_report(
             report_dict,
             args.spreadsheet,
             target_level=args.max_level,
-            review_decisions=args.review,
+            review_decisions=active_review_decisions,
         )
         print(f"Wrote spreadsheet report: {spreadsheet_path}", file=sys.stderr)
 
     if args.json:
-        print(json.dumps(report_dict or reporter.as_dict(), indent=2))
+        print(json.dumps(report_dict, indent=2))
     elif args.markdown:
-        if report_dict is None:
-            print(reporter.as_markdown(args.plot_dir))
-        else:
-            from reporter import render_markdown_report
-            print(render_markdown_report(report_dict, args.plot_dir))
+        from reporter import render_markdown_report
+        print(render_markdown_report(report_dict, args.plot_dir))
     elif args.html:
-        if report_dict is None:
-            print(reporter.as_html(args.plot_dir))
-        else:
-            from reporter import render_html_report
-            print(render_html_report(report_dict, args.plot_dir))
+        from reporter import render_html_report
+        print(render_html_report(report_dict, args.plot_dir))
     else:
         print(reporter.as_text())
+        signoff = report_dict.get("signoff_summary") or {}
+        semi = signoff.get("semi_auto") or {}
+        manual = signoff.get("manual") or {}
+        if signoff:
+            print("")
+            print("REVIEW SIGNOFF")
+            print(f"  Final signoff ready : {'YES' if signoff.get('final_ready') else 'NO'}")
+            print(f"  Hard blockers       : {signoff.get('hard_blockers', 0)}")
+            print(f"  Semi-auto pending   : {semi.get('pending', 0)} / {semi.get('total_review_items', 0)}")
+            print(f"  Manual pending      : {manual.get('pending', 0)} / {manual.get('total_review_items', 0)}")
 
 
 if __name__ == "__main__":

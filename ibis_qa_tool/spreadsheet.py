@@ -110,11 +110,21 @@ def _load_review_decisions(review_decisions: dict | str | Path | None) -> dict[s
     else:
         payload = review_decisions
     decisions = payload.get("decisions", []) if isinstance(payload, dict) else []
-    return {
-        str(item.get("result_id")): item
-        for item in decisions
-        if item.get("result_id")
-    }
+    indexed: dict[str, dict] = {}
+    for item in decisions:
+        if not isinstance(item, dict):
+            continue
+        for field in ("review_key", "result_key", "manual_key", "result_id", "legacy_result_id"):
+            value = item.get(field)
+            if value:
+                indexed[str(value)] = item
+        source = item.get("source_result") or item.get("source_item") or {}
+        if isinstance(source, dict):
+            for field in ("review_key", "result_key", "manual_key", "result_id", "legacy_result_id"):
+                value = source.get(field)
+                if value:
+                    indexed[str(value)] = item
+    return indexed
 
 
 def _build_sheets(
@@ -132,6 +142,7 @@ def _build_sheets(
     for model_name, model in report.get("models", {}).items():
         sheets.append(_model_sheet(report, model_name, model, metadata, used_names, target_level, review_decisions))
 
+    sheets.append(_manual_review_sheet(report, used_names, review_decisions))
     sheets.append(_results_sheet(report, used_names, review_decisions))
     return sheets
 
@@ -231,7 +242,8 @@ def _summary_sheet(
         [],
         [Cell("Review Queue", 3)],
         ["Semi-auto review items", len(report.get("review_queue", []))],
-        ["Manual items", "Marked as MANUAL REVIEW in component/model sheets"],
+        ["Manual review items", len(report.get("manual_review_queue", []))],
+        ["Final signoff ready", "Yes" if (report.get("signoff_summary") or {}).get("final_ready") else "No"],
     ])
 
     return Sheet(_unique_sheet_name("summary", used_names), rows, [28, 28, 24, 18, 90])
@@ -321,13 +333,54 @@ def _model_sheet(
     )
 
 
+def _manual_review_sheet(report: dict, used_names: set[str], review_decisions: dict[str, dict]) -> Sheet:
+    rows: list[list[object]] = [[
+        Cell("Review Key", 2),
+        Cell("Check ID", 2),
+        Cell("IQ Level", 2),
+        Cell("Scope", 2),
+        Cell("Subject", 2),
+        Cell("Description", 2),
+        Cell("Decision", 2),
+        Cell("External Evidence", 2),
+        Cell("Datasheet / Reference", 2),
+        Cell("Reviewer Comment", 2),
+        Cell("Model-Maker Action", 2),
+    ]]
+    for item in report.get("manual_review_queue", []):
+        decision = _decision_for_result(item, review_decisions) or item.get("review_decision") or {}
+        decision_label = decision.get("decision", "Pending") if decision else "Pending"
+        rows.append([
+            item.get("review_key", ""),
+            item.get("check_id", ""),
+            item.get("iq_level", ""),
+            item.get("scope", ""),
+            item.get("subject", ""),
+            item.get("title", item.get("message", "")),
+            Cell(decision_label, _status_style(_decision_status(decision_label) or "MANUAL REVIEW")),
+            decision.get("external_evidence", "") if decision else "",
+            decision.get("datasheet_section", "") if decision else "",
+            decision.get("comment", "") if decision else "",
+            decision.get("model_maker_action", "") if decision else "",
+        ])
+    if len(rows) == 1:
+        rows.append(["", "", "", "", "", "No manual items in scope.", "", "", "", "", ""])
+    return Sheet(
+        _unique_sheet_name("manual review", used_names),
+        rows,
+        [18, 10, 12, 14, 28, 70, 18, 45, 45, 60, 60],
+        freeze_row=1,
+    )
+
+
 def _results_sheet(report: dict, used_names: set[str], review_decisions: dict[str, dict]) -> Sheet:
     rows: list[list[object]] = [[
         Cell("Result ID", 2),
         Cell("Check ID", 2),
         Cell("IQ Level", 2),
         Cell("Automation", 2),
-        Cell("Status", 2),
+        Cell("Generated Status", 2),
+        Cell("Effective Status", 2),
         Cell("Scope", 2),
         Cell("Subject", 2),
         Cell("Review Required", 2),
@@ -338,6 +391,7 @@ def _results_sheet(report: dict, used_names: set[str], review_decisions: dict[st
     ]]
     for result in report.get("results", []):
         status = result.get("status", "")
+        effective = _effective_status(result, review_decisions)
         decision = _decision_for_result(result, review_decisions)
         rows.append([
             result.get("result_id", ""),
@@ -345,6 +399,7 @@ def _results_sheet(report: dict, used_names: set[str], review_decisions: dict[st
             result.get("iq_level", ""),
             result.get("automation_class", ""),
             Cell(status, _status_style(_sheet_status(status))),
+            Cell(effective, _status_style(_sheet_status(effective))),
             result.get("scope", ""),
             result.get("subject", ""),
             "Yes" if result.get("review_required") else "No",
@@ -353,7 +408,7 @@ def _results_sheet(report: dict, used_names: set[str], review_decisions: dict[st
             result.get("message", ""),
             _details_text(result),
         ])
-    return Sheet(_unique_sheet_name("results", used_names), rows, [12, 10, 12, 14, 12, 14, 28, 16, 18, 50, 60, 90], freeze_row=1)
+    return Sheet(_unique_sheet_name("results", used_names), rows, [18, 10, 12, 14, 14, 14, 14, 28, 16, 18, 50, 60, 90], freeze_row=1)
 
 
 def _check_row(
@@ -464,8 +519,14 @@ def _filter_check_ids(
 
 
 def _decision_for_result(result: dict, review_decisions: dict[str, dict]) -> dict | None:
-    result_id = str(result.get("result_id", ""))
-    decision = review_decisions.get(result_id)
+    decision = None
+    for field in ("review_key", "result_key", "manual_key", "result_id", "legacy_result_id"):
+        value = result.get(field)
+        if value and str(value) in review_decisions:
+            decision = review_decisions[str(value)]
+            break
+    if not decision and result.get("review_decision"):
+        decision = result.get("review_decision")
     if not decision:
         return None
     if not _decision_status(decision.get("decision", "")):
@@ -487,7 +548,7 @@ def _effective_status(result: dict, review_decisions: dict[str, dict]) -> str:
     decision = _decision_for_result(result, review_decisions)
     if decision:
         return _decision_status(decision.get("decision", "")) or result.get("status", "")
-    return result.get("status", "")
+    return result.get("effective_status") or result.get("status", "")
 
 
 def _result_reason(result: dict) -> str:

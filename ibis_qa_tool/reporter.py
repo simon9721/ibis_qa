@@ -15,6 +15,10 @@ from typing import TYPE_CHECKING
 
 from checks.base import CheckResult, Status
 from plotting import write_markdown_plot_assets
+from review import (
+    apply_review_decisions,
+    assign_stable_result_ids,
+)
 from zout import DEFAULT_ZOUT_RLOAD_OHM, estimate_zout_for_ibis, summarize_zout_results
 
 if TYPE_CHECKING:
@@ -29,7 +33,14 @@ _STATUS_SYMBOL = {
     Status.ERROR: "!",
 }
 _STATUS_ORDER = [Status.FAIL, Status.ERROR, Status.WARN, Status.PASS, Status.NA]
-_STATUS_VALUE_ORDER = [s.value for s in _STATUS_ORDER]
+_STATUS_VALUE_ORDER = [
+    Status.FAIL.value,
+    Status.ERROR.value,
+    Status.WARN.value,
+    "EXCEPTION",
+    Status.PASS.value,
+    Status.NA.value,
+]
 _SPEC_PATH = Path(__file__).resolve().parent.parent / "data" / "ibis_quality_spec_3_0.json"
 
 
@@ -83,13 +94,19 @@ def _md_cell(value) -> str:
 
 
 def _status_needs_attention(result: dict) -> bool:
+    status = result.get("effective_status") or result.get("status")
+    decision = result.get("review_decision") or {}
+    review_state = decision.get("decision") or result.get("review_state")
     return (
-        result.get("status") in {
+        status in {
             Status.FAIL.value,
             Status.ERROR.value,
             Status.WARN.value,
         }
-        or bool(result.get("review_required"))
+        or (
+            bool(result.get("review_required"))
+            and review_state in {None, "", "Pending", "Rejected"}
+        )
     )
 
 
@@ -104,7 +121,15 @@ def _result_reason(result: dict) -> str:
     message = result.get("message", "")
     details = [_human_detail(detail) for detail in (result.get("details") or [])[:2]]
     if details:
-        return f"{message}: {'; '.join(details)}"
+        message = f"{message}: {'; '.join(details)}"
+    decision = result.get("review_decision") or {}
+    decision_name = decision.get("decision")
+    if decision_name and decision_name != "Pending":
+        comment = decision.get("comment", "")
+        if comment:
+            message = f"{message} [Reviewer {decision_name}: {comment}]"
+        else:
+            message = f"{message} [Reviewer {decision_name}]"
     return message
 
 
@@ -302,8 +327,8 @@ def _subject_summary(results: list[dict], limit: int = 6) -> str:
 
 
 def _status_counts(results: list[dict]) -> Counter:
-    counts = Counter(result.get("status", "") for result in results)
-    for status in ("PASS", "FAIL", "WARN", "NA", "ERROR"):
+    counts = Counter(result.get("effective_status") or result.get("status", "") for result in results)
+    for status in ("PASS", "FAIL", "WARN", "NA", "ERROR", "EXCEPTION"):
         counts.setdefault(status, 0)
     return counts
 
@@ -407,7 +432,8 @@ def _visual_links_for_results(
     links = []
     seen = set()
     for result in results:
-        if result.get("status") not in {Status.WARN.value, Status.FAIL.value, Status.ERROR.value}:
+        status = result.get("effective_status") or result.get("status")
+        if status not in {Status.WARN.value, Status.FAIL.value, Status.ERROR.value}:
             continue
         model_name = result.get("model_name") or result.get("subject")
         if model_name not in plot_refs:
@@ -431,7 +457,8 @@ def _visual_links_for_results(
 def _qa_links_for_visual(model_results: list[dict], curve_key: str) -> str:
     check_ids = []
     for result in model_results:
-        if result.get("status") not in {Status.WARN.value, Status.FAIL.value, Status.ERROR.value}:
+        status = result.get("effective_status") or result.get("status")
+        if status not in {Status.WARN.value, Status.FAIL.value, Status.ERROR.value}:
             continue
         check_id = result.get("check_id", "")
         if curve_key not in _plot_keys_for_check(check_id):
@@ -445,7 +472,7 @@ def _qa_links_for_visual(model_results: list[dict], curve_key: str) -> str:
 
 
 
-def _render_toc(lines: list[str], max_level: int | None) -> None:
+def _render_toc(lines: list[str], max_level: int | None, has_report_diff: bool = False) -> None:
     score_cap = max_level or 4
     lines.extend([
         "",
@@ -453,11 +480,14 @@ def _render_toc(lines: list[str], max_level: int | None) -> None:
         '<a id="table-of-contents"></a>',
         "",
         "- [Score Assessment](#score-assessment)",
+        "- [Review Signoff Summary](#review-signoff-summary)",
         "- [Result Summary](#result-summary)",
         "- [Passed Items Per Level](#passed-items-per-level)",
         "- [Zout Estimates](#zout-estimates)",
         "- [Quality Check Results](#quality-check-results)",
     ])
+    if has_report_diff:
+        lines.append("- [Report Diff](#report-diff)")
     for level in range(1, score_cap + 1):
         check_ids = _check_ids_for_level(level)
         if not check_ids:
@@ -473,6 +503,7 @@ def _render_toc(lines: list[str], max_level: int | None) -> None:
     lines.extend([
         "",
         "- [Visual Curves by Model](#visual-curves-by-model)",
+        "- [Manual Review Items](#manual-review-items)",
         "- [Appendix A: IQ Levels](#appendix-a-iq-levels)",
         "- [Appendix B: Special Designators](#appendix-b-special-designators)",
     ])
@@ -573,6 +604,148 @@ def _render_quality_check_results(
                 "",
                 "[Back to table of contents](#table-of-contents)",
             ])
+
+
+def _render_review_signoff_summary(lines: list[str], report: dict) -> None:
+    signoff = report.get("signoff_summary") or {}
+    overlay = report.get("review_overlay") or {}
+    semi = signoff.get("semi_auto") or {}
+    manual = signoff.get("manual") or {}
+    effective = signoff.get("effective_status") or report.get("effective_summary") or {}
+    raw = signoff.get("generated_status") or report.get("summary") or {}
+
+    lines.extend([
+        "",
+        "## Review Signoff Summary",
+        '<a id="review-signoff-summary"></a>',
+        "",
+        "| Field | Value |",
+        "|---|---|",
+        f"| Review overlay loaded | {_md_cell('Yes' if overlay.get('loaded') else 'No')} |",
+        f"| Reviewer | {_md_cell(overlay.get('reviewer', ''))} |",
+        f"| Organization | {_md_cell(overlay.get('organization', ''))} |",
+        f"| Approval date | {_md_cell(overlay.get('approval_date', ''))} |",
+        f"| Final signoff ready | {_md_cell('Yes' if signoff.get('final_ready') else 'No')} |",
+        f"| Hard blockers after review | {signoff.get('hard_blockers', 0)} |",
+        f"| Semi-auto review pending | {semi.get('pending', 0)} / {semi.get('total_review_items', 0)} |",
+        f"| Semi-auto accepted | {semi.get('accepted', 0)} |",
+        f"| Semi-auto exceptions | {semi.get('exceptions', 0)} |",
+        f"| Semi-auto rejected | {semi.get('rejected', 0)} |",
+        f"| Manual review pending | {manual.get('pending', 0)} / {manual.get('total_review_items', 0)} |",
+        f"| Manual accepted | {manual.get('accepted', 0)} |",
+        f"| Manual exceptions | {manual.get('exceptions', 0)} |",
+        f"| Manual rejected | {manual.get('rejected', 0)} |",
+        f"| Note | {_md_cell(signoff.get('note', ''))} |",
+        "",
+        "| Status | Generated Count | Review-Adjusted Count |",
+        "|---|---:|---:|",
+    ])
+    for status in ("PASS", "FAIL", "WARN", "NA", "ERROR", "EXCEPTION"):
+        lines.append(
+            f"| {status} | {raw.get(status, 0)} | {effective.get(status, 0)} |"
+        )
+
+
+def _render_report_diff(lines: list[str], report: dict) -> None:
+    diff = report.get("report_diff") or {}
+    if not diff:
+        return
+    lines.extend([
+        "",
+        "## Report Diff",
+        '<a id="report-diff"></a>',
+        "",
+    ])
+    if not diff.get("available"):
+        lines.append(_md_cell(diff.get("note", "Previous report could not be compared.")))
+        return
+
+    lines.extend([
+        "| Field | Value |",
+        "|---|---|",
+        f"| Previous report file | {_md_cell(Path(diff.get('previous_file', '')).name)} |",
+        f"| Current report file | {_md_cell(Path(diff.get('current_file', '')).name)} |",
+        f"| Previous result count | {diff.get('previous_result_count', 0)} |",
+        f"| Current result count | {diff.get('current_result_count', 0)} |",
+        f"| Added findings | {diff.get('added_count', 0)} |",
+        f"| Resolved findings | {diff.get('resolved_count', 0)} |",
+        f"| Status changed | {diff.get('status_changed_count', 0)} |",
+    ])
+    for title, key in (
+        ("Added Findings", "added"),
+        ("Resolved Findings", "resolved"),
+        ("Status Changes", "status_changed"),
+    ):
+        items = diff.get(key) or []
+        if not items:
+            continue
+        lines.extend([
+            "",
+            f"### {title}",
+            "",
+            "| Check | Scope | Subject | Status | Message |",
+            "|---|---|---|---|---|",
+        ])
+        for item in items[:20]:
+            status = item.get("status") or item.get("current_status", "")
+            if key == "status_changed":
+                status = f"{item.get('previous_status', '')} -> {item.get('current_status', '')}"
+            lines.append(
+                f"| {_md_cell(item.get('check_id'))} "
+                f"| {_md_cell(item.get('scope'))} "
+                f"| {_md_cell(item.get('subject'))} "
+                f"| {_md_cell(status)} "
+                f"| {_md_cell(item.get('message'))} |"
+            )
+
+
+def _render_manual_review_items(lines: list[str], report: dict) -> None:
+    items = report.get("manual_review_queue") or []
+    lines.extend([
+        "",
+        "## Manual Review Items",
+        '<a id="manual-review-items"></a>',
+        "",
+    ])
+    if not items:
+        lines.append("No manual review items are in scope for this target level.")
+        return
+
+    lines.extend([
+        "Manual items require external evidence such as datasheets, extraction notes, SPICE/measurement data, package files, or model-maker documentation.",
+        "",
+        "| Level | Check | Scope | Subject | Decision | Evidence / Reference | Comment / Action |",
+        "|---|---|---|---|---|---|---|",
+    ])
+    for item in sorted(items, key=lambda i: (
+        i.get("numeric_level") or 99,
+        _check_sort_key(i.get("check_id", "")),
+        i.get("scope", ""),
+        i.get("subject", ""),
+    )):
+        decision = item.get("review_decision") or {}
+        decision_label = decision.get("decision") or "Pending"
+        evidence = []
+        if decision.get("external_evidence"):
+            evidence.append(decision.get("external_evidence"))
+        if decision.get("datasheet_section"):
+            evidence.append(f"Ref: {decision.get('datasheet_section')}")
+        action = []
+        if decision.get("comment"):
+            action.append(decision.get("comment"))
+        if decision.get("model_maker_action"):
+            action.append(f"Action: {decision.get('model_maker_action')}")
+        if not evidence:
+            evidence.append((item.get("details") or ["External evidence required."])[0])
+        lines.append(
+            f"| {_md_cell(item.get('iq_level'))} "
+            f"| {_md_cell(str(item.get('check_id', '')) + ' - ' + str(item.get('title', '')))} "
+            f"| {_md_cell(_scope_label(item.get('scope', '')))} "
+            f"| {_md_cell(item.get('subject', ''))} "
+            f"| {_md_cell(decision_label)} "
+            f"| {_md_cell('; '.join(evidence))} "
+            f"| {_md_cell('; '.join(action))} |"
+        )
 
 
 def _render_zout_estimates(
@@ -689,7 +862,8 @@ def _candidate_score_from_results(
 
 
 def _status_blocks_candidate(result: dict) -> bool:
-    return result.get("status") in {Status.FAIL.value, Status.ERROR.value}
+    status = result.get("effective_status") or result.get("status")
+    return status in {Status.FAIL.value, Status.ERROR.value}
 
 
 def _check_item_outcomes(results: list[dict]) -> dict[str, dict]:
@@ -709,7 +883,7 @@ def _check_item_outcomes(results: list[dict]) -> dict[str, dict]:
             "result_count": 0,
             "review_required_count": 0,
         })
-        status = result.get("status", "")
+        status = result.get("effective_status") or result.get("status", "")
         info["status_counts"][status] += 1
         info["result_count"] += 1
         if result.get("review_required"):
@@ -802,11 +976,14 @@ def render_markdown_report(
         report: dict,
         asset_dir: str | Path | None = None,
         asset_ref_prefix: str | None = None) -> str:
+    if "signoff_summary" not in report:
+        report = apply_review_decisions(report, None, copy_report=True)
     results = report.get("results", [])
     max_level = report.get("max_level")
     level_summary = report.get("level_summary") or _level_summary_from_results(results, max_level)
     score_summary = report.get("score_summary") or _score_summary_from_levels(level_summary)
     summary = report.get("summary", {})
+    effective_summary = report.get("effective_summary") or summary
     header = report.get("header", {})
     zout_summary = report.get("zout_summary", {})
     quality_levels = _REPORT_CONTEXT.get("quality_levels", [])
@@ -841,7 +1018,7 @@ def render_markdown_report(
         f"- Zout estimates: {zout_summary.get('models_with_estimates', 0)} model(s), {zout_summary.get('estimate_count', 0)} table/corner point(s)",
     ]
 
-    _render_toc(lines, max_level)
+    _render_toc(lines, max_level, bool(report.get("report_diff")))
 
     lines.extend([
         "",
@@ -852,20 +1029,25 @@ def render_markdown_report(
         "|---|---|",
         "| Final IQ score | To be assigned by the model maker after resolving or documenting findings |",
         f"| Candidate level from checked items | {_md_cell(score_summary.get('tool_score') or score_summary.get('implemented_check_score'))} |",
-        f"| Tool comments | {_md_cell(_report_comment(summary, score_summary))} |",
+        f"| Candidate level after review overlay | {_md_cell(score_summary.get('reviewed_candidate_score') or score_summary.get('tool_score') or score_summary.get('implemented_check_score'))} |",
+        f"| Tool comments | {_md_cell(_report_comment(effective_summary, score_summary))} |",
         "| Note | Candidate level is the highest implemented level without FAIL or ERROR. WARN/review items, manual checks, accepted exceptions, and correlation designators still require model-maker documentation before final IQ assignment. |",
+    ])
+    _render_review_signoff_summary(lines, report)
+    _render_report_diff(lines, report)
+    lines.extend([
         "",
         "## Result Summary",
         '<a id="result-summary"></a>',
         "",
-        "| Status | Count |",
-        "|---|---:|",
+        "| Status | Generated Count | Review-Adjusted Count |",
+        "|---|---:|---:|",
     ])
 
-    for status in ("PASS", "FAIL", "WARN", "NA", "ERROR"):
-        lines.append(f"| {status} | {summary.get(status, 0)} |")
+    for status in ("PASS", "FAIL", "WARN", "NA", "ERROR", "EXCEPTION"):
+        lines.append(f"| {status} | {summary.get(status, 0)} | {effective_summary.get(status, 0)} |")
     lines.extend([
-        f"| Total | {sum(summary.get(status, 0) for status in ('PASS', 'FAIL', 'WARN', 'NA', 'ERROR'))} |",
+        f"| Total | {sum(summary.get(status, 0) for status in ('PASS', 'FAIL', 'WARN', 'NA', 'ERROR'))} | {sum(effective_summary.get(status, 0) for status in ('PASS', 'FAIL', 'WARN', 'NA', 'ERROR', 'EXCEPTION'))} |",
         "",
         "## Passed Items Per Level",
         '<a id="passed-items-per-level"></a>',
@@ -952,6 +1134,8 @@ def render_markdown_report(
                 "",
             ])
         lines.append("")
+
+    _render_manual_review_items(lines, report)
 
     lines.extend([
         "",
@@ -1330,12 +1514,14 @@ class Reporter:
     def __init__(self, results: list[CheckResult],
                  ibis_file: "IBISFile", verbose: bool = False,
                  max_level: int | None = None,
-                 zout_rload_ohm: float = DEFAULT_ZOUT_RLOAD_OHM):
+                 zout_rload_ohm: float = DEFAULT_ZOUT_RLOAD_OHM,
+                 review_decisions: dict | str | Path | None = None):
         self.results   = results
         self.ibis_file = ibis_file
         self.verbose   = verbose
         self.max_level = max_level
         self.zout_rload_ohm = zout_rload_ohm
+        self.review_decisions = review_decisions
 
     # ── Text report ───────────────────────────────────────────────────────────
 
@@ -1412,9 +1598,10 @@ class Reporter:
             self._result_to_dict(r, result_index)
             for result_index, r in enumerate(self.results)
         ]
+        assign_stable_result_ids(scoped_results)
         level_summary = _level_summary_from_results(scoped_results, self.max_level)
         zout_by_model = estimate_zout_for_ibis(f, self.zout_rload_ohm)
-        return {
+        report = {
             "file": str(f.path),
             "max_level": self.max_level,
             "ibis_ver": f.ibis_ver,
@@ -1452,6 +1639,7 @@ class Reporter:
             "level_summary": level_summary,
             "score_summary": _score_summary_from_levels(level_summary),
         }
+        return apply_review_decisions(report, self.review_decisions)
 
     def as_json(self) -> str:
         return json.dumps(self.as_dict(), indent=2)
@@ -1506,6 +1694,7 @@ class Reporter:
         metadata = _CHECK_METADATA.get(r.check_id, {})
         return {
             "result_id": f"R{result_index:05d}",
+            "legacy_result_id": f"R{result_index:05d}",
             "check_id": r.check_id,
             "iq_level": metadata.get("iq_level"),
             "numeric_level": metadata.get("numeric_level"),
