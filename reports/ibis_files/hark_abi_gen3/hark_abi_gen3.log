@@ -1,0 +1,87 @@
+Parsing abi_gen3.ibs ...
+  1 component(s), 3 model(s)
+  Target level IQ3: skipping higher-level checks
+Parsing abi_gen3.ibs ...
+  1 component(s), 3 model(s)
+  Target level IQ3: skipping higher-level checks
+Parsing abi_gen3.ibs ...
+  1 component(s), 3 model(s)
+  Target level IQ3: skipping higher-level checks
+Parsing abi_gen3.ibs ...
+  1 component(s), 3 model(s)
+  Target level IQ3: skipping higher-level checks
+Wrote spreadsheet report: C:\Users\simom\Desktop\Projects\IBIS_QA\reports\ibis_files\hark_abi_gen3\hark_abi_gen3.xlsx
+========================================================================
+IBIS QA Report — AUTO Checks and SEMI-AUTO Evidence
+File   : C:\Users\simom\Desktop\Projects\IBIS Files\Hark Labs\FPGA-MD-02047-1-1-CertusPro-NX-IBIS-AMI Model_file\abi_gen3.ibs
+Target : IQ3
+IBIS Ver: 5.0   File Rev: 20230801   Date: Aug 01, 2023
+IQ Score in file: (not found)
+========================================================================
+
+[3.2.2] ✗  (1 fail, 0 pass, 0 NA, total 1)
+  ✗ [ABI_Serdes] 6 pin RLC issue(s)
+      Pin 2: missing L/C values
+      Pin 3: missing L/C values
+      Pin 4: missing L/C values
+      Pin 5: missing L/C values
+      Pin 6: missing L/C values
+      Pin 7: missing L/C values
+
+[5.3.2] ✗  (1 fail, 0 pass, 2 NA, total 3)
+  ✗ [abi_out] [Pullup] voltage sweep insufficient
+      High end: table ends at 1V, need ≥ 2V
+
+[5.3.3] ✗  (1 fail, 0 pass, 2 NA, total 3)
+  ✗ [abi_out] [Pulldown] voltage sweep insufficient
+      High end: table ends at 1V, need ≥ 2V
+
+[5.3.6] ⚠  (0 fail, 1 pass, 0 NA, total 3)
+  ⚠ [abi_in] I-V stair-step evidence needs review
+      [GND Clamp]: roughness=0.5 > 0.1
+  ⚠ [abi_out] I-V stair-step evidence needs review
+      [Pulldown]: roughness=0.5 > 0.1
+      [Pullup]: roughness=0.5 > 0.1
+
+[5.3.10] ⚠  (0 fail, 2 pass, 0 NA, total 3)
+  ⚠ [refclk] Clamp leakage evidence needs review
+      [GND Clamp]: I(0V)=-8.57 uA
+      [POWER Clamp]: I(0V)=2.04 uA
+
+[5.3.14] ⚠  (0 fail, 1 pass, 0 NA, total 3)
+  ⚠ [abi_in] I-V point distribution evidence needs review
+      [GND Clamp]: 3 point(s) < 20
+  ⚠ [abi_out] I-V point distribution evidence needs review
+      [Pulldown]: 3 point(s) < 20
+      [Pullup]: 3 point(s) < 20
+
+[5.5.3] ✗  (1 fail, 0 pass, 0 NA, total 1)
+  ✗ [abi_out] [Ramp] dV inconsistent with I-V load-line (6 corner(s))
+      Rise dV/typ: ramp=1V, expected≈0.3V (233.3% error, limit 10.0%)
+      Rise dV/min: ramp=1V, expected≈0.3243V (208.3% error, limit 10.0%)
+      Rise dV/max: ramp=1V, expected≈0.2791V (258.3% error, limit 10.0%)
+      Fall dV/typ: ramp=1V, expected≈0.3V (233.3% error, limit 10.0%)
+      Fall dV/min: ramp=1V, expected≈0.3243V (208.3% error, limit 10.0%)
+      Fall dV/max: ramp=1V, expected≈0.2791V (258.3% error, limit 10.0%)
+      Rise dV/typ: ramp=1V, expected≈0.3V from Vhigh=0.5V, Vlow=0V, error=233.3% (push-pull fixture=0V)
+      Rise dV/min: ramp=1V, expected≈0.3243V from Vhigh=0.5405V, Vlow=0V, error=208.3% (push-pull fixture=0V)
+      Rise dV/max: ramp=1V, expected≈0.2791V from Vhigh=0.4651V, Vlow=0V, error=258.3% (push-pull fixture=0V)
+      Fall dV/typ: ramp=1V, expected≈0.3V from Vhigh=1V, Vlow=0.5V, error=233.3% (push-pull fixture=1V)
+      Fall dV/min: ramp=1V, expected≈0.3243V from Vhigh=1V, Vlow=0.4595V, error=208.3% (push-pull fixture=1V)
+      Fall dV/max: ramp=1V, expected≈0.2791V from Vhigh=1V, Vlow=0.5349V, error=258.3% (push-pull fixture=1V)
+
+========================================================================
+SUMMARY
+  FAIL  : 4
+  WARN  : 5
+  PASS  : 38
+  NA    : 35
+  ERROR : 0
+  Total results: 82
+========================================================================
+
+REVIEW SIGNOFF
+  Final signoff ready : NO
+  Hard blockers       : 4
+  Semi-auto pending   : 5 / 5
+  Manual pending      : 46 / 46

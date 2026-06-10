@@ -1,0 +1,45 @@
+Parsing lfd2nx_ami_rx.ibs ...
+  1 component(s), 1 model(s)
+  Target level IQ3: skipping higher-level checks
+Parsing lfd2nx_ami_rx.ibs ...
+  1 component(s), 1 model(s)
+  Target level IQ3: skipping higher-level checks
+Parsing lfd2nx_ami_rx.ibs ...
+  1 component(s), 1 model(s)
+  Target level IQ3: skipping higher-level checks
+Parsing lfd2nx_ami_rx.ibs ...
+  1 component(s), 1 model(s)
+  Target level IQ3: skipping higher-level checks
+Wrote spreadsheet report: C:\Users\simom\Desktop\Projects\IBIS_QA\reports\ibis_files\hark_lfd2nx_ami_rx\hark_lfd2nx_ami_rx.xlsx
+========================================================================
+IBIS QA Report — AUTO Checks and SEMI-AUTO Evidence
+File   : C:\Users\simom\Desktop\Projects\IBIS Files\Hark Labs\FPGA-MD-02115-1-0-Certus-NX-IBIS-AMI-File\FPGA-MD-02115-1-0-Certus-NX-IBIS-AMI-File\model_files\lfd2nx_ami_rx.ibs
+Target : IQ3
+IBIS Ver: 6.0   File Rev: 1.0   Date: July 17, 2025
+IQ Score in file: (not found)
+========================================================================
+
+[3.2.2] ✗  (1 fail, 0 pass, 0 NA, total 1)
+  ✗ [lfd2nx_Serdes_Rx] 2 pin RLC issue(s)
+      Pin 2: missing L/C values
+      Pin 3: missing L/C values
+
+[5.3.14] ⚠  (0 fail, 0 pass, 0 NA, total 1)
+  ⚠ [lfd2nx_in] I-V point distribution evidence needs review
+      [GND Clamp]: 3 point(s) < 20
+
+========================================================================
+SUMMARY
+  FAIL  : 1
+  WARN  : 1
+  PASS  : 16
+  NA    : 14
+  ERROR : 0
+  Total results: 32
+========================================================================
+
+REVIEW SIGNOFF
+  Final signoff ready : NO
+  Hard blockers       : 1
+  Semi-auto pending   : 1 / 1
+  Manual pending      : 16 / 16

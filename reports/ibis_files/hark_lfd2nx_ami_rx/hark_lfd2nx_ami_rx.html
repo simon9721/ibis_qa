@@ -1,0 +1,2747 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IBIS QA Report - lfd2nx_ami_rx.ibs</title>
+<style>
+:root {
+  color-scheme: light;
+  --text: #1f2933;
+  --muted: #52606d;
+  --line: #d9e2ec;
+  --header: #102a43;
+  --link: #1d4ed8;
+  --panel: #f8fafc;
+}
+body {
+  margin: 0;
+  background: #ffffff;
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.5;
+}
+.report {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 32px 28px 64px;
+}
+h1, h2, h3, h4, h5 {
+  color: var(--header);
+  line-height: 1.2;
+}
+h1 { font-size: 30px; margin: 0 0 24px; }
+h2 { font-size: 22px; margin-top: 34px; border-bottom: 1px solid var(--line); padding-bottom: 7px; }
+h3 { font-size: 18px; margin-top: 28px; }
+h4 { font-size: 16px; margin-top: 24px; }
+h5 { font-size: 14px; margin: 18px 0 8px; }
+a { color: var(--link); text-decoration: none; }
+a:hover { text-decoration: underline; }
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0 20px;
+  font-size: 13px;
+}
+th, td {
+  border: 1px solid var(--line);
+  padding: 7px 8px;
+  vertical-align: top;
+}
+th {
+  background: #eef2f7;
+  color: var(--header);
+  text-align: left;
+}
+tr:nth-child(even) td { background: #fbfdff; }
+code {
+  background: #eef2f7;
+  border-radius: 3px;
+  padding: 1px 4px;
+}
+pre {
+  background: #ffffff;
+  color: var(--text);
+  border: 1px solid var(--line);
+  overflow-x: auto;
+  padding: 14px;
+  border-radius: 4px;
+  white-space: pre-wrap;
+}
+pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+}
+img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+  background: #ffffff;
+}
+ul { padding-left: 22px; }
+p { margin: 9px 0; }
+</style>
+</head>
+<body>
+<main class="report">
+<h1>IBIS QA Report</h1>
+<h2>File Summary</h2>
+<ul>
+<li>Generated: 2026-06-09T23:35:23-05:00</li>
+<li>IBIS file: <code>lfd2nx_ami_rx.ibs</code></li>
+<li>Target level: IQ3</li>
+<li>IBIS version: 6.0</li>
+<li>File revision: 1.0</li>
+<li>IBIS file date: July 17, 2025</li>
+<li>IQ score in file: (not found)</li>
+<li>Components: 1</li>
+<li>Models: 1</li>
+<li>Package models: 0</li>
+<li>Zout estimates: 0 model(s), 0 table/corner point(s)</li>
+</ul>
+<h2>Table of Contents</h2>
+<a id="table-of-contents"></a>
+<ul>
+<li><a href="#score-assessment">Score Assessment</a></li>
+<li><a href="#review-signoff-summary">Review Signoff Summary</a></li>
+<li><a href="#result-summary">Result Summary</a></li>
+<li><a href="#failed-error-items">Failed &amp; Error Items</a></li>
+<li><a href="#passed-items-per-level">Passed Items Per Level</a></li>
+<li><a href="#zout-estimates">Zout Estimates</a></li>
+<li><a href="#quality-check-results">Quality Check Results</a></li>
+</ul>
+<p><strong>LEVEL 1 Checks</strong></p>
+<ul>
+<li><a href="#level-1-check-results">LEVEL 1 check results</a></li>
+<li><a href="#check-2-1">2.1 - IBIS file passes IBISCHK</a></li>
+</ul>
+<p><strong>LEVEL 2 Checks</strong></p>
+<ul>
+<li><a href="#level-2-check-results">LEVEL 2 check results</a></li>
+<li><a href="#check-3-1-1">3.1.1 - (Package) must have typ/min/max values</a></li>
+<li><a href="#check-3-1-2">3.1.2 - (Package) model values must be reasonable</a></li>
+<li><a href="#check-3-2-1">3.2.1 - (Pin) section complete</a></li>
+<li><a href="#check-3-3-1">3.3.1 - (Diff Pin) referenced pin models match</a></li>
+<li><a href="#check-4-1">4.1 - (Model Selector) entries have reasonable descriptions</a></li>
+<li><a href="#check-4-2">4.2 - Default (Model Selector) entries are consistent</a></li>
+<li><a href="#check-5-1-1">5.1.1 - (Model) parameters have correct typ/min/max order</a></li>
+<li><a href="#check-5-1-2">5.1.2 - (Model) C_comp is reasonable</a></li>
+<li><a href="#check-5-1-3">5.1.3 - (Temperature Range) is reasonable</a></li>
+<li><a href="#check-5-1-4">5.1.4 - (Voltage Range) or (* Reference) is reasonable</a></li>
+<li><a href="#check-5-2-5">5.2.5 - (Model Spec) S_Overshoot subparameters complete and match data sheet</a></li>
+<li><a href="#check-5-2-6">5.2.6 - (Model Spec) S_Overshoot subparameters track typ/min/max</a></li>
+<li><a href="#check-5-2-7">5.2.7 - (Model Spec) D_Overshoot_* subparameters complete and match data sheet</a></li>
+<li><a href="#check-5-2-8">5.2.8 - (Model Spec) D_Overshoot_* subparameters track typ/min/max</a></li>
+<li><a href="#check-5-3-1">5.3.1 - I-V tables have correct typ/min/max order</a></li>
+<li><a href="#check-5-3-2">5.3.2 - (Pullup) voltage sweep range is correct</a></li>
+<li><a href="#check-5-3-3">5.3.3 - (Pulldown) voltage sweep range is correct</a></li>
+<li><a href="#check-5-3-4">5.3.4 - (POWER Clamp) voltage sweep range is correct</a></li>
+<li><a href="#check-5-3-5">5.3.5 - (GND Clamp) voltage sweep range is correct</a></li>
+<li><a href="#check-5-3-6">5.3.6 - I-V tables do not exhibit stair-stepping</a></li>
+<li><a href="#check-5-3-7">5.3.7 - Combined I-V tables are monotonic</a></li>
+<li><a href="#check-5-3-8">5.3.8 - (Pulldown) I-V tables pass through zero/zero</a></li>
+<li><a href="#check-5-3-9">5.3.9 - (Pullup) I-V tables pass through zero/zero</a></li>
+<li><a href="#check-5-3-10">5.3.10 - No leakage current in clamp I-V tables</a></li>
+<li><a href="#check-5-3-11">5.3.11 - I-V behavior not double-counted</a></li>
+<li><a href="#check-5-3-12">5.3.12 - On-die termination modeling documented</a></li>
+<li><a href="#check-5-3-13">5.3.13 - ECL models I-V tables swept from -Vcc to +2 * Vcc.</a></li>
+<li><a href="#check-5-3-14">5.3.14 - Point distributions in I-V tables should be sufficient</a></li>
+<li><a href="#check-5-4-1">5.4.1 - Output and I/O buffers have sufficient V-T tables</a></li>
+<li><a href="#check-5-4-2">5.4.2 - V-T tables have reasonable point distribution</a></li>
+<li><a href="#check-5-4-4">5.4.4 - V-T table endpoints match fixture voltages</a></li>
+<li><a href="#check-5-5-1">5.5.1 - (Ramp) R_load present if value other than 50 ohms</a></li>
+<li><a href="#check-5-5-2">5.5.2 - (Ramp) typ/min/max order is correct</a></li>
+<li><a href="#check-5-5-3">5.5.3 - (Ramp) dV value is consistent with I-V table calculations</a></li>
+<li><a href="#check-5-5-4">5.5.4 - (Ramp) dt is consistent with 20%-80% crossing time</a></li>
+</ul>
+<p><strong>LEVEL 3 Checks</strong></p>
+<ul>
+<li><a href="#level-3-check-results">LEVEL 3 check results</a></li>
+<li><a href="#check-3-2-2">3.2.2 - (Pin) RLC values are present and reasonable</a></li>
+<li><a href="#check-3-3-2">3.3.2 - (Diff Pin) Vdiff and Tdelay_* complete and reasonable</a></li>
+<li><a href="#check-5-2-1">5.2.1 - (Model) Vinl and Vinh reasonable</a></li>
+<li><a href="#check-5-2-2">5.2.2 - (Model Spec) Vinl and Vinh reasonable</a></li>
+<li><a href="#check-5-2-3">5.2.3 - (Model Spec) Vinl+/- and Vinh+/- complete and reasonable</a></li>
+<li><a href="#check-5-2-9">5.2.9 - (Receiver Thresholds) Vth present and matches data sheet, if needed</a></li>
+<li><a href="#check-5-2-10">5.2.10 - (Receiver Thresholds) Vth_min and Vth_max present and match data sheet, if needed</a></li>
+<li><a href="#check-5-2-11">5.2.11 - (Receiver Thresholds) Vinh_ac, Vinl_ac present and match data sheet, if needed</a></li>
+<li><a href="#check-5-2-12">5.2.12 - (Receiver Thresholds) Vinh_dc, Vinl_dc present and match data sheet, if needed</a></li>
+<li><a href="#check-5-2-13">5.2.13 - (Receiver Thresholds) Tslew_ac/Tdiffslew_ac present and match data sheet, if needed</a></li>
+<li><a href="#check-5-2-14">5.2.14 - (Receiver Thresholds) Threshold_sensitivity and Ext_ref present and match data sheet, if needed</a></li>
+<li><a href="#check-5-4-3">5.4.3 - V-T table duration is not excessive</a></li>
+<li><a href="#check-5-6-1">5.6.1 - (Model Spec) Vmeas and Vref used if typ/min/max variation</a></li>
+<li><a href="#check-5-6-2">5.6.2 - Vref consistent for Open-drain, Open-source, and ECL Model_types</a></li>
+</ul>
+<ul>
+<li><a href="#visual-curves-by-model">Visual Curves by Model</a></li>
+<li><a href="#manual-review-items">Manual Review Items</a></li>
+<li><a href="#appendix-a-iq-levels">Appendix A: IQ Levels</a></li>
+<li><a href="#appendix-b-special-designators">Appendix B: Special Designators</a></li>
+</ul>
+<h2>Score Assessment</h2>
+<a id="score-assessment"></a>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Final IQ score</td>
+<td>To be assigned by the model maker after resolving or documenting findings</td>
+</tr>
+<tr>
+<td>Candidate level from checked items</td>
+<td>IQ2</td>
+</tr>
+<tr>
+<td>Candidate level after review overlay</td>
+<td>IQ2</td>
+</tr>
+<tr>
+<td>Tool comments</td>
+<td>Candidate IQ2; resolve the FAIL/ERROR findings before final IQ assignment. WARN and review-required items also need documented judgement.</td>
+</tr>
+<tr>
+<td>Note</td>
+<td>Candidate level is the highest implemented level without FAIL or ERROR. WARN/review items, manual checks, accepted exceptions, and correlation designators still require model-maker documentation before final IQ assignment.</td>
+</tr>
+</tbody>
+</table>
+<h2>Review Signoff Summary</h2>
+<a id="review-signoff-summary"></a>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Review overlay loaded</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Reviewer</td>
+<td></td>
+</tr>
+<tr>
+<td>Organization</td>
+<td></td>
+</tr>
+<tr>
+<td>Approval date</td>
+<td></td>
+</tr>
+<tr>
+<td>Final signoff ready</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Hard blockers after review</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Semi-auto review pending</td>
+<td>1 / 1</td>
+</tr>
+<tr>
+<td>Semi-auto accepted</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Semi-auto exceptions</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Semi-auto rejected</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Manual review pending</td>
+<td>16 / 16</td>
+</tr>
+<tr>
+<td>Manual accepted</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Manual exceptions</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Manual rejected</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Note</td>
+<td>Final IQ assignment is ready only when hard blockers are zero and all semi-auto and manual review items have documented decisions.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Generated Count</th>
+<th>Review-Adjusted Count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PASS</td>
+<td>16</td>
+<td>16</td>
+</tr>
+<tr>
+<td>FAIL</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>WARN</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>NA</td>
+<td>14</td>
+<td>14</td>
+</tr>
+<tr>
+<td>ERROR</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>EXCEPTION</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<h2>Result Summary</h2>
+<a id="result-summary"></a>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Generated Count</th>
+<th>Review-Adjusted Count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PASS</td>
+<td>16</td>
+<td>16</td>
+</tr>
+<tr>
+<td>FAIL</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>WARN</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>NA</td>
+<td>14</td>
+<td>14</td>
+</tr>
+<tr>
+<td>ERROR</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>EXCEPTION</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Total</td>
+<td>32</td>
+<td>32</td>
+</tr>
+</tbody>
+</table>
+<h2>Failed &amp; Error Items</h2>
+<a id="failed-error-items"></a>
+<p>1 item(s) require attention. Each entry links to its full write-up in Quality Check Results and shows the most relevant visual where the issue is reflected in a plot. Items without an associated plot are rule/range checks best understood from the explanation text.</p>
+<h3>FAIL: 3.2.2 - lfd2nx_Serdes_Rx</h3>
+<ul>
+<li>2 pin RLC issue(s)</li>
+<li><a href="#check-3-2-2">Full check details</a></li>
+<li>Pin 2: missing L/C values</li>
+<li>Pin 3: missing L/C values</li>
+</ul>
+<p>_No directly associated plot for this item; see the explanation above._</p>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h2>Passed Items Per Level</h2>
+<a id="passed-items-per-level"></a>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Required Items</th>
+<th>Checked</th>
+<th>Passed</th>
+<th>NA</th>
+<th>Needs Review</th>
+<th>Failed</th>
+<th>Error</th>
+<th>Manual/External Review</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LEVEL 1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>LEVEL 2</td>
+<td>35</td>
+<td>25</td>
+<td>12</td>
+<td>12</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>10</td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>14</td>
+<td>4</td>
+<td>1</td>
+<td>2</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>10</td>
+</tr>
+</tbody>
+</table>
+<h2>Zout Estimates</h2>
+<a id="zout-estimates"></a>
+<p>Estimated output impedance is derived from Pullup/Pulldown I-V load-line intersections using Rload = 50 ohm. These values are characterization data for the model maker; they are not IQ PASS/FAIL checks.</p>
+<ul>
+<li>Models with estimates: 0 / 1</li>
+<li>Estimated table/corner points: 0</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Type</th>
+<th>Pulldown Zout typ/min/max</th>
+<th>Pullup Zout typ/min/max</th>
+<th>Load-line plot</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>lfd2nx_in</td>
+<td>Input</td>
+<td>NA / NA / NA</td>
+<td>NA / NA / NA</td>
+<td></td>
+<td>No usable Pullup/Pulldown driver table.</td>
+</tr>
+</tbody>
+</table>
+<h2>Quality Check Results</h2>
+<a id="quality-check-results"></a>
+<p>Rows are grouped by IQ level and then by check item. Each check item is summarized by result type so PASS, WARN, FAIL, NA, and manual/external-review status are visible in one place.</p>
+<p>Source location note: this parser currently keeps the raw IBIS text but does not retain per-result IBIS source line numbers. The report identifies the affected scope, subject, and evidence; exact line references require parser metadata work.</p>
+<h3>LEVEL 1 Check Results</h3>
+<a id="level-1-check-results"></a>
+<h4>2.1 - IBIS file passes IBISCHK</h4>
+<a id="check-2-1"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 303; section 2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>File/Header</td>
+<td>PASS</td>
+<td>3</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>lfd2nx_ami_rx.ibs</td>
+<td></td>
+<td>No existing &#x27;|IQ Score:&#x27; tag found inside the .ibs file. This is reported as a writeback note only; it does not fail the quality check because this tool is intended to help assign the score.<br>IBISCHK version not found documented inside the .ibs file. This is reported as a documentation note only; it does not block Level 1.<br>IBISCHK: 0 errors, 0 warning(s): IBISCHK executable: ibischk7_64.exe</td>
+</tr>
+</tbody>
+</table>
+<p><strong>IBISCHK execution summary</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Executable</td>
+<td>ibischk7_64.exe</td>
+</tr>
+<tr>
+<td>Version</td>
+<td>7.2.1</td>
+</tr>
+<tr>
+<td>Return code</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Errors</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Warnings</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Cautions</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>IBISCHK output excerpt</strong></p>
+<pre><code>
+IBISCHK7 V7.2.1
+
+Checking C:\Users\simom\Desktop\Projects\IBIS Files\Hark Labs\FPGA-MD-02115-1-0-Certus-NX-IBIS-AMI-File\FPGA-MD-02115-1-0-Certus-NX-IBIS-AMI-File\model_files\lfd2nx_ami_rx.ibs for IBIS 6.0 Compatibility...
+
+
+... Reading C:\Users\simom\Desktop\Projects\IBIS Files\Hark Labs\FPGA-MD-02115-1-0-Certus-NX-IBIS-AMI-File\FPGA-MD-02115-1-0-Certus-NX-IBIS-AMI-File\model_files\lfd2nx_rx.ami
+
+... Checking lfd2nx_rx.ami for Implicit AMI Version 5.0 Compatibility...
+
+... Done Checking lfd2nx_rx.ami
+... Done Reading lfd2nx_rx.ami
+
+... Status of [Algorithmic Model] Executables for Windows 64:
+lfd2nx_Rx2_rh64.dll:		Linux 64:		Not Checked
+lfd2nx_Rx2_x64.dll:		Windows 64:		Checked
+lfd2nx_Rx2_x86.dll:		Windows 32:		Not Checked
+... This IBISCHK7 executable supports Windows 64 bit only
+Errors  : 0
+
+File Passed
+</code></pre>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h3>LEVEL 2 Check Results</h3>
+<a id="level-2-check-results"></a>
+<h4>3.1.1 - [Package] must have typ/min/max values</h4>
+<a id="check-3-1-1"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 347; section 3.1</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Component</td>
+<td>PASS</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>lfd2nx_Serdes_Rx</td>
+<td></td>
+<td>All [Package] R/L/C have typ, min, and max values</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>3.1.2 - [Package] model values must be reasonable</h4>
+<a id="check-3-1-2"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 351; section 3.1</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Component</td>
+<td>PASS</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>lfd2nx_Serdes_Rx</td>
+<td></td>
+<td>Package values within limits and min≤typ≤max</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>3.2.1 - [Pin] section complete</h4>
+<a id="check-3-2-1"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 422; section 3.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Component</td>
+<td>PASS</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>lfd2nx_Serdes_Rx</td>
+<td></td>
+<td>[Pin] has 4 complete entry/entries with resolvable model references</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>3.3.1 - [Diff Pin] referenced pin models match</h4>
+<a id="check-3-3-1"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 459; section 3.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Component</td>
+<td>PASS</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>lfd2nx_Serdes_Rx</td>
+<td></td>
+<td>All [Diff Pin] model names match or have explanatory comments</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>4.1 - [Model Selector] entries have reasonable descriptions</h4>
+<a id="check-4-1"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 493; section 4</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>File/Header</td>
+<td>NA</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>lfd2nx_ami_rx.ibs</td>
+<td></td>
+<td>No [Model Selector] sections parsed from raw file</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>4.2 - Default [Model Selector] entries are consistent</h4>
+<a id="check-4-2"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 497; section 4</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.1.1 - [Model] parameters have correct typ/min/max order</h4>
+<a id="check-5-1-1"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 511; section 5.1</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>PASS</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>lfd2nx_in</td>
+<td></td>
+<td>3 model parameter set(s) have typ/min/max order evidence: C_comp; Voltage Range</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.1.2 - [Model] C_comp is reasonable</h4>
+<a id="check-5-1-2"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 517; section 5.1</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>PASS</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>lfd2nx_in</td>
+<td></td>
+<td>C_comp evidence is positive and within review threshold: C_comp</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.1.3 - [Temperature Range] is reasonable</h4>
+<a id="check-5-1-3"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 547; section 5.1</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.1.4 - [Voltage Range] or [* Reference] is reasonable</h4>
+<a id="check-5-1-4"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 571; section 5.1</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>PASS</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>lfd2nx_in</td>
+<td></td>
+<td>Voltage/reference evidence parsed, defaults resolved, and basic consistency looks reasonable: Voltage Range: typ=0.8V, min=0.8V, max=0.8V (explicit); Pullup Reference: typ=0.8V, min=0.8V, max=0.8V (default from Voltage Range)</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.2.5 - [Model Spec] S_Overshoot subparameters complete and match data sheet</h4>
+<a id="check-5-2-5"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 625; section 5.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.2.6 - [Model Spec] S_Overshoot subparameters track typ/min/max</h4>
+<a id="check-5-2-6"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 629; section 5.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>NA</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>lfd2nx_in</td>
+<td></td>
+<td>No [Model Spec] S_Overshoot data parsed</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.2.7 - [Model Spec] D_Overshoot_* subparameters complete and match data sheet</h4>
+<a id="check-5-2-7"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 633; section 5.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.2.8 - [Model Spec] D_Overshoot_* subparameters track typ/min/max</h4>
+<a id="check-5-2-8"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 643; section 5.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>NA</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>lfd2nx_in</td>
+<td></td>
+<td>No [Model Spec] D_Overshoot data parsed</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.1 - I-V tables have correct typ/min/max order</h4>
+<a id="check-5-3-1"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 705; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>PASS</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>lfd2nx_in</td>
+<td></td>
+<td>[GND Clamp] rows are voltage/typ/min/max</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.2 - [Pullup] voltage sweep range is correct</h4>
+<a id="check-5-3-2"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 715; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>NA</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>lfd2nx_in</td>
+<td></td>
+<td>Model_type=Input has no required [Pullup] table - NA</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.3 - [Pulldown] voltage sweep range is correct</h4>
+<a id="check-5-3-3"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 719; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>NA</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>lfd2nx_in</td>
+<td></td>
+<td>Model_type=Input has no required [Pulldown] table - NA</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.4 - [POWER Clamp] voltage sweep range is correct</h4>
+<a id="check-5-3-4"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 723; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.5 - [GND Clamp] voltage sweep range is correct</h4>
+<a id="check-5-3-5"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 731; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>PASS</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>lfd2nx_in</td>
+<td></td>
+<td>[GND Clamp] voltage sweep OK (-1V to 1V)</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.6 - I-V tables do not exhibit stair-stepping</h4>
+<a id="check-5-3-6"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 735; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>PASS</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>lfd2nx_in</td>
+<td></td>
+<td>I-V stair-step roughness evidence is within threshold</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.7 - Combined I-V tables are monotonic</h4>
+<a id="check-5-3-7"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 741; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>PASS</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>lfd2nx_in</td>
+<td></td>
+<td>[Pulldown] + [GND Clamp] combined curve monotonicity OK (nondecreasing, 3 sample point(s))</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.8 - [Pulldown] I-V tables pass through zero/zero</h4>
+<a id="check-5-3-8"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 749; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>NA</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>lfd2nx_in</td>
+<td></td>
+<td>Model_type=Input has no required [Pulldown] table - NA</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.9 - [Pullup] I-V tables pass through zero/zero</h4>
+<a id="check-5-3-9"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 753; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>NA</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>lfd2nx_in</td>
+<td></td>
+<td>Model_type=Input has no required [Pullup] table - NA</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.10 - No leakage current in clamp I-V tables</h4>
+<a id="check-5-3-10"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 757; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>PASS</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>lfd2nx_in</td>
+<td></td>
+<td>Clamp leakage evidence is within threshold at 0V</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.11 - I-V behavior not double-counted</h4>
+<a id="check-5-3-11"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 767; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.12 - On-die termination modeling documented</h4>
+<a id="check-5-3-12"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 773; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.13 - ECL models I-V tables swept from -Vcc to +2 * Vcc.</h4>
+<a id="check-5-3-13"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 777; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.14 - Point distributions in I-V tables should be sufficient</h4>
+<a id="check-5-3-14"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 781; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>WARN</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>lfd2nx_in</td>
+<td><a href="#curve-lfd2nx-in-iv">lfd2nx_in I-V curves</a></td>
+<td>I-V point distribution evidence needs review: [GND Clamp]: 3 point(s) &lt; 20</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.4.1 - Output and I/O buffers have sufficient V-T tables</h4>
+<a id="check-5-4-1"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 787; section 5.4</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>NA</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>lfd2nx_in</td>
+<td></td>
+<td>No V-T waveform tables parsed</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.4.2 - V-T tables have reasonable point distribution</h4>
+<a id="check-5-4-2"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 807; section 5.4</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>NA</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>lfd2nx_in</td>
+<td></td>
+<td>No V-T waveform tables parsed</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.4.4 - V-T table endpoints match fixture voltages</h4>
+<a id="check-5-4-4"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 817; section 5.4</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>NA</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>lfd2nx_in</td>
+<td></td>
+<td>No V-T waveform tables parsed</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.5.1 - [Ramp] R_load present if value other than 50 ohms</h4>
+<a id="check-5-5-1"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 833; section 5.5</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.5.2 - [Ramp] typ/min/max order is correct</h4>
+<a id="check-5-5-2"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 837; section 5.5</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>NA</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>lfd2nx_in</td>
+<td></td>
+<td>No [Ramp] data parsed</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.5.3 - [Ramp] dV value is consistent with I-V table calculations</h4>
+<a id="check-5-5-3"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 841; section 5.5</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.5.4 - [Ramp] dt is consistent with 20%-80% crossing time</h4>
+<a id="check-5-5-4"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 845; section 5.5</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>NA</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>lfd2nx_in</td>
+<td></td>
+<td>Ramp or V-T waveform data absent</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h3>LEVEL 3 Check Results</h3>
+<a id="level-3-check-results"></a>
+<h4>3.2.2 - [Pin] RLC values are present and reasonable</h4>
+<a id="check-3-2-2"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 442; section 3.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Component</td>
+<td>FAIL</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>lfd2nx_Serdes_Rx</td>
+<td></td>
+<td>2 pin RLC issue(s): Pin 2: missing L/C values; Pin 3: missing L/C values</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>3.3.2 - [Diff Pin] Vdiff and Tdelay_* complete and reasonable</h4>
+<a id="check-3-3-2"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 463; section 3.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Component</td>
+<td>PASS</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>lfd2nx_Serdes_Rx</td>
+<td></td>
+<td>All [Diff Pin] Vdiff/Tdelay values consistent with model type</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.2.1 - [Model] Vinl and Vinh reasonable</h4>
+<a id="check-5-2-1"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 599; section 5.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.2.2 - [Model Spec] Vinl and Vinh reasonable</h4>
+<a id="check-5-2-2"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 605; section 5.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.2.3 - [Model Spec] Vinl+/- and Vinh+/- complete and reasonable</h4>
+<a id="check-5-2-3"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 615; section 5.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.2.9 - [Receiver Thresholds] Vth present and matches data sheet, if needed</h4>
+<a id="check-5-2-9"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 647; section 5.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.2.10 - [Receiver Thresholds] Vth_min and Vth_max present and match data sheet, if needed</h4>
+<a id="check-5-2-10"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 653; section 5.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.2.11 - [Receiver Thresholds] Vinh_ac, Vinl_ac present and match data sheet, if needed</h4>
+<a id="check-5-2-11"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 663; section 5.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.2.12 - [Receiver Thresholds] Vinh_dc, Vinl_dc present and match data sheet, if needed</h4>
+<a id="check-5-2-12"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 673; section 5.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.2.13 - [Receiver Thresholds] Tslew_ac/Tdiffslew_ac present and match data sheet, if needed</h4>
+<a id="check-5-2-13"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 679; section 5.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.2.14 - [Receiver Thresholds] Threshold_sensitivity and Ext_ref present and match data sheet, if needed</h4>
+<a id="check-5-2-14"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 685; section 5.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.4.3 - V-T table duration is not excessive</h4>
+<a id="check-5-4-3"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 813; section 5.4</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>NA</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>lfd2nx_in</td>
+<td></td>
+<td>No V-T waveform tables parsed</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.6.1 - [Model Spec] Vmeas and Vref used if typ/min/max variation</h4>
+<a id="check-5-6-1"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 861; section 5.6</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.6.2 - Vref consistent for Open-drain, Open-source, and ECL Model_types</h4>
+<a id="check-5-6-2"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 865; section 5.6</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>NA</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>lfd2nx_in</td>
+<td></td>
+<td>Model_type=Input does not require this Vref consistency evidence</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h2>Visual Curves by Model</h2>
+<a id="visual-curves-by-model"></a>
+<p>Figures provide curve/table context for the linked QA items. The quality-check tables above remain the authoritative status summary.</p>
+<h3>Model: <code>lfd2nx_in</code></h3>
+<ul>
+<li>Candidate model score from model-scoped checked items: IQ3</li>
+<li>Model type: Input</li>
+<li>Waveform tables: 0</li>
+</ul>
+<h4>Visual Curves</h4>
+<h5>I-V Clamp Curves</h5>
+<a id="curve-lfd2nx-in-iv"></a>
+<p>Related WARN/FAIL QA items: <a href="#check-5-3-14">5.3.14</a></p>
+<p><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDAiIGhlaWdodD0iNTYwIiB2aWV3Qm94PSIwIDAgODAwIDU2MCI+DQo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmZmZmZmIi8+DQo8dGV4dCB4PSI3OCIgeT0iMjUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZm9udC13ZWlnaHQ9IjcwMCI+bGZkMm54X2luIEktViBDbGFtcCBDdXJ2ZXM8L3RleHQ+DQo8cmVjdCB4PSI3OCIgeT0iNTIiIHdpZHRoPSI2OTQiIGhlaWdodD0iMzQ4IiBmaWxsPSIjZmJmYmZiIiBzdHJva2U9IiNjOGM4YzgiLz4NCjxsaW5lIHgxPSI3OC4wMCIgeTE9IjUyIiB4Mj0iNzguMDAiIHkyPSI0MDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzguMDAiIHk9IjQyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4tMTwvdGV4dD4NCjxsaW5lIHgxPSIyMTYuODAiIHkxPSI1MiIgeDI9IjIxNi44MCIgeTI9IjQwMCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSIyMTYuODAiIHk9IjQyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4tMC42MjQ8L3RleHQ+DQo8bGluZSB4MT0iMzU1LjYwIiB5MT0iNTIiIHgyPSIzNTUuNjAiIHkyPSI0MDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iMzU1LjYwIiB5PSI0MjIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+LTAuMjA4PC90ZXh0Pg0KPGxpbmUgeDE9IjQ5NC40MCIgeTE9IjUyIiB4Mj0iNDk0LjQwIiB5Mj0iNDAwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjQ5NC40MCIgeT0iNDIyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPjAuMjA4PC90ZXh0Pg0KPGxpbmUgeDE9IjYzMy4yMCIgeTE9IjUyIiB4Mj0iNjMzLjIwIiB5Mj0iNDAwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjYzMy4yMCIgeT0iNDIyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPjAuNjI0PC90ZXh0Pg0KPGxpbmUgeDE9Ijc3Mi4wMCIgeTE9IjUyIiB4Mj0iNzcyLjAwIiB5Mj0iNDAwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9Ijc3Mi4wMCIgeT0iNDIyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPjE8L3RleHQ+DQo8bGluZSB4MT0iNzgiIHkxPSI0MDAuMDAiIHgyPSI3NzIiIHkyPSI0MDAuMDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzAiIHk9IjQwNC4wMCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4tMTwvdGV4dD4NCjxsaW5lIHgxPSI3OCIgeTE9IjMzMC40MCIgeDI9Ijc3MiIgeTI9IjMzMC40MCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI3MCIgeT0iMzM0LjQwIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPi0wLjY8L3RleHQ+DQo8bGluZSB4MT0iNzgiIHkxPSIyNjAuODAiIHgyPSI3NzIiIHkyPSIyNjAuODAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzAiIHk9IjI2NC44MCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4tMC4yPC90ZXh0Pg0KPGxpbmUgeDE9Ijc4IiB5MT0iMTkxLjIwIiB4Mj0iNzcyIiB5Mj0iMTkxLjIwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjcwIiB5PSIxOTUuMjAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+MC4yPC90ZXh0Pg0KPGxpbmUgeDE9Ijc4IiB5MT0iMTIxLjYwIiB4Mj0iNzcyIiB5Mj0iMTIxLjYwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjcwIiB5PSIxMjUuNjAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+MC42PC90ZXh0Pg0KPGxpbmUgeDE9Ijc4IiB5MT0iNTIuMDAiIHgyPSI3NzIiIHkyPSI1Mi4wMCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI3MCIgeT0iNTYuMDAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+MTwvdGV4dD4NCjxsaW5lIHgxPSI0MjUuMDAiIHkxPSI1MiIgeDI9IjQyNS4wMCIgeTI9IjQwMCIgc3Ryb2tlPSIjNzc3IiBzdHJva2UtZGFzaGFycmF5PSI0IDQiLz4NCjxsaW5lIHgxPSI3OCIgeTE9IjIyNi4wMCIgeDI9Ijc3MiIgeTI9IjIyNi4wMCIgc3Ryb2tlPSIjNzc3IiBzdHJva2UtZGFzaGFycmF5PSI0IDQiLz4NCjxsaW5lIHgxPSIxNTguMDgiIHkxPSI1MiIgeDI9IjE1OC4wOCIgeTI9IjQwMCIgc3Ryb2tlPSIjNTU1IiBzdHJva2UtZGFzaGFycmF5PSIyIDQiLz4NCjx0ZXh0IHg9IjE2Mi4wOCIgeT0iNjYiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZmlsbD0iIzU1NSI+LVZjYzwvdGV4dD4NCjxsaW5lIHgxPSI2OTEuOTIiIHkxPSI1MiIgeDI9IjY5MS45MiIgeTI9IjQwMCIgc3Ryb2tlPSIjNTU1IiBzdHJva2UtZGFzaGFycmF5PSIyIDQiLz4NCjx0ZXh0IHg9IjY5NS45MiIgeT0iNjYiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZmlsbD0iIzU1NSI+VmNjPC90ZXh0Pg0KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzBmNzY2ZSIgc3Ryb2tlLXdpZHRoPSIyLjgiIG9wYWNpdHk9IjAuOTUiIHN0cm9rZS1kYXNoYXJyYXk9IjYgMyIgcG9pbnRzPSI5MS4zNSwyMjYuMDAgNDI1LjAwLDIyNi4wMCA3NTguNjUsMjI2LjAwIi8+DQo8bGluZSB4MT0iODgiIHkxPSI3MCIgeDI9IjExMCIgeTI9IjcwIiBzdHJva2U9IiMwZjc2NmUiIHN0cm9rZS13aWR0aD0iMi44IiBzdHJva2UtZGFzaGFycmF5PSI2IDMiLz4NCjx0ZXh0IHg9IjExNiIgeT0iNzQiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiI+W0dORCBDbGFtcF08L3RleHQ+DQo8cmVjdCB4PSI3OCIgeT0iNDY0IiB3aWR0aD0iNjk0IiBoZWlnaHQ9IjQ0IiBmaWxsPSIjZmZmZGY3IiBzdHJva2U9IiNkOGM2YTEiIHJ4PSI0Ii8+DQo8dGV4dCB4PSI4OCIgeT0iNDgxIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiM0YjNiMjEiPkZpbmRpbmdzIG5lZWRpbmcgYXR0ZW50aW9uPC90ZXh0Pg0KPHJlY3QgeD0iODgiIHk9IjQ4OCIgd2lkdGg9IjciIGhlaWdodD0iNyIgZmlsbD0iI2I1NDcwOCIvPg0KPHRleHQgeD0iMTAyIiB5PSI0OTUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZmlsbD0iIzMzMyI+V0FSTiA1LjMuMTQ6IEktViBwb2ludCBkaXN0cmlidXRpb24gZXZpZGVuY2UgbmVlZHMgcmV2aWV3IHwgW0dORCBDbGFtcF06IDMgcG9pbnQocykgJmx0OyAyMDwvdGV4dD4NCjx0ZXh0IHg9IjQyNS4wMCIgeT0iNDQ0LjAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiPlRhYmxlIHZvbHRhZ2UgKFYpPC90ZXh0Pg0KPHRleHQgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTggMjI2LjAwKSByb3RhdGUoLTkwKSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIj5DdXJyZW50IChBKTwvdGV4dD4NCjx0ZXh0IHg9IjQyMCIgeT0iNDIiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZmlsbD0iIzU1NSI+dGhpY2sgZGFzaGVkPWNvbWJpbmVkIHR5cCBjdXJ2ZXM8L3RleHQ+DQo8L3N2Zz4=" alt="I-V Clamp Curves for lfd2nx_in" loading="lazy"></p>
+<h5>I-V clamp detail</h5>
+<a id="curve-lfd2nx-in-iv-clamp"></a>
+<p><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDAiIGhlaWdodD0iNTIwIiB2aWV3Qm94PSIwIDAgODAwIDUyMCI+DQo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmZmZmZmIi8+DQo8dGV4dCB4PSI3OCIgeT0iMjUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZm9udC13ZWlnaHQ9IjcwMCI+bGZkMm54X2luIEktViBDbGFtcCBEZXRhaWw8L3RleHQ+DQo8cmVjdCB4PSI3OCIgeT0iNTQiIHdpZHRoPSI2OTAiIGhlaWdodD0iMzA2IiBmaWxsPSIjZmJmYmZiIiBzdHJva2U9IiNjOGM4YzgiLz4NCjxsaW5lIHgxPSI3OC4wMCIgeTE9IjU0IiB4Mj0iNzguMDAiIHkyPSIzNjAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzguMDAiIHk9IjM4MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4wPC90ZXh0Pg0KPGxpbmUgeDE9IjIxNi4wMCIgeTE9IjU0IiB4Mj0iMjE2LjAwIiB5Mj0iMzYwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjIxNi4wMCIgeT0iMzgyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPjAuMTY8L3RleHQ+DQo8bGluZSB4MT0iMzU0LjAwIiB5MT0iNTQiIHgyPSIzNTQuMDAiIHkyPSIzNjAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iMzU0LjAwIiB5PSIzODIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+MC4zMjwvdGV4dD4NCjxsaW5lIHgxPSI0OTIuMDAiIHkxPSI1NCIgeDI9IjQ5Mi4wMCIgeTI9IjM2MCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI0OTIuMDAiIHk9IjM4MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4wLjQ4PC90ZXh0Pg0KPGxpbmUgeDE9IjYzMC4wMCIgeTE9IjU0IiB4Mj0iNjMwLjAwIiB5Mj0iMzYwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjYzMC4wMCIgeT0iMzgyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPjAuNjQ8L3RleHQ+DQo8bGluZSB4MT0iNzY4LjAwIiB5MT0iNTQiIHgyPSI3NjguMDAiIHkyPSIzNjAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzY4LjAwIiB5PSIzODIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+MC44PC90ZXh0Pg0KPGxpbmUgeDE9Ijc4IiB5MT0iMzYwLjAwIiB4Mj0iNzY4IiB5Mj0iMzYwLjAwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjcwIiB5PSIzNjQuMDAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+LTE8L3RleHQ+DQo8bGluZSB4MT0iNzgiIHkxPSIyOTguODAiIHgyPSI3NjgiIHkyPSIyOTguODAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzAiIHk9IjMwMi44MCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4tMC42PC90ZXh0Pg0KPGxpbmUgeDE9Ijc4IiB5MT0iMjM3LjYwIiB4Mj0iNzY4IiB5Mj0iMjM3LjYwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjcwIiB5PSIyNDEuNjAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+LTAuMjwvdGV4dD4NCjxsaW5lIHgxPSI3OCIgeTE9IjE3Ni40MCIgeDI9Ijc2OCIgeTI9IjE3Ni40MCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI3MCIgeT0iMTgwLjQwIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPjAuMjwvdGV4dD4NCjxsaW5lIHgxPSI3OCIgeTE9IjExNS4yMCIgeDI9Ijc2OCIgeTI9IjExNS4yMCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI3MCIgeT0iMTE5LjIwIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPjAuNjwvdGV4dD4NCjxsaW5lIHgxPSI3OCIgeTE9IjU0LjAwIiB4Mj0iNzY4IiB5Mj0iNTQuMDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzAiIHk9IjU4LjAwIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPjE8L3RleHQ+DQo8bGluZSB4MT0iNzguMDAiIHkxPSI1NCIgeDI9Ijc4LjAwIiB5Mj0iMzYwIiBzdHJva2U9IiM3NzciIHN0cm9rZS1kYXNoYXJyYXk9IjQgNCIvPg0KPGxpbmUgeDE9Ijc4IiB5MT0iMjA3LjAwIiB4Mj0iNzY4IiB5Mj0iMjA3LjAwIiBzdHJva2U9IiM3NzciIHN0cm9rZS1kYXNoYXJyYXk9IjQgNCIvPg0KPGxpbmUgeDE9Ijc4LjAwIiB5MT0iNTQiIHgyPSI3OC4wMCIgeTI9IjM2MCIgc3Ryb2tlPSIjNTU1IiBzdHJva2UtZGFzaGFycmF5PSIyIDQiLz4NCjx0ZXh0IHg9IjgyLjAwIiB5PSI2OCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjNTU1Ij4wVjwvdGV4dD4NCjxsaW5lIHgxPSI3NjguMDAiIHkxPSI1NCIgeDI9Ijc2OC4wMCIgeTI9IjM2MCIgc3Ryb2tlPSIjNTU1IiBzdHJva2UtZGFzaGFycmF5PSIyIDQiLz4NCjx0ZXh0IHg9Ijc3Mi4wMCIgeT0iNjgiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZmlsbD0iIzU1NSI+VmNjPC90ZXh0Pg0KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzJjYTAyYyIgc3Ryb2tlLXdpZHRoPSIxLjIiIG9wYWNpdHk9IjAuNTUiIHN0cm9rZS1kYXNoYXJyYXk9IjQgNCIgcG9pbnRzPSI3OC4wMCwyMDcuMDAgNzY4LjAwLDIwNy4wMCIvPg0KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzJjYTAyYyIgc3Ryb2tlLXdpZHRoPSIxLjIiIG9wYWNpdHk9IjAuNTUiIHN0cm9rZS1kYXNoYXJyYXk9IjQgNCIgcG9pbnRzPSI3OC4wMCwyMDcuMDAgNzY4LjAwLDIwNy4wMCIvPg0KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzJjYTAyYyIgc3Ryb2tlLXdpZHRoPSIyLjAiIG9wYWNpdHk9IjEuMCIgcG9pbnRzPSI3OC4wMCwyMDcuMDAgNzY4LjAwLDIwNy4wMCIvPg0KPGNpcmNsZSBjeD0iNzguMDAiIGN5PSIyMDcuMDAiIHI9IjQuMCIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMmNhMDJjIiBzdHJva2Utd2lkdGg9IjEuNSIvPg0KPGNpcmNsZSBjeD0iNzguMDAiIGN5PSIyMDcuMDAiIHI9IjMuMCIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMmNhMDJjIiBzdHJva2Utd2lkdGg9IjEuNSIvPg0KPGNpcmNsZSBjeD0iNzguMDAiIGN5PSIyMDcuMDAiIHI9IjMuMCIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMmNhMDJjIiBzdHJva2Utd2lkdGg9IjEuNSIvPg0KPGxpbmUgeDE9Ijg4IiB5MT0iNzIiIHgyPSIxMTAiIHkyPSI3MiIgc3Ryb2tlPSIjMmNhMDJjIiBzdHJva2Utd2lkdGg9IjIuNCIvPg0KPHRleHQgeD0iMTE2IiB5PSI3NiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIj5bR05EIENsYW1wXTwvdGV4dD4NCjx0ZXh0IHg9IjQyMy4wMCIgeT0iNDA0LjAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiPlRhYmxlIHZvbHRhZ2UgKFYpLCB6b29tZWQgMC4uVmNjPC90ZXh0Pg0KPHRleHQgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTggMjA3LjAwKSByb3RhdGUoLTkwKSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIj5DdXJyZW50IChBKTwvdGV4dD4NCjx0ZXh0IHg9IjQyMCIgeT0iNDIiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZmlsbD0iIzU1NSI+Y2xhbXAgY3VydmVzIHNob3cgdHlwL21pbi9tYXg7IG9wZW4gY2lyY2xlcyBtYXJrIGNsYW1wIEkoMCBWKTwvdGV4dD4NCjwvc3ZnPg==" alt="I-V clamp detail for lfd2nx_in" loading="lazy"></p>
+<h5>I-V clamp sweep range</h5>
+<a id="curve-lfd2nx-in-iv-clamp-sweep"></a>
+<p><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDAiIGhlaWdodD0iNTYwIiB2aWV3Qm94PSIwIDAgODAwIDU2MCI+DQo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmZmZmZmIi8+DQo8dGV4dCB4PSI3OCIgeT0iMjUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZm9udC13ZWlnaHQ9IjcwMCI+bGZkMm54X2luIEktViBDbGFtcCBTd2VlcCBSYW5nZTwvdGV4dD4NCjxyZWN0IHg9Ijc4IiB5PSI1MiIgd2lkdGg9IjY5NCIgaGVpZ2h0PSIzNDgiIGZpbGw9IiNmYmZiZmIiIHN0cm9rZT0iI2M4YzhjOCIvPg0KPGxpbmUgeDE9Ijc4LjAwIiB5MT0iNTIiIHgyPSI3OC4wMCIgeTI9IjQwMCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI3OC4wMCIgeT0iNDIyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPi0xLjE8L3RleHQ+DQo8bGluZSB4MT0iMjE2LjgwIiB5MT0iNTIiIHgyPSIyMTYuODAiIHkyPSI0MDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iMjE2LjgwIiB5PSI0MjIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+LTAuNjY8L3RleHQ+DQo8bGluZSB4MT0iMzU1LjYwIiB5MT0iNTIiIHgyPSIzNTUuNjAiIHkyPSI0MDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iMzU1LjYwIiB5PSI0MjIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+LTAuMjI8L3RleHQ+DQo8bGluZSB4MT0iNDk0LjQwIiB5MT0iNTIiIHgyPSI0OTQuNDAiIHkyPSI0MDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNDk0LjQwIiB5PSI0MjIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+MC4yMjwvdGV4dD4NCjxsaW5lIHgxPSI2MzMuMjAiIHkxPSI1MiIgeDI9IjYzMy4yMCIgeTI9IjQwMCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI2MzMuMjAiIHk9IjQyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4wLjY2PC90ZXh0Pg0KPGxpbmUgeDE9Ijc3Mi4wMCIgeTE9IjUyIiB4Mj0iNzcyLjAwIiB5Mj0iNDAwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9Ijc3Mi4wMCIgeT0iNDIyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPjEuMTwvdGV4dD4NCjxsaW5lIHgxPSI3OCIgeTE9IjQwMC4wMCIgeDI9Ijc3MiIgeTI9IjQwMC4wMCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI3MCIgeT0iNDA0LjAwIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPi0xPC90ZXh0Pg0KPGxpbmUgeDE9Ijc4IiB5MT0iMzMwLjQwIiB4Mj0iNzcyIiB5Mj0iMzMwLjQwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjcwIiB5PSIzMzQuNDAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+LTAuNjwvdGV4dD4NCjxsaW5lIHgxPSI3OCIgeTE9IjI2MC44MCIgeDI9Ijc3MiIgeTI9IjI2MC44MCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI3MCIgeT0iMjY0LjgwIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPi0wLjI8L3RleHQ+DQo8bGluZSB4MT0iNzgiIHkxPSIxOTEuMjAiIHgyPSI3NzIiIHkyPSIxOTEuMjAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzAiIHk9IjE5NS4yMCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4wLjI8L3RleHQ+DQo8bGluZSB4MT0iNzgiIHkxPSIxMjEuNjAiIHgyPSI3NzIiIHkyPSIxMjEuNjAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzAiIHk9IjEyNS42MCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4wLjY8L3RleHQ+DQo8bGluZSB4MT0iNzgiIHkxPSI1Mi4wMCIgeDI9Ijc3MiIgeTI9IjUyLjAwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjcwIiB5PSI1Ni4wMCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4xPC90ZXh0Pg0KPGxpbmUgeDE9IjQyNS4wMCIgeTE9IjUyIiB4Mj0iNDI1LjAwIiB5Mj0iNDAwIiBzdHJva2U9IiM3NzciIHN0cm9rZS1kYXNoYXJyYXk9IjQgNCIvPg0KPGxpbmUgeDE9Ijc4IiB5MT0iMjI2LjAwIiB4Mj0iNzcyIiB5Mj0iMjI2LjAwIiBzdHJva2U9IiM3NzciIHN0cm9rZS1kYXNoYXJyYXk9IjQgNCIvPg0KPGxpbmUgeDE9IjE3Mi42NCIgeTE9IjUyIiB4Mj0iMTcyLjY0IiB5Mj0iNDAwIiBzdHJva2U9IiM1NTUiIHN0cm9rZS1kYXNoYXJyYXk9IjIgNCIvPg0KPHRleHQgeD0iMTc2LjY0IiB5PSI2NiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjNTU1Ij4tVmNjPC90ZXh0Pg0KPGxpbmUgeDE9IjY3Ny4zNiIgeTE9IjUyIiB4Mj0iNjc3LjM2IiB5Mj0iNDAwIiBzdHJva2U9IiM1NTUiIHN0cm9rZS1kYXNoYXJyYXk9IjIgNCIvPg0KPHRleHQgeD0iNjgxLjM2IiB5PSI2NiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjNTU1Ij5WY2M8L3RleHQ+DQo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMmNhMDJjIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC41NSIgc3Ryb2tlLWRhc2hhcnJheT0iNCA0IiBwb2ludHM9IjEwOS41NSwyMjYuMDAgNDI1LjAwLDIyNi4wMCA3NDAuNDUsMjI2LjAwIi8+DQo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMmNhMDJjIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC41NSIgc3Ryb2tlLWRhc2hhcnJheT0iNCA0IiBwb2ludHM9IjEwOS41NSwyMjYuMDAgNDI1LjAwLDIyNi4wMCA3NDAuNDUsMjI2LjAwIi8+DQo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMmNhMDJjIiBzdHJva2Utd2lkdGg9IjIuMCIgb3BhY2l0eT0iMS4wIiBwb2ludHM9IjEwOS41NSwyMjYuMDAgNDI1LjAwLDIyNi4wMCA3NDAuNDUsMjI2LjAwIi8+DQo8bGluZSB4MT0iODgiIHkxPSI3MCIgeDI9IjExMCIgeTI9IjcwIiBzdHJva2U9IiMyY2EwMmMiIHN0cm9rZS13aWR0aD0iMi40Ii8+DQo8dGV4dCB4PSIxMTYiIHk9Ijc0IiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiPltHTkQgQ2xhbXBdPC90ZXh0Pg0KPHRleHQgeD0iNDI1LjAwIiB5PSI0NDQuMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiI+VGFibGUgdm9sdGFnZSAoVik8L3RleHQ+DQo8dGV4dCB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxOCAyMjYuMDApIHJvdGF0ZSgtOTApIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiPkN1cnJlbnQgKEEpPC90ZXh0Pg0KPHRleHQgeD0iNDIwIiB5PSI0MiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjNTU1Ij5zb2xpZD10eXAsIGRhc2hlZD1taW4vbWF4OyBkYXNoZWQgdmVydGljYWw9cmVxdWlyZWQgc3dlZXAgYm91bmRhcnkgKDUuMy40LzUuMy41KTwvdGV4dD4NCjwvc3ZnPg==" alt="I-V clamp sweep range for lfd2nx_in" loading="lazy"></p>
+<h2>Manual Review Items</h2>
+<a id="manual-review-items"></a>
+<p>Manual items require external evidence such as datasheets, extraction notes, SPICE/measurement data, package files, or model-maker documentation.</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Check</th>
+<th>Scope</th>
+<th>Subject</th>
+<th>Decision</th>
+<th>Evidence / Reference</th>
+<th>Comment / Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LEVEL 2</td>
+<td>4.2 - Default [Model Selector] entries are consistent</td>
+<td>Component</td>
+<td>lfd2nx_Serdes_Rx</td>
+<td>Pending</td>
+<td>Default model selector consistency depends on product configuration and likely use cases.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 2</td>
+<td>5.1.3 - [Temperature Range] is reasonable</td>
+<td>Model</td>
+<td>lfd2nx_in</td>
+<td>Pending</td>
+<td>Requires extraction conditions, technology behavior, and datasheet operating temperature comparison.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 2</td>
+<td>5.2.5 - [Model Spec] S_Overshoot subparameters complete and match data sheet</td>
+<td>Model</td>
+<td>lfd2nx_in</td>
+<td>Pending</td>
+<td>Requires datasheet functional overshoot limits.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 2</td>
+<td>5.2.7 - [Model Spec] D_Overshoot_* subparameters complete and match data sheet</td>
+<td>Model</td>
+<td>lfd2nx_in</td>
+<td>Pending</td>
+<td>Requires datasheet dynamic overshoot limits and documented conversion method.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 2</td>
+<td>5.3.11 - I-V behavior not double-counted</td>
+<td>Model</td>
+<td>lfd2nx_in</td>
+<td>Pending</td>
+<td>Double-counting of clamp, driver, and termination behavior needs curve/context review.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 2</td>
+<td>5.3.12 - On-die termination modeling documented</td>
+<td>Model</td>
+<td>lfd2nx_in</td>
+<td>Pending</td>
+<td>Requires documentation review for on-die termination modeling method.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.1 - [Model] Vinl and Vinh reasonable</td>
+<td>Model</td>
+<td>lfd2nx_in</td>
+<td>Pending</td>
+<td>Requires comparing thresholds against datasheet and Vmeas intent.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.2 - [Model Spec] Vinl and Vinh reasonable</td>
+<td>Model</td>
+<td>lfd2nx_in</td>
+<td>Pending</td>
+<td>Requires datasheet threshold ranges and supply variation interpretation.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.3 - [Model Spec] Vinl+/- and Vinh+/- complete and reasonable</td>
+<td>Model</td>
+<td>lfd2nx_in</td>
+<td>Pending</td>
+<td>Requires datasheet/hysteresis intent plus comment review for exceptions.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.9 - [Receiver Thresholds] Vth present and matches data sheet, if needed</td>
+<td>Model</td>
+<td>lfd2nx_in</td>
+<td>Pending</td>
+<td>Requires datasheet timing threshold and receiver-threshold applicability.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.10 - [Receiver Thresholds] Vth_min and Vth_max present and match data sheet, if needed</td>
+<td>Model</td>
+<td>lfd2nx_in</td>
+<td>Pending</td>
+<td>Requires datasheet Vth tolerance interpretation.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.11 - [Receiver Thresholds] Vinh_ac, Vinl_ac present and match data sheet, if needed</td>
+<td>Model</td>
+<td>lfd2nx_in</td>
+<td>Pending</td>
+<td>Requires datasheet AC threshold values and offset conversion review.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.12 - [Receiver Thresholds] Vinh_dc, Vinl_dc present and match data sheet, if needed</td>
+<td>Model</td>
+<td>lfd2nx_in</td>
+<td>Pending</td>
+<td>Requires datasheet DC threshold values and offset conversion review.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.13 - [Receiver Thresholds] Tslew_ac/Tdiffslew_ac present and match data sheet, if needed</td>
+<td>Model</td>
+<td>lfd2nx_in</td>
+<td>Pending</td>
+<td>Requires datasheet slew-limit values and differential/single-ended applicability.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.14 - [Receiver Thresholds] Threshold_sensitivity and Ext_ref present and match data sheet, if needed</td>
+<td>Model</td>
+<td>lfd2nx_in</td>
+<td>Pending</td>
+<td>Requires datasheet/reference-supply behavior.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.6.1 - [Model Spec] Vmeas and Vref used if typ/min/max variation</td>
+<td>Model</td>
+<td>lfd2nx_in</td>
+<td>Pending</td>
+<td>Requires deciding whether Vmeas/Vref variation exists across corners.</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2>Appendix A: IQ Levels</h2>
+<a id="appendix-a-iq-levels"></a>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Name</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IQ0</td>
+<td>Not Checked</td>
+<td>No documented quality checking has been performed.</td>
+</tr>
+<tr>
+<td>IQ1</td>
+<td>Passes IBISCHK</td>
+<td>IBISCHK has been run with zero errors and documented handling of warnings.</td>
+</tr>
+<tr>
+<td>IQ2</td>
+<td>Suitable for Waveform Simulation</td>
+<td>IQ1 plus all LEVEL 2 checks for basic waveform simulation data.</td>
+</tr>
+<tr>
+<td>IQ3</td>
+<td>Suitable for Timing Analysis</td>
+<td>IQ2 plus all LEVEL 3 checks for timing analysis data.</td>
+</tr>
+</tbody>
+</table>
+<h2>Appendix B: Special Designators</h2>
+<a id="appendix-b-special-designators"></a>
+<p>Special letters may be appended to the IQ score when the supporting evidence is documented.</p>
+<table>
+<thead>
+<tr>
+<th>Designator</th>
+<th>Name</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>G</td>
+<td>Contains Golden Waveforms</td>
+<td>The file contains golden waveform data using [Test Data] and [Test Load] or equivalent external documentation.</td>
+</tr>
+<tr>
+<td>M</td>
+<td>Measurement Correlated</td>
+<td>IBIS simulation has been correlated against hardware measurements with documented methods/results.</td>
+</tr>
+<tr>
+<td>S</td>
+<td>Simulation Correlated</td>
+<td>IBIS simulation has been correlated against a reference simulation such as SPICE with documented methods/results.</td>
+</tr>
+<tr>
+<td>X</td>
+<td>Exceptions</td>
+<td>One or more checks require documented exceptions in [Notes] or comments.</td>
+</tr>
+</tbody>
+</table>
+<h2>Appendix C: Scoring Notes</h2>
+<a id="appendix-c-scoring-notes"></a>
+<ul>
+<li>Base level: The summary IQ number is the highest level for which all required checks at that level and below pass, are NA, or are accepted exceptions.</li>
+<li>Optional checks: OPTIONAL checks are good practice but do not change the summary IQ number.</li>
+<li>Correlation designators: Append M, S, and/or G when measurement correlation, simulation correlation, and/or golden waveform evidence is documented for a reasonable set of models.</li>
+<li>Exception designator: Append X when any check passes only by documented exception or any remaining parser warning needs user attention.</li>
+<li>Writeback: The summary IQ score must be written into the IBIS file, preferably in [Notes]; detailed per-check status is better stored in a quality report.</li>
+</ul>
+</main>
+</body>
+</html>
+

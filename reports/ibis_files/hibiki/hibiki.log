@@ -1,0 +1,124 @@
+Parsing Hibiki_IOCL_I3C_I2C_ibis_20260211.ibs ...
+  1 component(s), 4 model(s)
+  Target level IQ3: skipping higher-level checks
+Parsing Hibiki_IOCL_I3C_I2C_ibis_20260211.ibs ...
+  1 component(s), 4 model(s)
+  Target level IQ3: skipping higher-level checks
+Parsing Hibiki_IOCL_I3C_I2C_ibis_20260211.ibs ...
+  1 component(s), 4 model(s)
+  Target level IQ3: skipping higher-level checks
+Parsing Hibiki_IOCL_I3C_I2C_ibis_20260211.ibs ...
+  1 component(s), 4 model(s)
+  Target level IQ3: skipping higher-level checks
+Wrote spreadsheet report: C:\Users\simom\Desktop\Projects\IBIS_QA\reports\ibis_files\hibiki\hibiki.xlsx
+========================================================================
+IBIS QA Report — AUTO Checks and SEMI-AUTO Evidence
+File   : C:\Users\simom\Desktop\Projects\IBIS Files\Hibiki_IOCL_I3C_I2C_ibis_20260211.ibs
+Target : IQ3
+IBIS Ver: 4.2   File Rev: 1.0   Date: Tue Feb 26 19:11:02 2026
+IQ Score in file: (not found)
+========================================================================
+
+[5.3.6] ⚠  (0 fail, 0 pass, 0 NA, total 4)
+  ⚠ [I3C_RX_RPU0RPD0_rx] I-V stair-step evidence needs review
+      [GND Clamp]: roughness=0.262 > 0.1
+      [POWER Clamp]: roughness=0.2 > 0.1
+  ⚠ [I2C_RX_RPU1RPD0_rx] I-V stair-step evidence needs review
+      [GND Clamp]: roughness=0.262 > 0.1
+      [POWER Clamp]: roughness=0.2 > 0.1
+  ⚠ [I2C_TX_8mA_tx] I-V stair-step evidence needs review
+      [GND Clamp]: roughness=0.262 > 0.1
+      [POWER Clamp]: roughness=0.2 > 0.1
+  ⚠ [I3C_TX_0p125mA_tx] I-V stair-step evidence needs review
+      [GND Clamp]: roughness=0.262 > 0.1
+      [POWER Clamp]: roughness=0.2 > 0.1
+
+[5.3.7] ✗  (6 fail, 2 pass, 0 NA, total 8)
+  ✗ [I3C_RX_RPU0RPD0_rx] [Pulldown] + [GND Clamp] combined curve non-monotonic (1 violation(s))
+      V=1.238: combined current decreases from 4.698e-06mA to 0mA
+  ✗ [I2C_RX_RPU1RPD0_rx] [Pulldown] + [GND Clamp] combined curve non-monotonic (1 violation(s))
+      V=1.238: combined current decreases from 4.695e-06mA to 0mA
+  ✗ [I2C_TX_8mA_tx] [Pulldown] + [GND Clamp] combined curve non-monotonic (18 violation(s))
+      V=1.725: combined current decreases from 43.22mA to 43.1mA
+      V=1.762: combined current decreases from 43.1mA to 42.84mA
+      V=1.8: combined current decreases from 42.84mA to 42.45mA
+      V=1.837: combined current decreases from 42.45mA to 41.96mA
+      V=1.913: combined current decreases from 41.96mA to 40.76mA
+      V=1.95: combined current decreases from 40.76mA to 40.07mA
+      V=1.988: combined current decreases from 40.07mA to 39.34mA
+      V=2.025: combined current decreases from 39.34mA to 38.57mA
+      V=2.062: combined current decreases from 38.57mA to 37.76mA
+      V=2.1: combined current decreases from 37.76mA to 36.93mA
+  ✗ [I2C_TX_8mA_tx] [Pullup] + [POWER Clamp] combined curve non-monotonic (19 violation(s))
+      V=1.688: combined current increases from -43.91mA to -43.9mA
+      V=1.725: combined current increases from -43.9mA to -43.75mA
+      V=1.762: combined current increases from -43.75mA to -43.49mA
+      V=1.8: combined current increases from -43.49mA to -43.14mA
+      V=1.837: combined current increases from -43.14mA to -42.69mA
+      V=1.913: combined current increases from -42.69mA to -41.6mA
+      V=1.95: combined current increases from -41.6mA to -40.97mA
+      V=1.988: combined current increases from -40.97mA to -40.29mA
+      V=2.025: combined current increases from -40.29mA to -39.58mA
+      V=2.062: combined current increases from -39.58mA to -38.83mA
+  ✗ [I3C_TX_0p125mA_tx] [Pulldown] + [GND Clamp] combined curve non-monotonic (17 violation(s))
+      V=1.762: combined current decreases from 1.128mA to 1.125mA
+      V=1.8: combined current decreases from 1.125mA to 1.118mA
+      V=1.837: combined current decreases from 1.118mA to 1.108mA
+      V=1.913: combined current decreases from 1.108mA to 1.082mA
+      V=1.95: combined current decreases from 1.082mA to 1.066mA
+      V=1.988: combined current decreases from 1.066mA to 1.049mA
+      V=2.025: combined current decreases from 1.049mA to 1.03mA
+      V=2.062: combined current decreases from 1.03mA to 1.011mA
+      V=2.1: combined current decreases from 1.011mA to 0.9903mA
+      V=2.138: combined current decreases from 0.9903mA to 0.9691mA
+  ✗ [I3C_TX_0p125mA_tx] [Pullup] + [POWER Clamp] combined curve non-monotonic (16 violation(s))
+      V=1.8: combined current increases from -1.176mA to -1.174mA
+      V=1.837: combined current increases from -1.174mA to -1.17mA
+      V=1.913: combined current increases from -1.17mA to -1.154mA
+      V=1.95: combined current increases from -1.154mA to -1.144mA
+      V=1.988: combined current increases from -1.144mA to -1.131mA
+      V=2.025: combined current increases from -1.131mA to -1.117mA
+      V=2.062: combined current increases from -1.117mA to -1.102mA
+      V=2.1: combined current increases from -1.102mA to -1.085mA
+      V=2.138: combined current increases from -1.085mA to -1.067mA
+      V=2.175: combined current increases from -1.067mA to -1.049mA
+
+[5.3.10] ⚠  (0 fail, 3 pass, 0 NA, total 4)
+  ⚠ [I2C_RX_RPU1RPD0_rx] Clamp leakage evidence needs review
+      [GND Clamp]: I(0V)=-17.8 uA
+
+[5.5.3] ✗  (2 fail, 0 pass, 0 NA, total 2)
+  ✗ [I2C_TX_8mA_tx] [Ramp] dV inconsistent with I-V load-line (2 corner(s))
+      Rise dV/max: ramp=0.5045V, expected≈0.4584V (10.0% error, limit 10.0%)
+      Fall dV/max: ramp=0.5017V, expected≈0.4559V (10.0% error, limit 10.0%)
+      Rise dV/typ: ramp=0.4248V, expected≈0.4248V from Vhigh=0.708V, Vlow=-1.728e-08V, error=0.0% (push-pull fixture=0V)
+      Rise dV/min: ramp=0.3463V, expected≈0.3842V from Vhigh=0.6404V, Vlow=-1.686e-07V, error=9.9% (push-pull fixture=0V)
+      Rise dV/max: ramp=0.5045V, expected≈0.4584V from Vhigh=0.7641V, Vlow=-3.562e-08V, error=10.0% (push-pull fixture=0V)
+      Fall dV/typ: ramp=0.4214V, expected≈0.4214V from Vhigh=1.2V, Vlow=0.4976V, error=0.0% (push-pull fixture=1.2V)
+      Fall dV/min: ramp=0.339V, expected≈0.3758V from Vhigh=1.2V, Vlow=0.5737V, error=9.8% (push-pull fixture=1.2V)
+      Fall dV/max: ramp=0.5017V, expected≈0.4559V from Vhigh=1.2V, Vlow=0.4402V, error=10.0% (push-pull fixture=1.2V)
+  ✗ [I3C_TX_0p125mA_tx] [Ramp] dV inconsistent with I-V load-line (2 corner(s))
+      Rise dV/max: ramp=0.03503V, expected≈0.03171V (10.5% error, limit 10.0%)
+      Fall dV/max: ramp=0.03401V, expected≈0.03081V (10.4% error, limit 10.0%)
+      Rise dV/typ: ramp=0.02583V, expected≈0.02583V from Vhigh=0.04305V, Vlow=-1.152e-09V, error=0.0% (push-pull fixture=0V)
+      Rise dV/min: ramp=0.01803V, expected≈0.01967V from Vhigh=0.03279V, Vlow=-9.733e-09V, error=8.3% (push-pull fixture=0V)
+      Rise dV/max: ramp=0.03503V, expected≈0.03171V from Vhigh=0.05285V, Vlow=-2.663e-09V, error=10.5% (push-pull fixture=0V)
+      Fall dV/typ: ramp=0.02493V, expected≈0.02493V from Vhigh=1.2V, Vlow=1.158V, error=0.0% (push-pull fixture=1.2V)
+      Fall dV/min: ramp=0.01658V, expected≈0.01778V from Vhigh=1.2V, Vlow=1.17V, error=6.8% (push-pull fixture=1.2V)
+      Fall dV/max: ramp=0.03401V, expected≈0.03081V from Vhigh=1.2V, Vlow=1.149V, error=10.4% (push-pull fixture=1.2V)
+
+========================================================================
+SUMMARY
+  FAIL  : 8
+  WARN  : 5
+  PASS  : 68
+  NA    : 37
+  ERROR : 0
+  Total results: 118
+========================================================================
+
+REVIEW SIGNOFF
+  Final signoff ready : NO
+  Hard blockers       : 8
+  Semi-auto pending   : 5 / 5
+  Manual pending      : 61 / 61

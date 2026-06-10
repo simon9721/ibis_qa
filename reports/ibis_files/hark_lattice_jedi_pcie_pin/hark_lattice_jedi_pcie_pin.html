@@ -1,0 +1,2669 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IBIS QA Report - ibis_lattice_jedi_d1_80k_484cabga_12242020_latticeupdate_122520_12um_l2_3_pcie_pin.ibs</title>
+<style>
+:root {
+  color-scheme: light;
+  --text: #1f2933;
+  --muted: #52606d;
+  --line: #d9e2ec;
+  --header: #102a43;
+  --link: #1d4ed8;
+  --panel: #f8fafc;
+}
+body {
+  margin: 0;
+  background: #ffffff;
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.5;
+}
+.report {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 32px 28px 64px;
+}
+h1, h2, h3, h4, h5 {
+  color: var(--header);
+  line-height: 1.2;
+}
+h1 { font-size: 30px; margin: 0 0 24px; }
+h2 { font-size: 22px; margin-top: 34px; border-bottom: 1px solid var(--line); padding-bottom: 7px; }
+h3 { font-size: 18px; margin-top: 28px; }
+h4 { font-size: 16px; margin-top: 24px; }
+h5 { font-size: 14px; margin: 18px 0 8px; }
+a { color: var(--link); text-decoration: none; }
+a:hover { text-decoration: underline; }
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0 20px;
+  font-size: 13px;
+}
+th, td {
+  border: 1px solid var(--line);
+  padding: 7px 8px;
+  vertical-align: top;
+}
+th {
+  background: #eef2f7;
+  color: var(--header);
+  text-align: left;
+}
+tr:nth-child(even) td { background: #fbfdff; }
+code {
+  background: #eef2f7;
+  border-radius: 3px;
+  padding: 1px 4px;
+}
+pre {
+  background: #ffffff;
+  color: var(--text);
+  border: 1px solid var(--line);
+  overflow-x: auto;
+  padding: 14px;
+  border-radius: 4px;
+  white-space: pre-wrap;
+}
+pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+}
+img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+  background: #ffffff;
+}
+ul { padding-left: 22px; }
+p { margin: 9px 0; }
+</style>
+</head>
+<body>
+<main class="report">
+<h1>IBIS QA Report</h1>
+<h2>File Summary</h2>
+<ul>
+<li>Generated: 2026-06-09T23:35:21-05:00</li>
+<li>IBIS file: <code>ibis_lattice_jedi_d1_80k_484cabga_12242020_latticeupdate_122520_12um_l2_3_pcie_pin.ibs</code></li>
+<li>Target level: IQ3</li>
+<li>IBIS version: 5.0</li>
+<li>File revision: 1.0</li>
+<li>IBIS file date: February 22,2021</li>
+<li>IQ score in file: (not found)</li>
+<li>Components: 1</li>
+<li>Models: 0</li>
+<li>Package models: 0</li>
+<li>Zout estimates: 0 model(s), 0 table/corner point(s)</li>
+</ul>
+<h2>File Classification: Package/Pin-Mapping Fragment</h2>
+<a id="file-classification"></a>
+<p><strong>QA checks were bypassed for this file.</strong></p>
+<p>This file defines no <code>[Model]</code> sections, and its <code>[Pin]</code> entries reference model name(s) signal (48 of 122 pins) that are not <code>POWER</code>/<code>GND</code>/<code>NC</code> and have no <code>[Model]</code> definition in this file. Per the IBIS spec, every <code>[Pin]</code> model name must resolve to a <code>[Model]</code> defined in the same file (or to a reserved name) — there is no cross-file include mechanism. This file is therefore a package/pin-mapping fragment, not a valid standalone IBIS model file, and the remaining QA checks have been skipped.</p>
+<h2>Table of Contents</h2>
+<a id="table-of-contents"></a>
+<ul>
+<li><a href="#file-classification">File Classification: Package/Pin-Mapping Fragment</a></li>
+<li><a href="#score-assessment">Score Assessment</a></li>
+<li><a href="#review-signoff-summary">Review Signoff Summary</a></li>
+<li><a href="#result-summary">Result Summary</a></li>
+<li><a href="#failed-error-items">Failed &amp; Error Items</a></li>
+<li><a href="#passed-items-per-level">Passed Items Per Level</a></li>
+<li><a href="#zout-estimates">Zout Estimates</a></li>
+<li><a href="#quality-check-results">Quality Check Results</a></li>
+</ul>
+<p><strong>LEVEL 1 Checks</strong></p>
+<ul>
+<li><a href="#level-1-check-results">LEVEL 1 check results</a></li>
+<li><a href="#check-2-1">2.1 - IBIS file passes IBISCHK</a></li>
+</ul>
+<p><strong>LEVEL 2 Checks</strong></p>
+<ul>
+<li><a href="#level-2-check-results">LEVEL 2 check results</a></li>
+<li><a href="#check-3-1-1">3.1.1 - (Package) must have typ/min/max values</a></li>
+<li><a href="#check-3-1-2">3.1.2 - (Package) model values must be reasonable</a></li>
+<li><a href="#check-3-2-1">3.2.1 - (Pin) section complete</a></li>
+<li><a href="#check-3-3-1">3.3.1 - (Diff Pin) referenced pin models match</a></li>
+<li><a href="#check-4-1">4.1 - (Model Selector) entries have reasonable descriptions</a></li>
+<li><a href="#check-4-2">4.2 - Default (Model Selector) entries are consistent</a></li>
+<li><a href="#check-5-1-1">5.1.1 - (Model) parameters have correct typ/min/max order</a></li>
+<li><a href="#check-5-1-2">5.1.2 - (Model) C_comp is reasonable</a></li>
+<li><a href="#check-5-1-3">5.1.3 - (Temperature Range) is reasonable</a></li>
+<li><a href="#check-5-1-4">5.1.4 - (Voltage Range) or (* Reference) is reasonable</a></li>
+<li><a href="#check-5-2-5">5.2.5 - (Model Spec) S_Overshoot subparameters complete and match data sheet</a></li>
+<li><a href="#check-5-2-6">5.2.6 - (Model Spec) S_Overshoot subparameters track typ/min/max</a></li>
+<li><a href="#check-5-2-7">5.2.7 - (Model Spec) D_Overshoot_* subparameters complete and match data sheet</a></li>
+<li><a href="#check-5-2-8">5.2.8 - (Model Spec) D_Overshoot_* subparameters track typ/min/max</a></li>
+<li><a href="#check-5-3-1">5.3.1 - I-V tables have correct typ/min/max order</a></li>
+<li><a href="#check-5-3-2">5.3.2 - (Pullup) voltage sweep range is correct</a></li>
+<li><a href="#check-5-3-3">5.3.3 - (Pulldown) voltage sweep range is correct</a></li>
+<li><a href="#check-5-3-4">5.3.4 - (POWER Clamp) voltage sweep range is correct</a></li>
+<li><a href="#check-5-3-5">5.3.5 - (GND Clamp) voltage sweep range is correct</a></li>
+<li><a href="#check-5-3-6">5.3.6 - I-V tables do not exhibit stair-stepping</a></li>
+<li><a href="#check-5-3-7">5.3.7 - Combined I-V tables are monotonic</a></li>
+<li><a href="#check-5-3-8">5.3.8 - (Pulldown) I-V tables pass through zero/zero</a></li>
+<li><a href="#check-5-3-9">5.3.9 - (Pullup) I-V tables pass through zero/zero</a></li>
+<li><a href="#check-5-3-10">5.3.10 - No leakage current in clamp I-V tables</a></li>
+<li><a href="#check-5-3-11">5.3.11 - I-V behavior not double-counted</a></li>
+<li><a href="#check-5-3-12">5.3.12 - On-die termination modeling documented</a></li>
+<li><a href="#check-5-3-13">5.3.13 - ECL models I-V tables swept from -Vcc to +2 * Vcc.</a></li>
+<li><a href="#check-5-3-14">5.3.14 - Point distributions in I-V tables should be sufficient</a></li>
+<li><a href="#check-5-4-1">5.4.1 - Output and I/O buffers have sufficient V-T tables</a></li>
+<li><a href="#check-5-4-2">5.4.2 - V-T tables have reasonable point distribution</a></li>
+<li><a href="#check-5-4-4">5.4.4 - V-T table endpoints match fixture voltages</a></li>
+<li><a href="#check-5-5-1">5.5.1 - (Ramp) R_load present if value other than 50 ohms</a></li>
+<li><a href="#check-5-5-2">5.5.2 - (Ramp) typ/min/max order is correct</a></li>
+<li><a href="#check-5-5-3">5.5.3 - (Ramp) dV value is consistent with I-V table calculations</a></li>
+<li><a href="#check-5-5-4">5.5.4 - (Ramp) dt is consistent with 20%-80% crossing time</a></li>
+</ul>
+<p><strong>LEVEL 3 Checks</strong></p>
+<ul>
+<li><a href="#level-3-check-results">LEVEL 3 check results</a></li>
+<li><a href="#check-3-2-2">3.2.2 - (Pin) RLC values are present and reasonable</a></li>
+<li><a href="#check-3-3-2">3.3.2 - (Diff Pin) Vdiff and Tdelay_* complete and reasonable</a></li>
+<li><a href="#check-5-2-1">5.2.1 - (Model) Vinl and Vinh reasonable</a></li>
+<li><a href="#check-5-2-2">5.2.2 - (Model Spec) Vinl and Vinh reasonable</a></li>
+<li><a href="#check-5-2-3">5.2.3 - (Model Spec) Vinl+/- and Vinh+/- complete and reasonable</a></li>
+<li><a href="#check-5-2-9">5.2.9 - (Receiver Thresholds) Vth present and matches data sheet, if needed</a></li>
+<li><a href="#check-5-2-10">5.2.10 - (Receiver Thresholds) Vth_min and Vth_max present and match data sheet, if needed</a></li>
+<li><a href="#check-5-2-11">5.2.11 - (Receiver Thresholds) Vinh_ac, Vinl_ac present and match data sheet, if needed</a></li>
+<li><a href="#check-5-2-12">5.2.12 - (Receiver Thresholds) Vinh_dc, Vinl_dc present and match data sheet, if needed</a></li>
+<li><a href="#check-5-2-13">5.2.13 - (Receiver Thresholds) Tslew_ac/Tdiffslew_ac present and match data sheet, if needed</a></li>
+<li><a href="#check-5-2-14">5.2.14 - (Receiver Thresholds) Threshold_sensitivity and Ext_ref present and match data sheet, if needed</a></li>
+<li><a href="#check-5-4-3">5.4.3 - V-T table duration is not excessive</a></li>
+<li><a href="#check-5-6-1">5.6.1 - (Model Spec) Vmeas and Vref used if typ/min/max variation</a></li>
+<li><a href="#check-5-6-2">5.6.2 - Vref consistent for Open-drain, Open-source, and ECL Model_types</a></li>
+</ul>
+<ul>
+<li><a href="#visual-curves-by-model">Visual Curves by Model</a></li>
+<li><a href="#manual-review-items">Manual Review Items</a></li>
+<li><a href="#appendix-a-iq-levels">Appendix A: IQ Levels</a></li>
+<li><a href="#appendix-b-special-designators">Appendix B: Special Designators</a></li>
+</ul>
+<h2>Score Assessment</h2>
+<a id="score-assessment"></a>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Final IQ score</td>
+<td>To be assigned by the model maker after resolving or documenting findings</td>
+</tr>
+<tr>
+<td>Candidate level from checked items</td>
+<td>IQ3</td>
+</tr>
+<tr>
+<td>Candidate level after review overlay</td>
+<td>Below IQ1</td>
+</tr>
+<tr>
+<td>Tool comments</td>
+<td>Candidate IQ3; no implemented checked item has FAIL/ERROR/WARN. Manual and external-evidence checks still need model-maker documentation.</td>
+</tr>
+<tr>
+<td>Note</td>
+<td>Candidate level is the highest implemented level without FAIL or ERROR. WARN/review items, manual checks, accepted exceptions, and correlation designators still require model-maker documentation before final IQ assignment.</td>
+</tr>
+</tbody>
+</table>
+<h2>Review Signoff Summary</h2>
+<a id="review-signoff-summary"></a>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Review overlay loaded</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Reviewer</td>
+<td></td>
+</tr>
+<tr>
+<td>Organization</td>
+<td></td>
+</tr>
+<tr>
+<td>Approval date</td>
+<td></td>
+</tr>
+<tr>
+<td>Final signoff ready</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Hard blockers after review</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Semi-auto review pending</td>
+<td>0 / 0</td>
+</tr>
+<tr>
+<td>Semi-auto accepted</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Semi-auto exceptions</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Semi-auto rejected</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Manual review pending</td>
+<td>16 / 16</td>
+</tr>
+<tr>
+<td>Manual accepted</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Manual exceptions</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Manual rejected</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Note</td>
+<td>Final IQ assignment is ready only when hard blockers are zero and all semi-auto and manual review items have documented decisions.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Generated Count</th>
+<th>Review-Adjusted Count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PASS</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>FAIL</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>WARN</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>NA</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>ERROR</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>EXCEPTION</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<h2>Result Summary</h2>
+<a id="result-summary"></a>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Generated Count</th>
+<th>Review-Adjusted Count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PASS</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>FAIL</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>WARN</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>NA</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>ERROR</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>EXCEPTION</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Total</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<h2>Failed &amp; Error Items</h2>
+<a id="failed-error-items"></a>
+<p>No FAIL or ERROR items were found.</p>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h2>Passed Items Per Level</h2>
+<a id="passed-items-per-level"></a>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Required Items</th>
+<th>Checked</th>
+<th>Passed</th>
+<th>NA</th>
+<th>Needs Review</th>
+<th>Failed</th>
+<th>Error</th>
+<th>Manual/External Review</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LEVEL 1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>LEVEL 2</td>
+<td>35</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>35</td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>14</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>14</td>
+</tr>
+</tbody>
+</table>
+<h2>Zout Estimates</h2>
+<a id="zout-estimates"></a>
+<p>Estimated output impedance is derived from Pullup/Pulldown I-V load-line intersections using Rload = 50 ohm. These values are characterization data for the model maker; they are not IQ PASS/FAIL checks.</p>
+<ul>
+<li>Models with estimates: 0 / 0</li>
+<li>Estimated table/corner points: 0</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Type</th>
+<th>Pulldown Zout typ/min/max</th>
+<th>Pullup Zout typ/min/max</th>
+<th>Load-line plot</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>No models parsed.</td>
+</tr>
+</tbody>
+</table>
+<h2>Quality Check Results</h2>
+<a id="quality-check-results"></a>
+<p>Rows are grouped by IQ level and then by check item. Each check item is summarized by result type so PASS, WARN, FAIL, NA, and manual/external-review status are visible in one place.</p>
+<p>Source location note: this parser currently keeps the raw IBIS text but does not retain per-result IBIS source line numbers. The report identifies the affected scope, subject, and evidence; exact line references require parser metadata work.</p>
+<h3>LEVEL 1 Check Results</h3>
+<a id="level-1-check-results"></a>
+<h4>2.1 - IBIS file passes IBISCHK</h4>
+<a id="check-2-1"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 303; section 2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h3>LEVEL 2 Check Results</h3>
+<a id="level-2-check-results"></a>
+<h4>3.1.1 - [Package] must have typ/min/max values</h4>
+<a id="check-3-1-1"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 347; section 3.1</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>3.1.2 - [Package] model values must be reasonable</h4>
+<a id="check-3-1-2"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 351; section 3.1</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>3.2.1 - [Pin] section complete</h4>
+<a id="check-3-2-1"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 422; section 3.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>3.3.1 - [Diff Pin] referenced pin models match</h4>
+<a id="check-3-3-1"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 459; section 3.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>4.1 - [Model Selector] entries have reasonable descriptions</h4>
+<a id="check-4-1"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 493; section 4</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>4.2 - Default [Model Selector] entries are consistent</h4>
+<a id="check-4-2"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 497; section 4</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.1.1 - [Model] parameters have correct typ/min/max order</h4>
+<a id="check-5-1-1"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 511; section 5.1</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.1.2 - [Model] C_comp is reasonable</h4>
+<a id="check-5-1-2"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 517; section 5.1</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.1.3 - [Temperature Range] is reasonable</h4>
+<a id="check-5-1-3"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 547; section 5.1</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.1.4 - [Voltage Range] or [* Reference] is reasonable</h4>
+<a id="check-5-1-4"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 571; section 5.1</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.2.5 - [Model Spec] S_Overshoot subparameters complete and match data sheet</h4>
+<a id="check-5-2-5"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 625; section 5.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.2.6 - [Model Spec] S_Overshoot subparameters track typ/min/max</h4>
+<a id="check-5-2-6"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 629; section 5.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.2.7 - [Model Spec] D_Overshoot_* subparameters complete and match data sheet</h4>
+<a id="check-5-2-7"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 633; section 5.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.2.8 - [Model Spec] D_Overshoot_* subparameters track typ/min/max</h4>
+<a id="check-5-2-8"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 643; section 5.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.1 - I-V tables have correct typ/min/max order</h4>
+<a id="check-5-3-1"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 705; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.2 - [Pullup] voltage sweep range is correct</h4>
+<a id="check-5-3-2"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 715; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.3 - [Pulldown] voltage sweep range is correct</h4>
+<a id="check-5-3-3"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 719; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.4 - [POWER Clamp] voltage sweep range is correct</h4>
+<a id="check-5-3-4"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 723; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.5 - [GND Clamp] voltage sweep range is correct</h4>
+<a id="check-5-3-5"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 731; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.6 - I-V tables do not exhibit stair-stepping</h4>
+<a id="check-5-3-6"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 735; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.7 - Combined I-V tables are monotonic</h4>
+<a id="check-5-3-7"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 741; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.8 - [Pulldown] I-V tables pass through zero/zero</h4>
+<a id="check-5-3-8"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 749; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.9 - [Pullup] I-V tables pass through zero/zero</h4>
+<a id="check-5-3-9"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 753; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.10 - No leakage current in clamp I-V tables</h4>
+<a id="check-5-3-10"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 757; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.11 - I-V behavior not double-counted</h4>
+<a id="check-5-3-11"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 767; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.12 - On-die termination modeling documented</h4>
+<a id="check-5-3-12"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 773; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.13 - ECL models I-V tables swept from -Vcc to +2 * Vcc.</h4>
+<a id="check-5-3-13"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 777; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.14 - Point distributions in I-V tables should be sufficient</h4>
+<a id="check-5-3-14"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 781; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.4.1 - Output and I/O buffers have sufficient V-T tables</h4>
+<a id="check-5-4-1"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 787; section 5.4</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.4.2 - V-T tables have reasonable point distribution</h4>
+<a id="check-5-4-2"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 807; section 5.4</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.4.4 - V-T table endpoints match fixture voltages</h4>
+<a id="check-5-4-4"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 817; section 5.4</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.5.1 - [Ramp] R_load present if value other than 50 ohms</h4>
+<a id="check-5-5-1"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 833; section 5.5</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.5.2 - [Ramp] typ/min/max order is correct</h4>
+<a id="check-5-5-2"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 837; section 5.5</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.5.3 - [Ramp] dV value is consistent with I-V table calculations</h4>
+<a id="check-5-5-3"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 841; section 5.5</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.5.4 - [Ramp] dt is consistent with 20%-80% crossing time</h4>
+<a id="check-5-5-4"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 845; section 5.5</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h3>LEVEL 3 Check Results</h3>
+<a id="level-3-check-results"></a>
+<h4>3.2.2 - [Pin] RLC values are present and reasonable</h4>
+<a id="check-3-2-2"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 442; section 3.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>3.3.2 - [Diff Pin] Vdiff and Tdelay_* complete and reasonable</h4>
+<a id="check-3-3-2"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 463; section 3.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.2.1 - [Model] Vinl and Vinh reasonable</h4>
+<a id="check-5-2-1"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 599; section 5.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.2.2 - [Model Spec] Vinl and Vinh reasonable</h4>
+<a id="check-5-2-2"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 605; section 5.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.2.3 - [Model Spec] Vinl+/- and Vinh+/- complete and reasonable</h4>
+<a id="check-5-2-3"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 615; section 5.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.2.9 - [Receiver Thresholds] Vth present and matches data sheet, if needed</h4>
+<a id="check-5-2-9"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 647; section 5.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.2.10 - [Receiver Thresholds] Vth_min and Vth_max present and match data sheet, if needed</h4>
+<a id="check-5-2-10"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 653; section 5.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.2.11 - [Receiver Thresholds] Vinh_ac, Vinl_ac present and match data sheet, if needed</h4>
+<a id="check-5-2-11"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 663; section 5.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.2.12 - [Receiver Thresholds] Vinh_dc, Vinl_dc present and match data sheet, if needed</h4>
+<a id="check-5-2-12"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 673; section 5.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.2.13 - [Receiver Thresholds] Tslew_ac/Tdiffslew_ac present and match data sheet, if needed</h4>
+<a id="check-5-2-13"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 679; section 5.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.2.14 - [Receiver Thresholds] Threshold_sensitivity and Ext_ref present and match data sheet, if needed</h4>
+<a id="check-5-2-14"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 685; section 5.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.4.3 - V-T table duration is not excessive</h4>
+<a id="check-5-4-3"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 813; section 5.4</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.6.1 - [Model Spec] Vmeas and Vref used if typ/min/max variation</h4>
+<a id="check-5-6-1"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 861; section 5.6</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.6.2 - Vref consistent for Open-drain, Open-source, and ECL Model_types</h4>
+<a id="check-5-6-2"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 865; section 5.6</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h2>Visual Curves by Model</h2>
+<a id="visual-curves-by-model"></a>
+<p>Figures provide curve/table context for the linked QA items. The quality-check tables above remain the authoritative status summary.</p>
+<h2>Manual Review Items</h2>
+<a id="manual-review-items"></a>
+<p>Manual items require external evidence such as datasheets, extraction notes, SPICE/measurement data, package files, or model-maker documentation.</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Check</th>
+<th>Scope</th>
+<th>Subject</th>
+<th>Decision</th>
+<th>Evidence / Reference</th>
+<th>Comment / Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LEVEL 2</td>
+<td>4.2 - Default [Model Selector] entries are consistent</td>
+<td>Component</td>
+<td>Component_Name</td>
+<td>Pending</td>
+<td>Default model selector consistency depends on product configuration and likely use cases.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 2</td>
+<td>5.1.3 - [Temperature Range] is reasonable</td>
+<td>File/Header</td>
+<td>ibis_lattice_jedi_d1_80k_484cabga_12242020_latticeupdate_122520_12um_l2_3_pcie_pin.ibs</td>
+<td>Pending</td>
+<td>Requires extraction conditions, technology behavior, and datasheet operating temperature comparison.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 2</td>
+<td>5.2.5 - [Model Spec] S_Overshoot subparameters complete and match data sheet</td>
+<td>File/Header</td>
+<td>ibis_lattice_jedi_d1_80k_484cabga_12242020_latticeupdate_122520_12um_l2_3_pcie_pin.ibs</td>
+<td>Pending</td>
+<td>Requires datasheet functional overshoot limits.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 2</td>
+<td>5.2.7 - [Model Spec] D_Overshoot_* subparameters complete and match data sheet</td>
+<td>File/Header</td>
+<td>ibis_lattice_jedi_d1_80k_484cabga_12242020_latticeupdate_122520_12um_l2_3_pcie_pin.ibs</td>
+<td>Pending</td>
+<td>Requires datasheet dynamic overshoot limits and documented conversion method.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 2</td>
+<td>5.3.11 - I-V behavior not double-counted</td>
+<td>File/Header</td>
+<td>ibis_lattice_jedi_d1_80k_484cabga_12242020_latticeupdate_122520_12um_l2_3_pcie_pin.ibs</td>
+<td>Pending</td>
+<td>Double-counting of clamp, driver, and termination behavior needs curve/context review.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 2</td>
+<td>5.3.12 - On-die termination modeling documented</td>
+<td>File/Header</td>
+<td>ibis_lattice_jedi_d1_80k_484cabga_12242020_latticeupdate_122520_12um_l2_3_pcie_pin.ibs</td>
+<td>Pending</td>
+<td>Requires documentation review for on-die termination modeling method.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.1 - [Model] Vinl and Vinh reasonable</td>
+<td>File/Header</td>
+<td>ibis_lattice_jedi_d1_80k_484cabga_12242020_latticeupdate_122520_12um_l2_3_pcie_pin.ibs</td>
+<td>Pending</td>
+<td>Requires comparing thresholds against datasheet and Vmeas intent.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.2 - [Model Spec] Vinl and Vinh reasonable</td>
+<td>File/Header</td>
+<td>ibis_lattice_jedi_d1_80k_484cabga_12242020_latticeupdate_122520_12um_l2_3_pcie_pin.ibs</td>
+<td>Pending</td>
+<td>Requires datasheet threshold ranges and supply variation interpretation.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.3 - [Model Spec] Vinl+/- and Vinh+/- complete and reasonable</td>
+<td>File/Header</td>
+<td>ibis_lattice_jedi_d1_80k_484cabga_12242020_latticeupdate_122520_12um_l2_3_pcie_pin.ibs</td>
+<td>Pending</td>
+<td>Requires datasheet/hysteresis intent plus comment review for exceptions.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.9 - [Receiver Thresholds] Vth present and matches data sheet, if needed</td>
+<td>File/Header</td>
+<td>ibis_lattice_jedi_d1_80k_484cabga_12242020_latticeupdate_122520_12um_l2_3_pcie_pin.ibs</td>
+<td>Pending</td>
+<td>Requires datasheet timing threshold and receiver-threshold applicability.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.10 - [Receiver Thresholds] Vth_min and Vth_max present and match data sheet, if needed</td>
+<td>File/Header</td>
+<td>ibis_lattice_jedi_d1_80k_484cabga_12242020_latticeupdate_122520_12um_l2_3_pcie_pin.ibs</td>
+<td>Pending</td>
+<td>Requires datasheet Vth tolerance interpretation.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.11 - [Receiver Thresholds] Vinh_ac, Vinl_ac present and match data sheet, if needed</td>
+<td>File/Header</td>
+<td>ibis_lattice_jedi_d1_80k_484cabga_12242020_latticeupdate_122520_12um_l2_3_pcie_pin.ibs</td>
+<td>Pending</td>
+<td>Requires datasheet AC threshold values and offset conversion review.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.12 - [Receiver Thresholds] Vinh_dc, Vinl_dc present and match data sheet, if needed</td>
+<td>File/Header</td>
+<td>ibis_lattice_jedi_d1_80k_484cabga_12242020_latticeupdate_122520_12um_l2_3_pcie_pin.ibs</td>
+<td>Pending</td>
+<td>Requires datasheet DC threshold values and offset conversion review.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.13 - [Receiver Thresholds] Tslew_ac/Tdiffslew_ac present and match data sheet, if needed</td>
+<td>File/Header</td>
+<td>ibis_lattice_jedi_d1_80k_484cabga_12242020_latticeupdate_122520_12um_l2_3_pcie_pin.ibs</td>
+<td>Pending</td>
+<td>Requires datasheet slew-limit values and differential/single-ended applicability.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.14 - [Receiver Thresholds] Threshold_sensitivity and Ext_ref present and match data sheet, if needed</td>
+<td>File/Header</td>
+<td>ibis_lattice_jedi_d1_80k_484cabga_12242020_latticeupdate_122520_12um_l2_3_pcie_pin.ibs</td>
+<td>Pending</td>
+<td>Requires datasheet/reference-supply behavior.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.6.1 - [Model Spec] Vmeas and Vref used if typ/min/max variation</td>
+<td>File/Header</td>
+<td>ibis_lattice_jedi_d1_80k_484cabga_12242020_latticeupdate_122520_12um_l2_3_pcie_pin.ibs</td>
+<td>Pending</td>
+<td>Requires deciding whether Vmeas/Vref variation exists across corners.</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2>Appendix A: IQ Levels</h2>
+<a id="appendix-a-iq-levels"></a>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Name</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IQ0</td>
+<td>Not Checked</td>
+<td>No documented quality checking has been performed.</td>
+</tr>
+<tr>
+<td>IQ1</td>
+<td>Passes IBISCHK</td>
+<td>IBISCHK has been run with zero errors and documented handling of warnings.</td>
+</tr>
+<tr>
+<td>IQ2</td>
+<td>Suitable for Waveform Simulation</td>
+<td>IQ1 plus all LEVEL 2 checks for basic waveform simulation data.</td>
+</tr>
+<tr>
+<td>IQ3</td>
+<td>Suitable for Timing Analysis</td>
+<td>IQ2 plus all LEVEL 3 checks for timing analysis data.</td>
+</tr>
+</tbody>
+</table>
+<h2>Appendix B: Special Designators</h2>
+<a id="appendix-b-special-designators"></a>
+<p>Special letters may be appended to the IQ score when the supporting evidence is documented.</p>
+<table>
+<thead>
+<tr>
+<th>Designator</th>
+<th>Name</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>G</td>
+<td>Contains Golden Waveforms</td>
+<td>The file contains golden waveform data using [Test Data] and [Test Load] or equivalent external documentation.</td>
+</tr>
+<tr>
+<td>M</td>
+<td>Measurement Correlated</td>
+<td>IBIS simulation has been correlated against hardware measurements with documented methods/results.</td>
+</tr>
+<tr>
+<td>S</td>
+<td>Simulation Correlated</td>
+<td>IBIS simulation has been correlated against a reference simulation such as SPICE with documented methods/results.</td>
+</tr>
+<tr>
+<td>X</td>
+<td>Exceptions</td>
+<td>One or more checks require documented exceptions in [Notes] or comments.</td>
+</tr>
+</tbody>
+</table>
+<h2>Appendix C: Scoring Notes</h2>
+<a id="appendix-c-scoring-notes"></a>
+<ul>
+<li>Base level: The summary IQ number is the highest level for which all required checks at that level and below pass, are NA, or are accepted exceptions.</li>
+<li>Optional checks: OPTIONAL checks are good practice but do not change the summary IQ number.</li>
+<li>Correlation designators: Append M, S, and/or G when measurement correlation, simulation correlation, and/or golden waveform evidence is documented for a reasonable set of models.</li>
+<li>Exception designator: Append X when any check passes only by documented exception or any remaining parser warning needs user attention.</li>
+<li>Writeback: The summary IQ score must be written into the IBIS file, preferably in [Notes]; detailed per-check status is better stored in a quality report.</li>
+</ul>
+</main>
+</body>
+</html>
+

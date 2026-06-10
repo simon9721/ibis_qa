@@ -1,0 +1,3108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IBIS QA Report - abi_gen3.ibs</title>
+<style>
+:root {
+  color-scheme: light;
+  --text: #1f2933;
+  --muted: #52606d;
+  --line: #d9e2ec;
+  --header: #102a43;
+  --link: #1d4ed8;
+  --panel: #f8fafc;
+}
+body {
+  margin: 0;
+  background: #ffffff;
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.5;
+}
+.report {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 32px 28px 64px;
+}
+h1, h2, h3, h4, h5 {
+  color: var(--header);
+  line-height: 1.2;
+}
+h1 { font-size: 30px; margin: 0 0 24px; }
+h2 { font-size: 22px; margin-top: 34px; border-bottom: 1px solid var(--line); padding-bottom: 7px; }
+h3 { font-size: 18px; margin-top: 28px; }
+h4 { font-size: 16px; margin-top: 24px; }
+h5 { font-size: 14px; margin: 18px 0 8px; }
+a { color: var(--link); text-decoration: none; }
+a:hover { text-decoration: underline; }
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0 20px;
+  font-size: 13px;
+}
+th, td {
+  border: 1px solid var(--line);
+  padding: 7px 8px;
+  vertical-align: top;
+}
+th {
+  background: #eef2f7;
+  color: var(--header);
+  text-align: left;
+}
+tr:nth-child(even) td { background: #fbfdff; }
+code {
+  background: #eef2f7;
+  border-radius: 3px;
+  padding: 1px 4px;
+}
+pre {
+  background: #ffffff;
+  color: var(--text);
+  border: 1px solid var(--line);
+  overflow-x: auto;
+  padding: 14px;
+  border-radius: 4px;
+  white-space: pre-wrap;
+}
+pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+}
+img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+  background: #ffffff;
+}
+ul { padding-left: 22px; }
+p { margin: 9px 0; }
+</style>
+</head>
+<body>
+<main class="report">
+<h1>IBIS QA Report</h1>
+<h2>File Summary</h2>
+<ul>
+<li>Generated: 2026-06-09T23:35:20-05:00</li>
+<li>IBIS file: <code>abi_gen3.ibs</code></li>
+<li>Target level: IQ3</li>
+<li>IBIS version: 5.0</li>
+<li>File revision: 20230801</li>
+<li>IBIS file date: Aug 01, 2023</li>
+<li>IQ score in file: (not found)</li>
+<li>Components: 1</li>
+<li>Models: 3</li>
+<li>Package models: 0</li>
+<li>Zout estimates: 1 model(s), 6 table/corner point(s)</li>
+</ul>
+<h2>Table of Contents</h2>
+<a id="table-of-contents"></a>
+<ul>
+<li><a href="#score-assessment">Score Assessment</a></li>
+<li><a href="#review-signoff-summary">Review Signoff Summary</a></li>
+<li><a href="#result-summary">Result Summary</a></li>
+<li><a href="#failed-error-items">Failed &amp; Error Items</a></li>
+<li><a href="#passed-items-per-level">Passed Items Per Level</a></li>
+<li><a href="#zout-estimates">Zout Estimates</a></li>
+<li><a href="#quality-check-results">Quality Check Results</a></li>
+</ul>
+<p><strong>LEVEL 1 Checks</strong></p>
+<ul>
+<li><a href="#level-1-check-results">LEVEL 1 check results</a></li>
+<li><a href="#check-2-1">2.1 - IBIS file passes IBISCHK</a></li>
+</ul>
+<p><strong>LEVEL 2 Checks</strong></p>
+<ul>
+<li><a href="#level-2-check-results">LEVEL 2 check results</a></li>
+<li><a href="#check-3-1-1">3.1.1 - (Package) must have typ/min/max values</a></li>
+<li><a href="#check-3-1-2">3.1.2 - (Package) model values must be reasonable</a></li>
+<li><a href="#check-3-2-1">3.2.1 - (Pin) section complete</a></li>
+<li><a href="#check-3-3-1">3.3.1 - (Diff Pin) referenced pin models match</a></li>
+<li><a href="#check-4-1">4.1 - (Model Selector) entries have reasonable descriptions</a></li>
+<li><a href="#check-4-2">4.2 - Default (Model Selector) entries are consistent</a></li>
+<li><a href="#check-5-1-1">5.1.1 - (Model) parameters have correct typ/min/max order</a></li>
+<li><a href="#check-5-1-2">5.1.2 - (Model) C_comp is reasonable</a></li>
+<li><a href="#check-5-1-3">5.1.3 - (Temperature Range) is reasonable</a></li>
+<li><a href="#check-5-1-4">5.1.4 - (Voltage Range) or (* Reference) is reasonable</a></li>
+<li><a href="#check-5-2-5">5.2.5 - (Model Spec) S_Overshoot subparameters complete and match data sheet</a></li>
+<li><a href="#check-5-2-6">5.2.6 - (Model Spec) S_Overshoot subparameters track typ/min/max</a></li>
+<li><a href="#check-5-2-7">5.2.7 - (Model Spec) D_Overshoot_* subparameters complete and match data sheet</a></li>
+<li><a href="#check-5-2-8">5.2.8 - (Model Spec) D_Overshoot_* subparameters track typ/min/max</a></li>
+<li><a href="#check-5-3-1">5.3.1 - I-V tables have correct typ/min/max order</a></li>
+<li><a href="#check-5-3-2">5.3.2 - (Pullup) voltage sweep range is correct</a></li>
+<li><a href="#check-5-3-3">5.3.3 - (Pulldown) voltage sweep range is correct</a></li>
+<li><a href="#check-5-3-4">5.3.4 - (POWER Clamp) voltage sweep range is correct</a></li>
+<li><a href="#check-5-3-5">5.3.5 - (GND Clamp) voltage sweep range is correct</a></li>
+<li><a href="#check-5-3-6">5.3.6 - I-V tables do not exhibit stair-stepping</a></li>
+<li><a href="#check-5-3-7">5.3.7 - Combined I-V tables are monotonic</a></li>
+<li><a href="#check-5-3-8">5.3.8 - (Pulldown) I-V tables pass through zero/zero</a></li>
+<li><a href="#check-5-3-9">5.3.9 - (Pullup) I-V tables pass through zero/zero</a></li>
+<li><a href="#check-5-3-10">5.3.10 - No leakage current in clamp I-V tables</a></li>
+<li><a href="#check-5-3-11">5.3.11 - I-V behavior not double-counted</a></li>
+<li><a href="#check-5-3-12">5.3.12 - On-die termination modeling documented</a></li>
+<li><a href="#check-5-3-13">5.3.13 - ECL models I-V tables swept from -Vcc to +2 * Vcc.</a></li>
+<li><a href="#check-5-3-14">5.3.14 - Point distributions in I-V tables should be sufficient</a></li>
+<li><a href="#check-5-4-1">5.4.1 - Output and I/O buffers have sufficient V-T tables</a></li>
+<li><a href="#check-5-4-2">5.4.2 - V-T tables have reasonable point distribution</a></li>
+<li><a href="#check-5-4-4">5.4.4 - V-T table endpoints match fixture voltages</a></li>
+<li><a href="#check-5-5-1">5.5.1 - (Ramp) R_load present if value other than 50 ohms</a></li>
+<li><a href="#check-5-5-2">5.5.2 - (Ramp) typ/min/max order is correct</a></li>
+<li><a href="#check-5-5-3">5.5.3 - (Ramp) dV value is consistent with I-V table calculations</a></li>
+<li><a href="#check-5-5-4">5.5.4 - (Ramp) dt is consistent with 20%-80% crossing time</a></li>
+</ul>
+<p><strong>LEVEL 3 Checks</strong></p>
+<ul>
+<li><a href="#level-3-check-results">LEVEL 3 check results</a></li>
+<li><a href="#check-3-2-2">3.2.2 - (Pin) RLC values are present and reasonable</a></li>
+<li><a href="#check-3-3-2">3.3.2 - (Diff Pin) Vdiff and Tdelay_* complete and reasonable</a></li>
+<li><a href="#check-5-2-1">5.2.1 - (Model) Vinl and Vinh reasonable</a></li>
+<li><a href="#check-5-2-2">5.2.2 - (Model Spec) Vinl and Vinh reasonable</a></li>
+<li><a href="#check-5-2-3">5.2.3 - (Model Spec) Vinl+/- and Vinh+/- complete and reasonable</a></li>
+<li><a href="#check-5-2-9">5.2.9 - (Receiver Thresholds) Vth present and matches data sheet, if needed</a></li>
+<li><a href="#check-5-2-10">5.2.10 - (Receiver Thresholds) Vth_min and Vth_max present and match data sheet, if needed</a></li>
+<li><a href="#check-5-2-11">5.2.11 - (Receiver Thresholds) Vinh_ac, Vinl_ac present and match data sheet, if needed</a></li>
+<li><a href="#check-5-2-12">5.2.12 - (Receiver Thresholds) Vinh_dc, Vinl_dc present and match data sheet, if needed</a></li>
+<li><a href="#check-5-2-13">5.2.13 - (Receiver Thresholds) Tslew_ac/Tdiffslew_ac present and match data sheet, if needed</a></li>
+<li><a href="#check-5-2-14">5.2.14 - (Receiver Thresholds) Threshold_sensitivity and Ext_ref present and match data sheet, if needed</a></li>
+<li><a href="#check-5-4-3">5.4.3 - V-T table duration is not excessive</a></li>
+<li><a href="#check-5-6-1">5.6.1 - (Model Spec) Vmeas and Vref used if typ/min/max variation</a></li>
+<li><a href="#check-5-6-2">5.6.2 - Vref consistent for Open-drain, Open-source, and ECL Model_types</a></li>
+</ul>
+<ul>
+<li><a href="#visual-curves-by-model">Visual Curves by Model</a></li>
+<li><a href="#manual-review-items">Manual Review Items</a></li>
+<li><a href="#appendix-a-iq-levels">Appendix A: IQ Levels</a></li>
+<li><a href="#appendix-b-special-designators">Appendix B: Special Designators</a></li>
+</ul>
+<h2>Score Assessment</h2>
+<a id="score-assessment"></a>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Final IQ score</td>
+<td>To be assigned by the model maker after resolving or documenting findings</td>
+</tr>
+<tr>
+<td>Candidate level from checked items</td>
+<td>IQ1</td>
+</tr>
+<tr>
+<td>Candidate level after review overlay</td>
+<td>IQ1</td>
+</tr>
+<tr>
+<td>Tool comments</td>
+<td>Candidate IQ1; resolve the FAIL/ERROR findings before final IQ assignment. WARN and review-required items also need documented judgement.</td>
+</tr>
+<tr>
+<td>Note</td>
+<td>Candidate level is the highest implemented level without FAIL or ERROR. WARN/review items, manual checks, accepted exceptions, and correlation designators still require model-maker documentation before final IQ assignment.</td>
+</tr>
+</tbody>
+</table>
+<h2>Review Signoff Summary</h2>
+<a id="review-signoff-summary"></a>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Review overlay loaded</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Reviewer</td>
+<td></td>
+</tr>
+<tr>
+<td>Organization</td>
+<td></td>
+</tr>
+<tr>
+<td>Approval date</td>
+<td></td>
+</tr>
+<tr>
+<td>Final signoff ready</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Hard blockers after review</td>
+<td>4</td>
+</tr>
+<tr>
+<td>Semi-auto review pending</td>
+<td>5 / 5</td>
+</tr>
+<tr>
+<td>Semi-auto accepted</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Semi-auto exceptions</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Semi-auto rejected</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Manual review pending</td>
+<td>46 / 46</td>
+</tr>
+<tr>
+<td>Manual accepted</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Manual exceptions</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Manual rejected</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Note</td>
+<td>Final IQ assignment is ready only when hard blockers are zero and all semi-auto and manual review items have documented decisions.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Generated Count</th>
+<th>Review-Adjusted Count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PASS</td>
+<td>38</td>
+<td>38</td>
+</tr>
+<tr>
+<td>FAIL</td>
+<td>4</td>
+<td>4</td>
+</tr>
+<tr>
+<td>WARN</td>
+<td>5</td>
+<td>5</td>
+</tr>
+<tr>
+<td>NA</td>
+<td>35</td>
+<td>35</td>
+</tr>
+<tr>
+<td>ERROR</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>EXCEPTION</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<h2>Result Summary</h2>
+<a id="result-summary"></a>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Generated Count</th>
+<th>Review-Adjusted Count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PASS</td>
+<td>38</td>
+<td>38</td>
+</tr>
+<tr>
+<td>FAIL</td>
+<td>4</td>
+<td>4</td>
+</tr>
+<tr>
+<td>WARN</td>
+<td>5</td>
+<td>5</td>
+</tr>
+<tr>
+<td>NA</td>
+<td>35</td>
+<td>35</td>
+</tr>
+<tr>
+<td>ERROR</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>EXCEPTION</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Total</td>
+<td>82</td>
+<td>82</td>
+</tr>
+</tbody>
+</table>
+<h2>Failed &amp; Error Items</h2>
+<a id="failed-error-items"></a>
+<p>4 item(s) require attention. Each entry links to its full write-up in Quality Check Results and shows the most relevant visual where the issue is reflected in a plot. Items without an associated plot are rule/range checks best understood from the explanation text.</p>
+<h3>FAIL: 3.2.2 - ABI_Serdes</h3>
+<ul>
+<li>6 pin RLC issue(s)</li>
+<li><a href="#check-3-2-2">Full check details</a></li>
+<li>Pin 2: missing L/C values</li>
+<li>Pin 3: missing L/C values</li>
+<li>Pin 4: missing L/C values</li>
+<li>Pin 5: missing L/C values</li>
+<li>Pin 6: missing L/C values</li>
+<li>Pin 7: missing L/C values</li>
+</ul>
+<p>_No directly associated plot for this item; see the explanation above._</p>
+<h3>FAIL: 5.3.2 - abi_out</h3>
+<ul>
+<li>[Pullup] voltage sweep insufficient</li>
+<li><a href="#check-5-3-2">Full check details</a></li>
+<li>High end: table ends at 1V, need ≥ 2V</li>
+</ul>
+<p><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDAiIGhlaWdodD0iNTYwIiB2aWV3Qm94PSIwIDAgODAwIDU2MCI+DQo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmZmZmZmIi8+DQo8dGV4dCB4PSI3OCIgeT0iMjUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZm9udC13ZWlnaHQ9IjcwMCI+YWJpX291dCBJLVYgUHVsbHVwL1B1bGxkb3duIEN1cnZlczwvdGV4dD4NCjxyZWN0IHg9Ijc4IiB5PSI1MiIgd2lkdGg9IjY5NCIgaGVpZ2h0PSIzNDgiIGZpbGw9IiNmYmZiZmIiIHN0cm9rZT0iI2M4YzhjOCIvPg0KPGxpbmUgeDE9Ijc4LjAwIiB5MT0iNTIiIHgyPSI3OC4wMCIgeTI9IjQwMCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI3OC4wMCIgeT0iNDIyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPi0xPC90ZXh0Pg0KPGxpbmUgeDE9IjIxNi44MCIgeTE9IjUyIiB4Mj0iMjE2LjgwIiB5Mj0iNDAwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjIxNi44MCIgeT0iNDIyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPi0wLjYyNDwvdGV4dD4NCjxsaW5lIHgxPSIzNTUuNjAiIHkxPSI1MiIgeDI9IjM1NS42MCIgeTI9IjQwMCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSIzNTUuNjAiIHk9IjQyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4tMC4yMDg8L3RleHQ+DQo8bGluZSB4MT0iNDk0LjQwIiB5MT0iNTIiIHgyPSI0OTQuNDAiIHkyPSI0MDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNDk0LjQwIiB5PSI0MjIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+MC4yMDg8L3RleHQ+DQo8bGluZSB4MT0iNjMzLjIwIiB5MT0iNTIiIHgyPSI2MzMuMjAiIHkyPSI0MDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNjMzLjIwIiB5PSI0MjIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+MC42MjQ8L3RleHQ+DQo8bGluZSB4MT0iNzcyLjAwIiB5MT0iNTIiIHgyPSI3NzIuMDAiIHkyPSI0MDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzcyLjAwIiB5PSI0MjIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+MTwvdGV4dD4NCjxsaW5lIHgxPSI3OCIgeTE9IjQwMC4wMCIgeDI9Ijc3MiIgeTI9IjQwMC4wMCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI3MCIgeT0iNDA0LjAwIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPi0wLjAyMzI8L3RleHQ+DQo8bGluZSB4MT0iNzgiIHkxPSIzMzAuNDAiIHgyPSI3NzIiIHkyPSIzMzAuNDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzAiIHk9IjMzNC40MCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4tMC4wMTM5PC90ZXh0Pg0KPGxpbmUgeDE9Ijc4IiB5MT0iMjYwLjgwIiB4Mj0iNzcyIiB5Mj0iMjYwLjgwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjcwIiB5PSIyNjQuODAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+LTAuMDA0NjQ8L3RleHQ+DQo8bGluZSB4MT0iNzgiIHkxPSIxOTEuMjAiIHgyPSI3NzIiIHkyPSIxOTEuMjAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzAiIHk9IjE5NS4yMCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4wLjAwNDY0PC90ZXh0Pg0KPGxpbmUgeDE9Ijc4IiB5MT0iMTIxLjYwIiB4Mj0iNzcyIiB5Mj0iMTIxLjYwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjcwIiB5PSIxMjUuNjAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+MC4wMTM5PC90ZXh0Pg0KPGxpbmUgeDE9Ijc4IiB5MT0iNTIuMDAiIHgyPSI3NzIiIHkyPSI1Mi4wMCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI3MCIgeT0iNTYuMDAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+MC4wMjMyPC90ZXh0Pg0KPGxpbmUgeDE9IjQyNS4wMCIgeTE9IjUyIiB4Mj0iNDI1LjAwIiB5Mj0iNDAwIiBzdHJva2U9IiM3NzciIHN0cm9rZS1kYXNoYXJyYXk9IjQgNCIvPg0KPGxpbmUgeDE9Ijc4IiB5MT0iMjI2LjAwIiB4Mj0iNzcyIiB5Mj0iMjI2LjAwIiBzdHJva2U9IiM3NzciIHN0cm9rZS1kYXNoYXJyYXk9IjQgNCIvPg0KPGxpbmUgeDE9IjkxLjM1IiB5MT0iNTIiIHgyPSI5MS4zNSIgeTI9IjQwMCIgc3Ryb2tlPSIjNTU1IiBzdHJva2UtZGFzaGFycmF5PSIyIDQiLz4NCjx0ZXh0IHg9Ijk1LjM1IiB5PSI2NiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjNTU1Ij4tVmNjPC90ZXh0Pg0KPGxpbmUgeDE9Ijc1OC42NSIgeTE9IjUyIiB4Mj0iNzU4LjY1IiB5Mj0iNDAwIiBzdHJva2U9IiM1NTUiIHN0cm9rZS1kYXNoYXJyYXk9IjIgNCIvPg0KPHRleHQgeD0iNzYyLjY1IiB5PSI2NiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjNTU1Ij5WY2M8L3RleHQ+DQo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMGY3NjZlIiBzdHJva2Utd2lkdGg9IjIuOCIgb3BhY2l0eT0iMC45NSIgc3Ryb2tlLWRhc2hhcnJheT0iNiAzIiBwb2ludHM9IjkxLjM1LDM3Ni4wMCA0MjUuMDAsMjI2LjAwIDc1OC42NSw3Ni4wMCIvPg0KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzdjMmQxMiIgc3Ryb2tlLXdpZHRoPSIyLjgiIG9wYWNpdHk9IjAuOTUiIHN0cm9rZS1kYXNoYXJyYXk9IjYgMyIgcG9pbnRzPSI5MS4zNSw3Ni4wMCA0MjUuMDAsMjI2LjAwIDc1OC42NSwzNzYuMDAiLz4NCjxsaW5lIHgxPSI4OCIgeTE9IjcwIiB4Mj0iMTEwIiB5Mj0iNzAiIHN0cm9rZT0iIzBmNzY2ZSIgc3Ryb2tlLXdpZHRoPSIyLjgiIHN0cm9rZS1kYXNoYXJyYXk9IjYgMyIvPg0KPHRleHQgeD0iMTE2IiB5PSI3NCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIj5bUHVsbGRvd25dPC90ZXh0Pg0KPGxpbmUgeDE9Ijg4IiB5MT0iODgiIHgyPSIxMTAiIHkyPSI4OCIgc3Ryb2tlPSIjN2MyZDEyIiBzdHJva2Utd2lkdGg9IjIuOCIgc3Ryb2tlLWRhc2hhcnJheT0iNiAzIi8+DQo8dGV4dCB4PSIxMTYiIHk9IjkyIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiPltQdWxsdXBdPC90ZXh0Pg0KPHJlY3QgeD0iNzgiIHk9IjQ2NCIgd2lkdGg9IjY5NCIgaGVpZ2h0PSI5MiIgZmlsbD0iI2ZmZmRmNyIgc3Ryb2tlPSIjZDhjNmExIiByeD0iNCIvPg0KPHRleHQgeD0iODgiIHk9IjQ4MSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjNGIzYjIxIj5GaW5kaW5ncyBuZWVkaW5nIGF0dGVudGlvbjwvdGV4dD4NCjxyZWN0IHg9Ijg4IiB5PSI0ODgiIHdpZHRoPSI3IiBoZWlnaHQ9IjciIGZpbGw9IiNiNDIzMTgiLz4NCjx0ZXh0IHg9IjEwMiIgeT0iNDk1IiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZpbGw9IiMzMzMiPkZBSUwgNS4zLjI6IFtQdWxsdXBdIHZvbHRhZ2Ugc3dlZXAgaW5zdWZmaWNpZW50IHwgSGlnaCBlbmQ6IHRhYmxlIGVuZHMgYXQgMVYsIG5lZWQg4omlIDJWPC90ZXh0Pg0KPHJlY3QgeD0iODgiIHk9IjUwNCIgd2lkdGg9IjciIGhlaWdodD0iNyIgZmlsbD0iI2I0MjMxOCIvPg0KPHRleHQgeD0iMTAyIiB5PSI1MTEiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZmlsbD0iIzMzMyI+RkFJTCA1LjMuMzogW1B1bGxkb3duXSB2b2x0YWdlIHN3ZWVwIGluc3VmZmljaWVudCB8IEhpZ2ggZW5kOiB0YWJsZSBlbmRzIGF0IDFWLCBuZWVkIOKJpSAyVjwvdGV4dD4NCjxyZWN0IHg9Ijg4IiB5PSI1MjAiIHdpZHRoPSI3IiBoZWlnaHQ9IjciIGZpbGw9IiNiNTQ3MDgiLz4NCjx0ZXh0IHg9IjEwMiIgeT0iNTI3IiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZpbGw9IiMzMzMiPldBUk4gNS4zLjY6IEktViBzdGFpci1zdGVwIGV2aWRlbmNlIG5lZWRzIHJldmlldyB8IFtQdWxsZG93bl06IHJvdWdobmVzcz0wLjUgJmd0OyAwLjE8L3RleHQ+DQo8dGV4dCB4PSIxMDIiIHk9IjU0MyIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjNTU1Ij4xIG1vcmUgZmluZGluZyhzKSBpbiB0aGUgcmVwb3J0IHRhYmxlPC90ZXh0Pg0KPHRleHQgeD0iNDI1LjAwIiB5PSI0NDQuMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiI+VGFibGUgdm9sdGFnZSAoVik8L3RleHQ+DQo8dGV4dCB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxOCAyMjYuMDApIHJvdGF0ZSgtOTApIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiPkN1cnJlbnQgKEEpPC90ZXh0Pg0KPHRleHQgeD0iNDIwIiB5PSI0MiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjNTU1Ij50aGljayBkYXNoZWQ9Y29tYmluZWQgdHlwIGN1cnZlczwvdGV4dD4NCjwvc3ZnPg==" alt="abi_out I-V curves" loading="lazy"></p>
+<p><a href="#curve-abi-out-iv">Jump to I-V curves for abi_out</a></p>
+<h3>FAIL: 5.3.3 - abi_out</h3>
+<ul>
+<li>[Pulldown] voltage sweep insufficient</li>
+<li><a href="#check-5-3-3">Full check details</a></li>
+<li>High end: table ends at 1V, need ≥ 2V</li>
+</ul>
+<p><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDAiIGhlaWdodD0iNTYwIiB2aWV3Qm94PSIwIDAgODAwIDU2MCI+DQo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmZmZmZmIi8+DQo8dGV4dCB4PSI3OCIgeT0iMjUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZm9udC13ZWlnaHQ9IjcwMCI+YWJpX291dCBJLVYgUHVsbHVwL1B1bGxkb3duIEN1cnZlczwvdGV4dD4NCjxyZWN0IHg9Ijc4IiB5PSI1MiIgd2lkdGg9IjY5NCIgaGVpZ2h0PSIzNDgiIGZpbGw9IiNmYmZiZmIiIHN0cm9rZT0iI2M4YzhjOCIvPg0KPGxpbmUgeDE9Ijc4LjAwIiB5MT0iNTIiIHgyPSI3OC4wMCIgeTI9IjQwMCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI3OC4wMCIgeT0iNDIyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPi0xPC90ZXh0Pg0KPGxpbmUgeDE9IjIxNi44MCIgeTE9IjUyIiB4Mj0iMjE2LjgwIiB5Mj0iNDAwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjIxNi44MCIgeT0iNDIyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPi0wLjYyNDwvdGV4dD4NCjxsaW5lIHgxPSIzNTUuNjAiIHkxPSI1MiIgeDI9IjM1NS42MCIgeTI9IjQwMCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSIzNTUuNjAiIHk9IjQyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4tMC4yMDg8L3RleHQ+DQo8bGluZSB4MT0iNDk0LjQwIiB5MT0iNTIiIHgyPSI0OTQuNDAiIHkyPSI0MDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNDk0LjQwIiB5PSI0MjIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+MC4yMDg8L3RleHQ+DQo8bGluZSB4MT0iNjMzLjIwIiB5MT0iNTIiIHgyPSI2MzMuMjAiIHkyPSI0MDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNjMzLjIwIiB5PSI0MjIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+MC42MjQ8L3RleHQ+DQo8bGluZSB4MT0iNzcyLjAwIiB5MT0iNTIiIHgyPSI3NzIuMDAiIHkyPSI0MDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzcyLjAwIiB5PSI0MjIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+MTwvdGV4dD4NCjxsaW5lIHgxPSI3OCIgeTE9IjQwMC4wMCIgeDI9Ijc3MiIgeTI9IjQwMC4wMCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI3MCIgeT0iNDA0LjAwIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPi0wLjAyMzI8L3RleHQ+DQo8bGluZSB4MT0iNzgiIHkxPSIzMzAuNDAiIHgyPSI3NzIiIHkyPSIzMzAuNDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzAiIHk9IjMzNC40MCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4tMC4wMTM5PC90ZXh0Pg0KPGxpbmUgeDE9Ijc4IiB5MT0iMjYwLjgwIiB4Mj0iNzcyIiB5Mj0iMjYwLjgwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjcwIiB5PSIyNjQuODAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+LTAuMDA0NjQ8L3RleHQ+DQo8bGluZSB4MT0iNzgiIHkxPSIxOTEuMjAiIHgyPSI3NzIiIHkyPSIxOTEuMjAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzAiIHk9IjE5NS4yMCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4wLjAwNDY0PC90ZXh0Pg0KPGxpbmUgeDE9Ijc4IiB5MT0iMTIxLjYwIiB4Mj0iNzcyIiB5Mj0iMTIxLjYwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjcwIiB5PSIxMjUuNjAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+MC4wMTM5PC90ZXh0Pg0KPGxpbmUgeDE9Ijc4IiB5MT0iNTIuMDAiIHgyPSI3NzIiIHkyPSI1Mi4wMCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI3MCIgeT0iNTYuMDAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+MC4wMjMyPC90ZXh0Pg0KPGxpbmUgeDE9IjQyNS4wMCIgeTE9IjUyIiB4Mj0iNDI1LjAwIiB5Mj0iNDAwIiBzdHJva2U9IiM3NzciIHN0cm9rZS1kYXNoYXJyYXk9IjQgNCIvPg0KPGxpbmUgeDE9Ijc4IiB5MT0iMjI2LjAwIiB4Mj0iNzcyIiB5Mj0iMjI2LjAwIiBzdHJva2U9IiM3NzciIHN0cm9rZS1kYXNoYXJyYXk9IjQgNCIvPg0KPGxpbmUgeDE9IjkxLjM1IiB5MT0iNTIiIHgyPSI5MS4zNSIgeTI9IjQwMCIgc3Ryb2tlPSIjNTU1IiBzdHJva2UtZGFzaGFycmF5PSIyIDQiLz4NCjx0ZXh0IHg9Ijk1LjM1IiB5PSI2NiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjNTU1Ij4tVmNjPC90ZXh0Pg0KPGxpbmUgeDE9Ijc1OC42NSIgeTE9IjUyIiB4Mj0iNzU4LjY1IiB5Mj0iNDAwIiBzdHJva2U9IiM1NTUiIHN0cm9rZS1kYXNoYXJyYXk9IjIgNCIvPg0KPHRleHQgeD0iNzYyLjY1IiB5PSI2NiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjNTU1Ij5WY2M8L3RleHQ+DQo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMGY3NjZlIiBzdHJva2Utd2lkdGg9IjIuOCIgb3BhY2l0eT0iMC45NSIgc3Ryb2tlLWRhc2hhcnJheT0iNiAzIiBwb2ludHM9IjkxLjM1LDM3Ni4wMCA0MjUuMDAsMjI2LjAwIDc1OC42NSw3Ni4wMCIvPg0KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzdjMmQxMiIgc3Ryb2tlLXdpZHRoPSIyLjgiIG9wYWNpdHk9IjAuOTUiIHN0cm9rZS1kYXNoYXJyYXk9IjYgMyIgcG9pbnRzPSI5MS4zNSw3Ni4wMCA0MjUuMDAsMjI2LjAwIDc1OC42NSwzNzYuMDAiLz4NCjxsaW5lIHgxPSI4OCIgeTE9IjcwIiB4Mj0iMTEwIiB5Mj0iNzAiIHN0cm9rZT0iIzBmNzY2ZSIgc3Ryb2tlLXdpZHRoPSIyLjgiIHN0cm9rZS1kYXNoYXJyYXk9IjYgMyIvPg0KPHRleHQgeD0iMTE2IiB5PSI3NCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIj5bUHVsbGRvd25dPC90ZXh0Pg0KPGxpbmUgeDE9Ijg4IiB5MT0iODgiIHgyPSIxMTAiIHkyPSI4OCIgc3Ryb2tlPSIjN2MyZDEyIiBzdHJva2Utd2lkdGg9IjIuOCIgc3Ryb2tlLWRhc2hhcnJheT0iNiAzIi8+DQo8dGV4dCB4PSIxMTYiIHk9IjkyIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiPltQdWxsdXBdPC90ZXh0Pg0KPHJlY3QgeD0iNzgiIHk9IjQ2NCIgd2lkdGg9IjY5NCIgaGVpZ2h0PSI5MiIgZmlsbD0iI2ZmZmRmNyIgc3Ryb2tlPSIjZDhjNmExIiByeD0iNCIvPg0KPHRleHQgeD0iODgiIHk9IjQ4MSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjNGIzYjIxIj5GaW5kaW5ncyBuZWVkaW5nIGF0dGVudGlvbjwvdGV4dD4NCjxyZWN0IHg9Ijg4IiB5PSI0ODgiIHdpZHRoPSI3IiBoZWlnaHQ9IjciIGZpbGw9IiNiNDIzMTgiLz4NCjx0ZXh0IHg9IjEwMiIgeT0iNDk1IiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZpbGw9IiMzMzMiPkZBSUwgNS4zLjI6IFtQdWxsdXBdIHZvbHRhZ2Ugc3dlZXAgaW5zdWZmaWNpZW50IHwgSGlnaCBlbmQ6IHRhYmxlIGVuZHMgYXQgMVYsIG5lZWQg4omlIDJWPC90ZXh0Pg0KPHJlY3QgeD0iODgiIHk9IjUwNCIgd2lkdGg9IjciIGhlaWdodD0iNyIgZmlsbD0iI2I0MjMxOCIvPg0KPHRleHQgeD0iMTAyIiB5PSI1MTEiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZmlsbD0iIzMzMyI+RkFJTCA1LjMuMzogW1B1bGxkb3duXSB2b2x0YWdlIHN3ZWVwIGluc3VmZmljaWVudCB8IEhpZ2ggZW5kOiB0YWJsZSBlbmRzIGF0IDFWLCBuZWVkIOKJpSAyVjwvdGV4dD4NCjxyZWN0IHg9Ijg4IiB5PSI1MjAiIHdpZHRoPSI3IiBoZWlnaHQ9IjciIGZpbGw9IiNiNTQ3MDgiLz4NCjx0ZXh0IHg9IjEwMiIgeT0iNTI3IiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZpbGw9IiMzMzMiPldBUk4gNS4zLjY6IEktViBzdGFpci1zdGVwIGV2aWRlbmNlIG5lZWRzIHJldmlldyB8IFtQdWxsZG93bl06IHJvdWdobmVzcz0wLjUgJmd0OyAwLjE8L3RleHQ+DQo8dGV4dCB4PSIxMDIiIHk9IjU0MyIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjNTU1Ij4xIG1vcmUgZmluZGluZyhzKSBpbiB0aGUgcmVwb3J0IHRhYmxlPC90ZXh0Pg0KPHRleHQgeD0iNDI1LjAwIiB5PSI0NDQuMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiI+VGFibGUgdm9sdGFnZSAoVik8L3RleHQ+DQo8dGV4dCB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxOCAyMjYuMDApIHJvdGF0ZSgtOTApIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiPkN1cnJlbnQgKEEpPC90ZXh0Pg0KPHRleHQgeD0iNDIwIiB5PSI0MiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjNTU1Ij50aGljayBkYXNoZWQ9Y29tYmluZWQgdHlwIGN1cnZlczwvdGV4dD4NCjwvc3ZnPg==" alt="abi_out I-V curves" loading="lazy"></p>
+<p><a href="#curve-abi-out-iv">Jump to I-V curves for abi_out</a></p>
+<h3>FAIL: 5.5.3 - abi_out</h3>
+<ul>
+<li>[Ramp] dV inconsistent with I-V load-line (6 corner(s))</li>
+<li><a href="#check-5-5-3">Full check details</a></li>
+<li>Rise dV/typ: ramp=1V, expected≈0.3V (233.3% error, limit 10.0%)</li>
+<li>Rise dV/min: ramp=1V, expected≈0.3243V (208.3% error, limit 10.0%)</li>
+<li>Rise dV/max: ramp=1V, expected≈0.2791V (258.3% error, limit 10.0%)</li>
+<li>Fall dV/typ: ramp=1V, expected≈0.3V (233.3% error, limit 10.0%)</li>
+<li>Fall dV/min: ramp=1V, expected≈0.3243V (208.3% error, limit 10.0%)</li>
+<li>Fall dV/max: ramp=1V, expected≈0.2791V (258.3% error, limit 10.0%)</li>
+<li>Rise dV/typ: ramp=1V, expected≈0.3V from Vhigh=0.5V, Vlow=0V, error=233.3% (push-pull fixture=0V)</li>
+<li>Rise dV/min: ramp=1V, expected≈0.3243V from Vhigh=0.5405V, Vlow=0V, error=208.3% (push-pull fixture=0V)</li>
+<li>Rise dV/max: ramp=1V, expected≈0.2791V from Vhigh=0.4651V, Vlow=0V, error=258.3% (push-pull fixture=0V)</li>
+<li>Fall dV/typ: ramp=1V, expected≈0.3V from Vhigh=1V, Vlow=0.5V, error=233.3% (push-pull fixture=1V)</li>
+</ul>
+<p>_No directly associated plot for this item; see the explanation above._</p>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h2>Passed Items Per Level</h2>
+<a id="passed-items-per-level"></a>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Required Items</th>
+<th>Checked</th>
+<th>Passed</th>
+<th>NA</th>
+<th>Needs Review</th>
+<th>Failed</th>
+<th>Error</th>
+<th>Manual/External Review</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LEVEL 1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>LEVEL 2</td>
+<td>35</td>
+<td>28</td>
+<td>15</td>
+<td>7</td>
+<td>3</td>
+<td>3</td>
+<td>0</td>
+<td>7</td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>14</td>
+<td>4</td>
+<td>1</td>
+<td>2</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>10</td>
+</tr>
+</tbody>
+</table>
+<h2>Zout Estimates</h2>
+<a id="zout-estimates"></a>
+<p>Estimated output impedance is derived from Pullup/Pulldown I-V load-line intersections using Rload = 50 ohm. These values are characterization data for the model maker; they are not IQ PASS/FAIL checks.</p>
+<ul>
+<li>Models with estimates: 1 / 3</li>
+<li>Estimated table/corner points: 6</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Type</th>
+<th>Pulldown Zout typ/min/max</th>
+<th>Pullup Zout typ/min/max</th>
+<th>Load-line plot</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>abi_in</td>
+<td>Input</td>
+<td>NA / NA / NA</td>
+<td>NA / NA / NA</td>
+<td></td>
+<td>No usable Pullup/Pulldown driver table.</td>
+</tr>
+<tr>
+<td>abi_out</td>
+<td>Output</td>
+<td>50 ohm / 42.5 ohm / 57.5 ohm</td>
+<td>50 ohm / 42.5 ohm / 57.5 ohm</td>
+<td><a href="#curve-abi-out-zout">View plot</a></td>
+<td>Estimated from available corners.</td>
+</tr>
+<tr>
+<td>refclk</td>
+<td>Input</td>
+<td>NA / NA / NA</td>
+<td>NA / NA / NA</td>
+<td></td>
+<td>No usable Pullup/Pulldown driver table.</td>
+</tr>
+</tbody>
+</table>
+<h2>Quality Check Results</h2>
+<a id="quality-check-results"></a>
+<p>Rows are grouped by IQ level and then by check item. Each check item is summarized by result type so PASS, WARN, FAIL, NA, and manual/external-review status are visible in one place.</p>
+<p>Source location note: this parser currently keeps the raw IBIS text but does not retain per-result IBIS source line numbers. The report identifies the affected scope, subject, and evidence; exact line references require parser metadata work.</p>
+<h3>LEVEL 1 Check Results</h3>
+<a id="level-1-check-results"></a>
+<h4>2.1 - IBIS file passes IBISCHK</h4>
+<a id="check-2-1"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 303; section 2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>File/Header</td>
+<td>PASS</td>
+<td>3</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>abi_gen3.ibs</td>
+<td></td>
+<td>No existing &#x27;|IQ Score:&#x27; tag found inside the .ibs file. This is reported as a writeback note only; it does not fail the quality check because this tool is intended to help assign the score.<br>IBISCHK version not found documented inside the .ibs file. This is reported as a documentation note only; it does not block Level 1.<br>IBISCHK: 0 errors, 0 warning(s): IBISCHK executable: ibischk7_64.exe</td>
+</tr>
+</tbody>
+</table>
+<p><strong>IBISCHK execution summary</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Executable</td>
+<td>ibischk7_64.exe</td>
+</tr>
+<tr>
+<td>Version</td>
+<td>7.2.1</td>
+</tr>
+<tr>
+<td>Return code</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Errors</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Warnings</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Cautions</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>IBISCHK output excerpt</strong></p>
+<pre><code>
+IBISCHK7 V7.2.1
+
+Checking C:\Users\simom\Desktop\Projects\IBIS Files\Hark Labs\FPGA-MD-02047-1-1-CertusPro-NX-IBIS-AMI Model_file\abi_gen3.ibs for IBIS 5.1 Compatibility...
+
+
+... Reading C:\Users\simom\Desktop\Projects\IBIS Files\Hark Labs\FPGA-MD-02047-1-1-CertusPro-NX-IBIS-AMI Model_file\abi_g3_rx.ami
+
+... Checking abi_g3_rx.ami for Implicit AMI Version 5.0 Compatibility...
+
+... Done Checking abi_g3_rx.ami
+... Done Reading abi_g3_rx.ami
+
+
+... Reading C:\Users\simom\Desktop\Projects\IBIS Files\Hark Labs\FPGA-MD-02047-1-1-CertusPro-NX-IBIS-AMI Model_file\abi_g3_tx.ami
+
+... Checking abi_g3_tx.ami for Implicit AMI Version 5.0 Compatibility...
+
+... Done Checking abi_g3_tx.ami
+... Done Reading abi_g3_tx.ami
+
+... Status of [Algorithmic Model] Executables for Windows 64:
+ABICDR_Tx_rh64.dll:		Linux 64:		Not Checked
+ABICDR_Tx_x64.dll:		Windows 64:		Checked
+ABICDR_Tx_x86.dll:		Windows 32:		Not Checked
+ABICDR_Rx2_rh64.dll:		Linux 64:		Not Checked
+</code></pre>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h3>LEVEL 2 Check Results</h3>
+<a id="level-2-check-results"></a>
+<h4>3.1.1 - [Package] must have typ/min/max values</h4>
+<a id="check-3-1-1"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 347; section 3.1</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Component</td>
+<td>PASS</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>ABI_Serdes</td>
+<td></td>
+<td>All [Package] R/L/C have typ, min, and max values</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>3.1.2 - [Package] model values must be reasonable</h4>
+<a id="check-3-1-2"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 351; section 3.1</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Component</td>
+<td>PASS</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>ABI_Serdes</td>
+<td></td>
+<td>Package values within limits and min≤typ≤max</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>3.2.1 - [Pin] section complete</h4>
+<a id="check-3-2-1"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 422; section 3.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Component</td>
+<td>PASS</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>ABI_Serdes</td>
+<td></td>
+<td>[Pin] has 8 complete entry/entries with resolvable model references</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>3.3.1 - [Diff Pin] referenced pin models match</h4>
+<a id="check-3-3-1"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 459; section 3.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Component</td>
+<td>PASS</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>ABI_Serdes</td>
+<td></td>
+<td>All [Diff Pin] model names match or have explanatory comments</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>4.1 - [Model Selector] entries have reasonable descriptions</h4>
+<a id="check-4-1"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 493; section 4</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>File/Header</td>
+<td>NA</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>abi_gen3.ibs</td>
+<td></td>
+<td>No [Model Selector] sections parsed from raw file</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>4.2 - Default [Model Selector] entries are consistent</h4>
+<a id="check-4-2"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 497; section 4</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.1.1 - [Model] parameters have correct typ/min/max order</h4>
+<a id="check-5-1-1"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 511; section 5.1</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>PASS</td>
+<td>3</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>abi_in<br>abi_out<br>refclk</td>
+<td></td>
+<td>3x 3 model parameter set(s) have typ/min/max order evidence: C_comp; Voltage Range</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.1.2 - [Model] C_comp is reasonable</h4>
+<a id="check-5-1-2"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 517; section 5.1</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>PASS</td>
+<td>3</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>abi_in<br>abi_out<br>refclk</td>
+<td></td>
+<td>3x C_comp evidence is positive and within review threshold: C_comp</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.1.3 - [Temperature Range] is reasonable</h4>
+<a id="check-5-1-3"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 547; section 5.1</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.1.4 - [Voltage Range] or [* Reference] is reasonable</h4>
+<a id="check-5-1-4"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 571; section 5.1</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>PASS</td>
+<td>3</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>abi_in<br>abi_out<br>refclk</td>
+<td></td>
+<td>2x Voltage/reference evidence parsed, defaults resolved, and basic consistency looks reasonable: Voltage Range: typ=1V, min=1V, max=1V (explicit); Pullup Reference: typ=1V, min=1V, max=1V (default from Voltage Range)<br>Voltage/reference evidence parsed, defaults resolved, and basic consistency looks reasonable: Voltage Range: typ=1.8V, min=1.71V, max=1.89V (explicit); Pullup Reference: typ=1.8V, min=1.71V, max=1.89V (default from Voltage Range)</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.2.5 - [Model Spec] S_Overshoot subparameters complete and match data sheet</h4>
+<a id="check-5-2-5"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 625; section 5.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.2.6 - [Model Spec] S_Overshoot subparameters track typ/min/max</h4>
+<a id="check-5-2-6"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 629; section 5.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>NA</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>3</td>
+<td>0</td>
+<td>0</td>
+<td>abi_in<br>abi_out<br>refclk</td>
+<td></td>
+<td>3x No [Model Spec] S_Overshoot data parsed</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.2.7 - [Model Spec] D_Overshoot_* subparameters complete and match data sheet</h4>
+<a id="check-5-2-7"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 633; section 5.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.2.8 - [Model Spec] D_Overshoot_* subparameters track typ/min/max</h4>
+<a id="check-5-2-8"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 643; section 5.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>NA</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>3</td>
+<td>0</td>
+<td>0</td>
+<td>abi_in<br>abi_out<br>refclk</td>
+<td></td>
+<td>3x No [Model Spec] D_Overshoot data parsed</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.1 - I-V tables have correct typ/min/max order</h4>
+<a id="check-5-3-1"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 705; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>PASS</td>
+<td>5</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>abi_in<br>abi_out<br>refclk</td>
+<td></td>
+<td>2x [GND Clamp] rows are voltage/typ/min/max<br>[Pulldown] rows are voltage/typ/min/max with expected active-region corner ordering<br>[Pullup] rows are voltage/typ/min/max with expected active-region corner ordering<br>1 more evidence message(s)</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.2 - [Pullup] voltage sweep range is correct</h4>
+<a id="check-5-3-2"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 715; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>FAIL</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>abi_in<br>abi_out<br>refclk</td>
+<td><a href="#curve-abi-out-iv">abi_out I-V curves</a></td>
+<td>[Pullup] voltage sweep insufficient: High end: table ends at 1V, need ≥ 2V</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.3 - [Pulldown] voltage sweep range is correct</h4>
+<a id="check-5-3-3"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 719; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>FAIL</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>abi_in<br>abi_out<br>refclk</td>
+<td><a href="#curve-abi-out-iv">abi_out I-V curves</a></td>
+<td>[Pulldown] voltage sweep insufficient: High end: table ends at 1V, need ≥ 2V</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.4 - [POWER Clamp] voltage sweep range is correct</h4>
+<a id="check-5-3-4"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 723; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>PASS</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>refclk</td>
+<td></td>
+<td>[POWER Clamp] voltage sweep OK (-1.8V to 1.8V)</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.5 - [GND Clamp] voltage sweep range is correct</h4>
+<a id="check-5-3-5"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 731; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>PASS</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>abi_in<br>refclk</td>
+<td></td>
+<td>[GND Clamp] voltage sweep OK (-1V to 1V)<br>[GND Clamp] voltage sweep OK (-1.8V to 1.8V)</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.6 - I-V tables do not exhibit stair-stepping</h4>
+<a id="check-5-3-6"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 735; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>WARN</td>
+<td>1</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>2</td>
+<td>abi_in<br>abi_out<br>refclk</td>
+<td><a href="#curve-abi-in-iv">abi_in I-V curves</a><br><a href="#curve-abi-out-iv">abi_out I-V curves</a></td>
+<td>I-V stair-step evidence needs review: [GND Clamp]: roughness=0.5 &gt; 0.1<br>I-V stair-step evidence needs review: [Pulldown]: roughness=0.5 &gt; 0.1; [Pullup]: roughness=0.5 &gt; 0.1</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.7 - Combined I-V tables are monotonic</h4>
+<a id="check-5-3-7"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 741; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>PASS</td>
+<td>5</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>abi_in<br>abi_out<br>refclk</td>
+<td></td>
+<td>2x [Pulldown] + [GND Clamp] combined curve monotonicity OK (nondecreasing, 3 sample point(s))<br>[Pullup] + [POWER Clamp] combined curve monotonicity OK (nonincreasing, 3 sample point(s))<br>[Pulldown] + [GND Clamp] combined curve monotonicity OK (nondecreasing, 98 sample point(s))<br>1 more evidence message(s)</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.8 - [Pulldown] I-V tables pass through zero/zero</h4>
+<a id="check-5-3-8"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 749; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>PASS</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>abi_in<br>abi_out<br>refclk</td>
+<td></td>
+<td>2x Model_type=Input has no required [Pulldown] table - NA<br>[Pulldown] passes through near 0 at 0V (within +/-1uA)</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.9 - [Pullup] I-V tables pass through zero/zero</h4>
+<a id="check-5-3-9"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 753; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>PASS</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>abi_in<br>abi_out<br>refclk</td>
+<td></td>
+<td>2x Model_type=Input has no required [Pullup] table - NA<br>[Pullup] passes through near 0 at 0V (within +/-1uA)</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.10 - No leakage current in clamp I-V tables</h4>
+<a id="check-5-3-10"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 757; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>WARN</td>
+<td>2</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>abi_in<br>abi_out<br>refclk</td>
+<td><a href="#curve-refclk-iv-clamp">refclk I-V clamp detail</a></td>
+<td>Clamp leakage evidence needs review: [GND Clamp]: I(0V)=-8.57 uA; [POWER Clamp]: I(0V)=2.04 uA</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.11 - I-V behavior not double-counted</h4>
+<a id="check-5-3-11"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 767; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.12 - On-die termination modeling documented</h4>
+<a id="check-5-3-12"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 773; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.13 - ECL models I-V tables swept from -Vcc to +2 * Vcc.</h4>
+<a id="check-5-3-13"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 777; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.3.14 - Point distributions in I-V tables should be sufficient</h4>
+<a id="check-5-3-14"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 781; section 5.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>WARN</td>
+<td>1</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>2</td>
+<td>abi_in<br>abi_out<br>refclk</td>
+<td><a href="#curve-abi-in-iv">abi_in I-V curves</a><br><a href="#curve-abi-out-iv">abi_out I-V curves</a></td>
+<td>I-V point distribution evidence needs review: [GND Clamp]: 3 point(s) &lt; 20<br>I-V point distribution evidence needs review: [Pulldown]: 3 point(s) &lt; 20; [Pullup]: 3 point(s) &lt; 20</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.4.1 - Output and I/O buffers have sufficient V-T tables</h4>
+<a id="check-5-4-1"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 787; section 5.4</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>NA</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>3</td>
+<td>0</td>
+<td>0</td>
+<td>abi_in<br>abi_out<br>refclk</td>
+<td></td>
+<td>3x No V-T waveform tables parsed</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.4.2 - V-T tables have reasonable point distribution</h4>
+<a id="check-5-4-2"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 807; section 5.4</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>NA</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>3</td>
+<td>0</td>
+<td>0</td>
+<td>abi_in<br>abi_out<br>refclk</td>
+<td></td>
+<td>3x No V-T waveform tables parsed</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.4.4 - V-T table endpoints match fixture voltages</h4>
+<a id="check-5-4-4"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 817; section 5.4</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>NA</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>3</td>
+<td>0</td>
+<td>0</td>
+<td>abi_in<br>abi_out<br>refclk</td>
+<td></td>
+<td>3x No V-T waveform tables parsed</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.5.1 - [Ramp] R_load present if value other than 50 ohms</h4>
+<a id="check-5-5-1"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 833; section 5.5</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>PASS</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>abi_out</td>
+<td></td>
+<td>R_load = 50.0Ω documented</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.5.2 - [Ramp] typ/min/max order is correct</h4>
+<a id="check-5-5-2"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 837; section 5.5</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>PASS</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>abi_in<br>abi_out<br>refclk</td>
+<td></td>
+<td>2x No [Ramp] data parsed<br>Ramp typ/min/max slew order evidence is ordered: dV/dt_r; dV/dt_f</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.5.3 - [Ramp] dV value is consistent with I-V table calculations</h4>
+<a id="check-5-5-3"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 841; section 5.5</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>FAIL</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>abi_out</td>
+<td></td>
+<td>[Ramp] dV inconsistent with I-V load-line (6 corner(s)): Rise dV/typ: ramp=1V, expected≈0.3V (233.3% error, limit 10.0%); Rise dV/min: ramp=1V, expected≈0.3243V (208.3% error, limit 10.0%)</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.5.4 - [Ramp] dt is consistent with 20%-80% crossing time</h4>
+<a id="check-5-5-4"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 845; section 5.5</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>NA</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>3</td>
+<td>0</td>
+<td>0</td>
+<td>abi_in<br>abi_out<br>refclk</td>
+<td></td>
+<td>3x Ramp or V-T waveform data absent</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h3>LEVEL 3 Check Results</h3>
+<a id="level-3-check-results"></a>
+<h4>3.2.2 - [Pin] RLC values are present and reasonable</h4>
+<a id="check-3-2-2"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 442; section 3.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Component</td>
+<td>FAIL</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>ABI_Serdes</td>
+<td></td>
+<td>6 pin RLC issue(s): Pin 2: missing L/C values; Pin 3: missing L/C values</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>3.3.2 - [Diff Pin] Vdiff and Tdelay_* complete and reasonable</h4>
+<a id="check-3-3-2"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: Quality spec source line 463; section 3.3</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Component</td>
+<td>PASS</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>ABI_Serdes</td>
+<td></td>
+<td>All [Diff Pin] Vdiff/Tdelay values consistent with model type</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.2.1 - [Model] Vinl and Vinh reasonable</h4>
+<a id="check-5-2-1"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 599; section 5.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.2.2 - [Model Spec] Vinl and Vinh reasonable</h4>
+<a id="check-5-2-2"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 605; section 5.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.2.3 - [Model Spec] Vinl+/- and Vinh+/- complete and reasonable</h4>
+<a id="check-5-2-3"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 615; section 5.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.2.9 - [Receiver Thresholds] Vth present and matches data sheet, if needed</h4>
+<a id="check-5-2-9"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 647; section 5.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.2.10 - [Receiver Thresholds] Vth_min and Vth_max present and match data sheet, if needed</h4>
+<a id="check-5-2-10"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 653; section 5.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.2.11 - [Receiver Thresholds] Vinh_ac, Vinl_ac present and match data sheet, if needed</h4>
+<a id="check-5-2-11"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 663; section 5.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.2.12 - [Receiver Thresholds] Vinh_dc, Vinl_dc present and match data sheet, if needed</h4>
+<a id="check-5-2-12"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 673; section 5.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.2.13 - [Receiver Thresholds] Tslew_ac/Tdiffslew_ac present and match data sheet, if needed</h4>
+<a id="check-5-2-13"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 679; section 5.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.2.14 - [Receiver Thresholds] Threshold_sensitivity and Ext_ref present and match data sheet, if needed</h4>
+<a id="check-5-2-14"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 685; section 5.2</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.4.3 - V-T table duration is not excessive</h4>
+<a id="check-5-4-3"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 813; section 5.4</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>NA</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>3</td>
+<td>0</td>
+<td>0</td>
+<td>abi_in<br>abi_out<br>refclk</td>
+<td></td>
+<td>3x No V-T waveform tables parsed</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.6.1 - [Model Spec] Vmeas and Vref used if typ/min/max variation</h4>
+<a id="check-5-6-1"></a>
+<ul>
+<li>Automation class: <code>manual</code></li>
+<li>Spec reference: Quality spec source line 861; section 5.6</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h4>5.6.2 - Vref consistent for Open-drain, Open-source, and ECL Model_types</h4>
+<a id="check-5-6-2"></a>
+<ul>
+<li>Automation class: <code>semi_auto</code></li>
+<li>Spec reference: Quality spec source line 865; section 5.6</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>NA</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>3</td>
+<td>0</td>
+<td>0</td>
+<td>abi_in<br>abi_out<br>refclk</td>
+<td></td>
+<td>2x Model_type=Input does not require this Vref consistency evidence<br>Model_type=Output does not require this Vref consistency evidence</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+<h2>Visual Curves by Model</h2>
+<a id="visual-curves-by-model"></a>
+<p>Figures provide curve/table context for the linked QA items. The quality-check tables above remain the authoritative status summary.</p>
+<h3>Model: <code>abi_in</code></h3>
+<ul>
+<li>Candidate model score from model-scoped checked items: IQ3</li>
+<li>Model type: Input</li>
+<li>Waveform tables: 0</li>
+</ul>
+<h4>Visual Curves</h4>
+<h5>I-V Clamp Curves</h5>
+<a id="curve-abi-in-iv"></a>
+<p>Related WARN/FAIL QA items: <a href="#check-5-3-6">5.3.6</a>, <a href="#check-5-3-14">5.3.14</a></p>
+<p><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDAiIGhlaWdodD0iNTYwIiB2aWV3Qm94PSIwIDAgODAwIDU2MCI+DQo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmZmZmZmIi8+DQo8dGV4dCB4PSI3OCIgeT0iMjUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZm9udC13ZWlnaHQ9IjcwMCI+YWJpX2luIEktViBDbGFtcCBDdXJ2ZXM8L3RleHQ+DQo8cmVjdCB4PSI3OCIgeT0iNTIiIHdpZHRoPSI2OTQiIGhlaWdodD0iMzQ4IiBmaWxsPSIjZmJmYmZiIiBzdHJva2U9IiNjOGM4YzgiLz4NCjxsaW5lIHgxPSI3OC4wMCIgeTE9IjUyIiB4Mj0iNzguMDAiIHkyPSI0MDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzguMDAiIHk9IjQyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4tMTwvdGV4dD4NCjxsaW5lIHgxPSIyMTYuODAiIHkxPSI1MiIgeDI9IjIxNi44MCIgeTI9IjQwMCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSIyMTYuODAiIHk9IjQyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4tMC42MjQ8L3RleHQ+DQo8bGluZSB4MT0iMzU1LjYwIiB5MT0iNTIiIHgyPSIzNTUuNjAiIHkyPSI0MDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iMzU1LjYwIiB5PSI0MjIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+LTAuMjA4PC90ZXh0Pg0KPGxpbmUgeDE9IjQ5NC40MCIgeTE9IjUyIiB4Mj0iNDk0LjQwIiB5Mj0iNDAwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjQ5NC40MCIgeT0iNDIyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPjAuMjA4PC90ZXh0Pg0KPGxpbmUgeDE9IjYzMy4yMCIgeTE9IjUyIiB4Mj0iNjMzLjIwIiB5Mj0iNDAwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjYzMy4yMCIgeT0iNDIyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPjAuNjI0PC90ZXh0Pg0KPGxpbmUgeDE9Ijc3Mi4wMCIgeTE9IjUyIiB4Mj0iNzcyLjAwIiB5Mj0iNDAwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9Ijc3Mi4wMCIgeT0iNDIyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPjE8L3RleHQ+DQo8bGluZSB4MT0iNzgiIHkxPSI0MDAuMDAiIHgyPSI3NzIiIHkyPSI0MDAuMDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzAiIHk9IjQwNC4wMCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4tMC4wMjMyPC90ZXh0Pg0KPGxpbmUgeDE9Ijc4IiB5MT0iMzMwLjQwIiB4Mj0iNzcyIiB5Mj0iMzMwLjQwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjcwIiB5PSIzMzQuNDAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+LTAuMDEzOTwvdGV4dD4NCjxsaW5lIHgxPSI3OCIgeTE9IjI2MC44MCIgeDI9Ijc3MiIgeTI9IjI2MC44MCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI3MCIgeT0iMjY0LjgwIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPi0wLjAwNDY0PC90ZXh0Pg0KPGxpbmUgeDE9Ijc4IiB5MT0iMTkxLjIwIiB4Mj0iNzcyIiB5Mj0iMTkxLjIwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjcwIiB5PSIxOTUuMjAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+MC4wMDQ2NDwvdGV4dD4NCjxsaW5lIHgxPSI3OCIgeTE9IjEyMS42MCIgeDI9Ijc3MiIgeTI9IjEyMS42MCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI3MCIgeT0iMTI1LjYwIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPjAuMDEzOTwvdGV4dD4NCjxsaW5lIHgxPSI3OCIgeTE9IjUyLjAwIiB4Mj0iNzcyIiB5Mj0iNTIuMDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzAiIHk9IjU2LjAwIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPjAuMDIzMjwvdGV4dD4NCjxsaW5lIHgxPSI0MjUuMDAiIHkxPSI1MiIgeDI9IjQyNS4wMCIgeTI9IjQwMCIgc3Ryb2tlPSIjNzc3IiBzdHJva2UtZGFzaGFycmF5PSI0IDQiLz4NCjxsaW5lIHgxPSI3OCIgeTE9IjIyNi4wMCIgeDI9Ijc3MiIgeTI9IjIyNi4wMCIgc3Ryb2tlPSIjNzc3IiBzdHJva2UtZGFzaGFycmF5PSI0IDQiLz4NCjxsaW5lIHgxPSI5MS4zNSIgeTE9IjUyIiB4Mj0iOTEuMzUiIHkyPSI0MDAiIHN0cm9rZT0iIzU1NSIgc3Ryb2tlLWRhc2hhcnJheT0iMiA0Ii8+DQo8dGV4dCB4PSI5NS4zNSIgeT0iNjYiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZmlsbD0iIzU1NSI+LVZjYzwvdGV4dD4NCjxsaW5lIHgxPSI3NTguNjUiIHkxPSI1MiIgeDI9Ijc1OC42NSIgeTI9IjQwMCIgc3Ryb2tlPSIjNTU1IiBzdHJva2UtZGFzaGFycmF5PSIyIDQiLz4NCjx0ZXh0IHg9Ijc2Mi42NSIgeT0iNjYiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZmlsbD0iIzU1NSI+VmNjPC90ZXh0Pg0KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzBmNzY2ZSIgc3Ryb2tlLXdpZHRoPSIyLjgiIG9wYWNpdHk9IjAuOTUiIHN0cm9rZS1kYXNoYXJyYXk9IjYgMyIgcG9pbnRzPSI5MS4zNSwzNzYuMDAgNDI1LjAwLDIyNi4wMCA3NTguNjUsNzYuMDAiLz4NCjxsaW5lIHgxPSI4OCIgeTE9IjcwIiB4Mj0iMTEwIiB5Mj0iNzAiIHN0cm9rZT0iIzBmNzY2ZSIgc3Ryb2tlLXdpZHRoPSIyLjgiIHN0cm9rZS1kYXNoYXJyYXk9IjYgMyIvPg0KPHRleHQgeD0iMTE2IiB5PSI3NCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIj5bR05EIENsYW1wXTwvdGV4dD4NCjxyZWN0IHg9Ijc4IiB5PSI0NjQiIHdpZHRoPSI2OTQiIGhlaWdodD0iNjAiIGZpbGw9IiNmZmZkZjciIHN0cm9rZT0iI2Q4YzZhMSIgcng9IjQiLz4NCjx0ZXh0IHg9Ijg4IiB5PSI0ODEiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzRiM2IyMSI+RmluZGluZ3MgbmVlZGluZyBhdHRlbnRpb248L3RleHQ+DQo8cmVjdCB4PSI4OCIgeT0iNDg4IiB3aWR0aD0iNyIgaGVpZ2h0PSI3IiBmaWxsPSIjYjU0NzA4Ii8+DQo8dGV4dCB4PSIxMDIiIHk9IjQ5NSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjMzMzIj5XQVJOIDUuMy42OiBJLVYgc3RhaXItc3RlcCBldmlkZW5jZSBuZWVkcyByZXZpZXcgfCBbR05EIENsYW1wXTogcm91Z2huZXNzPTAuNSAmZ3Q7IDAuMTwvdGV4dD4NCjxyZWN0IHg9Ijg4IiB5PSI1MDQiIHdpZHRoPSI3IiBoZWlnaHQ9IjciIGZpbGw9IiNiNTQ3MDgiLz4NCjx0ZXh0IHg9IjEwMiIgeT0iNTExIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZpbGw9IiMzMzMiPldBUk4gNS4zLjE0OiBJLVYgcG9pbnQgZGlzdHJpYnV0aW9uIGV2aWRlbmNlIG5lZWRzIHJldmlldyB8IFtHTkQgQ2xhbXBdOiAzIHBvaW50KHMpICZsdDsgMjA8L3RleHQ+DQo8dGV4dCB4PSI0MjUuMDAiIHk9IjQ0NC4wMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIj5UYWJsZSB2b2x0YWdlIChWKTwvdGV4dD4NCjx0ZXh0IHRyYW5zZm9ybT0idHJhbnNsYXRlKDE4IDIyNi4wMCkgcm90YXRlKC05MCkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiI+Q3VycmVudCAoQSk8L3RleHQ+DQo8dGV4dCB4PSI0MjAiIHk9IjQyIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZpbGw9IiM1NTUiPnRoaWNrIGRhc2hlZD1jb21iaW5lZCB0eXAgY3VydmVzPC90ZXh0Pg0KPC9zdmc+" alt="I-V Clamp Curves for abi_in" loading="lazy"></p>
+<h5>I-V clamp detail</h5>
+<a id="curve-abi-in-iv-clamp"></a>
+<p><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDAiIGhlaWdodD0iNTIwIiB2aWV3Qm94PSIwIDAgODAwIDUyMCI+DQo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmZmZmZmIi8+DQo8dGV4dCB4PSI3OCIgeT0iMjUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZm9udC13ZWlnaHQ9IjcwMCI+YWJpX2luIEktViBDbGFtcCBEZXRhaWw8L3RleHQ+DQo8cmVjdCB4PSI3OCIgeT0iNTQiIHdpZHRoPSI2OTAiIGhlaWdodD0iMzA2IiBmaWxsPSIjZmJmYmZiIiBzdHJva2U9IiNjOGM4YzgiLz4NCjxsaW5lIHgxPSI3OC4wMCIgeTE9IjU0IiB4Mj0iNzguMDAiIHkyPSIzNjAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzguMDAiIHk9IjM4MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4wPC90ZXh0Pg0KPGxpbmUgeDE9IjIxNi4wMCIgeTE9IjU0IiB4Mj0iMjE2LjAwIiB5Mj0iMzYwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjIxNi4wMCIgeT0iMzgyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPjAuMjwvdGV4dD4NCjxsaW5lIHgxPSIzNTQuMDAiIHkxPSI1NCIgeDI9IjM1NC4wMCIgeTI9IjM2MCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSIzNTQuMDAiIHk9IjM4MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4wLjQ8L3RleHQ+DQo8bGluZSB4MT0iNDkyLjAwIiB5MT0iNTQiIHgyPSI0OTIuMDAiIHkyPSIzNjAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNDkyLjAwIiB5PSIzODIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+MC42PC90ZXh0Pg0KPGxpbmUgeDE9IjYzMC4wMCIgeTE9IjU0IiB4Mj0iNjMwLjAwIiB5Mj0iMzYwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjYzMC4wMCIgeT0iMzgyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPjAuODwvdGV4dD4NCjxsaW5lIHgxPSI3NjguMDAiIHkxPSI1NCIgeDI9Ijc2OC4wMCIgeTI9IjM2MCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI3NjguMDAiIHk9IjM4MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4xPC90ZXh0Pg0KPGxpbmUgeDE9Ijc4IiB5MT0iMzYwLjAwIiB4Mj0iNzY4IiB5Mj0iMzYwLjAwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjcwIiB5PSIzNjQuMDAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+LTAuMDAzNzY8L3RleHQ+DQo8bGluZSB4MT0iNzgiIHkxPSIyOTguODAiIHgyPSI3NjgiIHkyPSIyOTguODAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzAiIHk9IjMwMi44MCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4wLjAwMjQ1PC90ZXh0Pg0KPGxpbmUgeDE9Ijc4IiB5MT0iMjM3LjYwIiB4Mj0iNzY4IiB5Mj0iMjM3LjYwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjcwIiB5PSIyNDEuNjAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+MC4wMDg2NjwvdGV4dD4NCjxsaW5lIHgxPSI3OCIgeTE9IjE3Ni40MCIgeDI9Ijc2OCIgeTI9IjE3Ni40MCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI3MCIgeT0iMTgwLjQwIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPjAuMDE0OTwvdGV4dD4NCjxsaW5lIHgxPSI3OCIgeTE9IjExNS4yMCIgeDI9Ijc2OCIgeTI9IjExNS4yMCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI3MCIgeT0iMTE5LjIwIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPjAuMDIxMTwvdGV4dD4NCjxsaW5lIHgxPSI3OCIgeTE9IjU0LjAwIiB4Mj0iNzY4IiB5Mj0iNTQuMDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzAiIHk9IjU4LjAwIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPjAuMDI3MzwvdGV4dD4NCjxsaW5lIHgxPSI3OC4wMCIgeTE9IjU0IiB4Mj0iNzguMDAiIHkyPSIzNjAiIHN0cm9rZT0iIzc3NyIgc3Ryb2tlLWRhc2hhcnJheT0iNCA0Ii8+DQo8bGluZSB4MT0iNzgiIHkxPSIzMjIuOTEiIHgyPSI3NjgiIHkyPSIzMjIuOTEiIHN0cm9rZT0iIzc3NyIgc3Ryb2tlLWRhc2hhcnJheT0iNCA0Ii8+DQo8bGluZSB4MT0iNzguMDAiIHkxPSI1NCIgeDI9Ijc4LjAwIiB5Mj0iMzYwIiBzdHJva2U9IiM1NTUiIHN0cm9rZS1kYXNoYXJyYXk9IjIgNCIvPg0KPHRleHQgeD0iODIuMDAiIHk9IjY4IiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZpbGw9IiM1NTUiPjBWPC90ZXh0Pg0KPGxpbmUgeDE9Ijc2OC4wMCIgeTE9IjU0IiB4Mj0iNzY4LjAwIiB5Mj0iMzYwIiBzdHJva2U9IiM1NTUiIHN0cm9rZS1kYXNoYXJyYXk9IjIgNCIvPg0KPHRleHQgeD0iNzcyLjAwIiB5PSI2OCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjNTU1Ij5WY2M8L3RleHQ+DQo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMmNhMDJjIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC41NSIgc3Ryb2tlLWRhc2hhcnJheT0iNCA0IiBwb2ludHM9Ijc4LjAwLDMyMi45MSA3NjguMDAsOTEuMDkiLz4NCjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9IiMyY2EwMmMiIHN0cm9rZS13aWR0aD0iMS4yIiBvcGFjaXR5PSIwLjU1IiBzdHJva2UtZGFzaGFycmF5PSI0IDQiIHBvaW50cz0iNzguMDAsMzIyLjkxIDc2OC4wMCwxNTEuNTciLz4NCjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9IiMyY2EwMmMiIHN0cm9rZS13aWR0aD0iMi4wIiBvcGFjaXR5PSIxLjAiIHBvaW50cz0iNzguMDAsMzIyLjkxIDc2OC4wMCwxMjUuODYiLz4NCjxjaXJjbGUgY3g9Ijc4LjAwIiBjeT0iMzIyLjkxIiByPSI0LjAiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0iIzJjYTAyYyIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4NCjxjaXJjbGUgY3g9Ijc4LjAwIiBjeT0iMzIyLjkxIiByPSIzLjAiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0iIzJjYTAyYyIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4NCjxjaXJjbGUgY3g9Ijc4LjAwIiBjeT0iMzIyLjkxIiByPSIzLjAiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0iIzJjYTAyYyIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4NCjxsaW5lIHgxPSI4OCIgeTE9IjcyIiB4Mj0iMTEwIiB5Mj0iNzIiIHN0cm9rZT0iIzJjYTAyYyIgc3Ryb2tlLXdpZHRoPSIyLjQiLz4NCjx0ZXh0IHg9IjExNiIgeT0iNzYiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiI+W0dORCBDbGFtcF08L3RleHQ+DQo8dGV4dCB4PSI0MjMuMDAiIHk9IjQwNC4wMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIj5UYWJsZSB2b2x0YWdlIChWKSwgem9vbWVkIDAuLlZjYzwvdGV4dD4NCjx0ZXh0IHRyYW5zZm9ybT0idHJhbnNsYXRlKDE4IDIwNy4wMCkgcm90YXRlKC05MCkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiI+Q3VycmVudCAoQSk8L3RleHQ+DQo8dGV4dCB4PSI0MjAiIHk9IjQyIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZpbGw9IiM1NTUiPmNsYW1wIGN1cnZlcyBzaG93IHR5cC9taW4vbWF4OyBvcGVuIGNpcmNsZXMgbWFyayBjbGFtcCBJKDAgVik8L3RleHQ+DQo8L3N2Zz4=" alt="I-V clamp detail for abi_in" loading="lazy"></p>
+<h5>I-V clamp sweep range</h5>
+<a id="curve-abi-in-iv-clamp-sweep"></a>
+<p><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDAiIGhlaWdodD0iNTYwIiB2aWV3Qm94PSIwIDAgODAwIDU2MCI+DQo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmZmZmZmIi8+DQo8dGV4dCB4PSI3OCIgeT0iMjUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZm9udC13ZWlnaHQ9IjcwMCI+YWJpX2luIEktViBDbGFtcCBTd2VlcCBSYW5nZTwvdGV4dD4NCjxyZWN0IHg9Ijc4IiB5PSI1MiIgd2lkdGg9IjY5NCIgaGVpZ2h0PSIzNDgiIGZpbGw9IiNmYmZiZmIiIHN0cm9rZT0iI2M4YzhjOCIvPg0KPGxpbmUgeDE9Ijc4LjAwIiB5MT0iNTIiIHgyPSI3OC4wMCIgeTI9IjQwMCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI3OC4wMCIgeT0iNDIyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPi0xLjE8L3RleHQ+DQo8bGluZSB4MT0iMjE2LjgwIiB5MT0iNTIiIHgyPSIyMTYuODAiIHkyPSI0MDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iMjE2LjgwIiB5PSI0MjIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+LTAuNjY8L3RleHQ+DQo8bGluZSB4MT0iMzU1LjYwIiB5MT0iNTIiIHgyPSIzNTUuNjAiIHkyPSI0MDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iMzU1LjYwIiB5PSI0MjIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+LTAuMjI8L3RleHQ+DQo8bGluZSB4MT0iNDk0LjQwIiB5MT0iNTIiIHgyPSI0OTQuNDAiIHkyPSI0MDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNDk0LjQwIiB5PSI0MjIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+MC4yMjwvdGV4dD4NCjxsaW5lIHgxPSI2MzMuMjAiIHkxPSI1MiIgeDI9IjYzMy4yMCIgeTI9IjQwMCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI2MzMuMjAiIHk9IjQyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4wLjY2PC90ZXh0Pg0KPGxpbmUgeDE9Ijc3Mi4wMCIgeTE9IjUyIiB4Mj0iNzcyLjAwIiB5Mj0iNDAwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9Ijc3Mi4wMCIgeT0iNDIyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPjEuMTwvdGV4dD4NCjxsaW5lIHgxPSI3OCIgeTE9IjQwMC4wMCIgeDI9Ijc3MiIgeTI9IjQwMC4wMCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI3MCIgeT0iNDA0LjAwIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPi0wLjAyNzM8L3RleHQ+DQo8bGluZSB4MT0iNzgiIHkxPSIzMzAuNDAiIHgyPSI3NzIiIHkyPSIzMzAuNDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzAiIHk9IjMzNC40MCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4tMC4wMTY0PC90ZXh0Pg0KPGxpbmUgeDE9Ijc4IiB5MT0iMjYwLjgwIiB4Mj0iNzcyIiB5Mj0iMjYwLjgwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjcwIiB5PSIyNjQuODAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+LTAuMDA1NDY8L3RleHQ+DQo8bGluZSB4MT0iNzgiIHkxPSIxOTEuMjAiIHgyPSI3NzIiIHkyPSIxOTEuMjAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzAiIHk9IjE5NS4yMCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4wLjAwNTQ2PC90ZXh0Pg0KPGxpbmUgeDE9Ijc4IiB5MT0iMTIxLjYwIiB4Mj0iNzcyIiB5Mj0iMTIxLjYwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjcwIiB5PSIxMjUuNjAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+MC4wMTY0PC90ZXh0Pg0KPGxpbmUgeDE9Ijc4IiB5MT0iNTIuMDAiIHgyPSI3NzIiIHkyPSI1Mi4wMCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI3MCIgeT0iNTYuMDAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+MC4wMjczPC90ZXh0Pg0KPGxpbmUgeDE9IjQyNS4wMCIgeTE9IjUyIiB4Mj0iNDI1LjAwIiB5Mj0iNDAwIiBzdHJva2U9IiM3NzciIHN0cm9rZS1kYXNoYXJyYXk9IjQgNCIvPg0KPGxpbmUgeDE9Ijc4IiB5MT0iMjI2LjAwIiB4Mj0iNzcyIiB5Mj0iMjI2LjAwIiBzdHJva2U9IiM3NzciIHN0cm9rZS1kYXNoYXJyYXk9IjQgNCIvPg0KPGxpbmUgeDE9IjEwOS41NSIgeTE9IjUyIiB4Mj0iMTA5LjU1IiB5Mj0iNDAwIiBzdHJva2U9IiM1NTUiIHN0cm9rZS1kYXNoYXJyYXk9IjIgNCIvPg0KPHRleHQgeD0iMTEzLjU1IiB5PSI2NiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjNTU1Ij4tVmNjPC90ZXh0Pg0KPGxpbmUgeDE9Ijc0MC40NSIgeTE9IjUyIiB4Mj0iNzQwLjQ1IiB5Mj0iNDAwIiBzdHJva2U9IiM1NTUiIHN0cm9rZS1kYXNoYXJyYXk9IjIgNCIvPg0KPHRleHQgeD0iNzQ0LjQ1IiB5PSI2NiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjNTU1Ij5WY2M8L3RleHQ+DQo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMmNhMDJjIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC41NSIgc3Ryb2tlLWRhc2hhcnJheT0iNCA0IiBwb2ludHM9IjEwOS41NSwzNzYuMDAgNDI1LjAwLDIyNi4wMCA3NDAuNDUsNzYuMDAiLz4NCjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9IiMyY2EwMmMiIHN0cm9rZS13aWR0aD0iMS4yIiBvcGFjaXR5PSIwLjU1IiBzdHJva2UtZGFzaGFycmF5PSI0IDQiIHBvaW50cz0iMTA5LjU1LDMzNi44NyA0MjUuMDAsMjI2LjAwIDc0MC40NSwxMTUuMTMiLz4NCjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9IiMyY2EwMmMiIHN0cm9rZS13aWR0aD0iMi4wIiBvcGFjaXR5PSIxLjAiIHBvaW50cz0iMTA5LjU1LDM1My41MCA0MjUuMDAsMjI2LjAwIDc0MC40NSw5OC41MCIvPg0KPGxpbmUgeDE9Ijg4IiB5MT0iNzAiIHgyPSIxMTAiIHkyPSI3MCIgc3Ryb2tlPSIjMmNhMDJjIiBzdHJva2Utd2lkdGg9IjIuNCIvPg0KPHRleHQgeD0iMTE2IiB5PSI3NCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIj5bR05EIENsYW1wXTwvdGV4dD4NCjx0ZXh0IHg9IjQyNS4wMCIgeT0iNDQ0LjAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiPlRhYmxlIHZvbHRhZ2UgKFYpPC90ZXh0Pg0KPHRleHQgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTggMjI2LjAwKSByb3RhdGUoLTkwKSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIj5DdXJyZW50IChBKTwvdGV4dD4NCjx0ZXh0IHg9IjQyMCIgeT0iNDIiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZmlsbD0iIzU1NSI+c29saWQ9dHlwLCBkYXNoZWQ9bWluL21heDsgZGFzaGVkIHZlcnRpY2FsPXJlcXVpcmVkIHN3ZWVwIGJvdW5kYXJ5ICg1LjMuNC81LjMuNSk8L3RleHQ+DQo8L3N2Zz4=" alt="I-V clamp sweep range for abi_in" loading="lazy"></p>
+<h3>Model: <code>abi_out</code></h3>
+<ul>
+<li>Candidate model score from model-scoped checked items: IQ1</li>
+<li>Model type: Output</li>
+<li>Waveform tables: 0</li>
+</ul>
+<h4>Visual Curves</h4>
+<h5>I-V Pullup/Pulldown Curves</h5>
+<a id="curve-abi-out-iv"></a>
+<p>Related WARN/FAIL QA items: <a href="#check-5-3-2">5.3.2</a>, <a href="#check-5-3-3">5.3.3</a>, <a href="#check-5-3-6">5.3.6</a>, <a href="#check-5-3-14">5.3.14</a></p>
+<p><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDAiIGhlaWdodD0iNTYwIiB2aWV3Qm94PSIwIDAgODAwIDU2MCI+DQo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmZmZmZmIi8+DQo8dGV4dCB4PSI3OCIgeT0iMjUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZm9udC13ZWlnaHQ9IjcwMCI+YWJpX291dCBJLVYgUHVsbHVwL1B1bGxkb3duIEN1cnZlczwvdGV4dD4NCjxyZWN0IHg9Ijc4IiB5PSI1MiIgd2lkdGg9IjY5NCIgaGVpZ2h0PSIzNDgiIGZpbGw9IiNmYmZiZmIiIHN0cm9rZT0iI2M4YzhjOCIvPg0KPGxpbmUgeDE9Ijc4LjAwIiB5MT0iNTIiIHgyPSI3OC4wMCIgeTI9IjQwMCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI3OC4wMCIgeT0iNDIyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPi0xPC90ZXh0Pg0KPGxpbmUgeDE9IjIxNi44MCIgeTE9IjUyIiB4Mj0iMjE2LjgwIiB5Mj0iNDAwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjIxNi44MCIgeT0iNDIyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPi0wLjYyNDwvdGV4dD4NCjxsaW5lIHgxPSIzNTUuNjAiIHkxPSI1MiIgeDI9IjM1NS42MCIgeTI9IjQwMCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSIzNTUuNjAiIHk9IjQyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4tMC4yMDg8L3RleHQ+DQo8bGluZSB4MT0iNDk0LjQwIiB5MT0iNTIiIHgyPSI0OTQuNDAiIHkyPSI0MDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNDk0LjQwIiB5PSI0MjIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+MC4yMDg8L3RleHQ+DQo8bGluZSB4MT0iNjMzLjIwIiB5MT0iNTIiIHgyPSI2MzMuMjAiIHkyPSI0MDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNjMzLjIwIiB5PSI0MjIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+MC42MjQ8L3RleHQ+DQo8bGluZSB4MT0iNzcyLjAwIiB5MT0iNTIiIHgyPSI3NzIuMDAiIHkyPSI0MDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzcyLjAwIiB5PSI0MjIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+MTwvdGV4dD4NCjxsaW5lIHgxPSI3OCIgeTE9IjQwMC4wMCIgeDI9Ijc3MiIgeTI9IjQwMC4wMCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI3MCIgeT0iNDA0LjAwIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPi0wLjAyMzI8L3RleHQ+DQo8bGluZSB4MT0iNzgiIHkxPSIzMzAuNDAiIHgyPSI3NzIiIHkyPSIzMzAuNDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzAiIHk9IjMzNC40MCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4tMC4wMTM5PC90ZXh0Pg0KPGxpbmUgeDE9Ijc4IiB5MT0iMjYwLjgwIiB4Mj0iNzcyIiB5Mj0iMjYwLjgwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjcwIiB5PSIyNjQuODAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+LTAuMDA0NjQ8L3RleHQ+DQo8bGluZSB4MT0iNzgiIHkxPSIxOTEuMjAiIHgyPSI3NzIiIHkyPSIxOTEuMjAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzAiIHk9IjE5NS4yMCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4wLjAwNDY0PC90ZXh0Pg0KPGxpbmUgeDE9Ijc4IiB5MT0iMTIxLjYwIiB4Mj0iNzcyIiB5Mj0iMTIxLjYwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjcwIiB5PSIxMjUuNjAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+MC4wMTM5PC90ZXh0Pg0KPGxpbmUgeDE9Ijc4IiB5MT0iNTIuMDAiIHgyPSI3NzIiIHkyPSI1Mi4wMCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI3MCIgeT0iNTYuMDAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+MC4wMjMyPC90ZXh0Pg0KPGxpbmUgeDE9IjQyNS4wMCIgeTE9IjUyIiB4Mj0iNDI1LjAwIiB5Mj0iNDAwIiBzdHJva2U9IiM3NzciIHN0cm9rZS1kYXNoYXJyYXk9IjQgNCIvPg0KPGxpbmUgeDE9Ijc4IiB5MT0iMjI2LjAwIiB4Mj0iNzcyIiB5Mj0iMjI2LjAwIiBzdHJva2U9IiM3NzciIHN0cm9rZS1kYXNoYXJyYXk9IjQgNCIvPg0KPGxpbmUgeDE9IjkxLjM1IiB5MT0iNTIiIHgyPSI5MS4zNSIgeTI9IjQwMCIgc3Ryb2tlPSIjNTU1IiBzdHJva2UtZGFzaGFycmF5PSIyIDQiLz4NCjx0ZXh0IHg9Ijk1LjM1IiB5PSI2NiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjNTU1Ij4tVmNjPC90ZXh0Pg0KPGxpbmUgeDE9Ijc1OC42NSIgeTE9IjUyIiB4Mj0iNzU4LjY1IiB5Mj0iNDAwIiBzdHJva2U9IiM1NTUiIHN0cm9rZS1kYXNoYXJyYXk9IjIgNCIvPg0KPHRleHQgeD0iNzYyLjY1IiB5PSI2NiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjNTU1Ij5WY2M8L3RleHQ+DQo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMGY3NjZlIiBzdHJva2Utd2lkdGg9IjIuOCIgb3BhY2l0eT0iMC45NSIgc3Ryb2tlLWRhc2hhcnJheT0iNiAzIiBwb2ludHM9IjkxLjM1LDM3Ni4wMCA0MjUuMDAsMjI2LjAwIDc1OC42NSw3Ni4wMCIvPg0KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzdjMmQxMiIgc3Ryb2tlLXdpZHRoPSIyLjgiIG9wYWNpdHk9IjAuOTUiIHN0cm9rZS1kYXNoYXJyYXk9IjYgMyIgcG9pbnRzPSI5MS4zNSw3Ni4wMCA0MjUuMDAsMjI2LjAwIDc1OC42NSwzNzYuMDAiLz4NCjxsaW5lIHgxPSI4OCIgeTE9IjcwIiB4Mj0iMTEwIiB5Mj0iNzAiIHN0cm9rZT0iIzBmNzY2ZSIgc3Ryb2tlLXdpZHRoPSIyLjgiIHN0cm9rZS1kYXNoYXJyYXk9IjYgMyIvPg0KPHRleHQgeD0iMTE2IiB5PSI3NCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIj5bUHVsbGRvd25dPC90ZXh0Pg0KPGxpbmUgeDE9Ijg4IiB5MT0iODgiIHgyPSIxMTAiIHkyPSI4OCIgc3Ryb2tlPSIjN2MyZDEyIiBzdHJva2Utd2lkdGg9IjIuOCIgc3Ryb2tlLWRhc2hhcnJheT0iNiAzIi8+DQo8dGV4dCB4PSIxMTYiIHk9IjkyIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiPltQdWxsdXBdPC90ZXh0Pg0KPHJlY3QgeD0iNzgiIHk9IjQ2NCIgd2lkdGg9IjY5NCIgaGVpZ2h0PSI5MiIgZmlsbD0iI2ZmZmRmNyIgc3Ryb2tlPSIjZDhjNmExIiByeD0iNCIvPg0KPHRleHQgeD0iODgiIHk9IjQ4MSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjNGIzYjIxIj5GaW5kaW5ncyBuZWVkaW5nIGF0dGVudGlvbjwvdGV4dD4NCjxyZWN0IHg9Ijg4IiB5PSI0ODgiIHdpZHRoPSI3IiBoZWlnaHQ9IjciIGZpbGw9IiNiNDIzMTgiLz4NCjx0ZXh0IHg9IjEwMiIgeT0iNDk1IiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZpbGw9IiMzMzMiPkZBSUwgNS4zLjI6IFtQdWxsdXBdIHZvbHRhZ2Ugc3dlZXAgaW5zdWZmaWNpZW50IHwgSGlnaCBlbmQ6IHRhYmxlIGVuZHMgYXQgMVYsIG5lZWQg4omlIDJWPC90ZXh0Pg0KPHJlY3QgeD0iODgiIHk9IjUwNCIgd2lkdGg9IjciIGhlaWdodD0iNyIgZmlsbD0iI2I0MjMxOCIvPg0KPHRleHQgeD0iMTAyIiB5PSI1MTEiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZmlsbD0iIzMzMyI+RkFJTCA1LjMuMzogW1B1bGxkb3duXSB2b2x0YWdlIHN3ZWVwIGluc3VmZmljaWVudCB8IEhpZ2ggZW5kOiB0YWJsZSBlbmRzIGF0IDFWLCBuZWVkIOKJpSAyVjwvdGV4dD4NCjxyZWN0IHg9Ijg4IiB5PSI1MjAiIHdpZHRoPSI3IiBoZWlnaHQ9IjciIGZpbGw9IiNiNTQ3MDgiLz4NCjx0ZXh0IHg9IjEwMiIgeT0iNTI3IiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZpbGw9IiMzMzMiPldBUk4gNS4zLjY6IEktViBzdGFpci1zdGVwIGV2aWRlbmNlIG5lZWRzIHJldmlldyB8IFtQdWxsZG93bl06IHJvdWdobmVzcz0wLjUgJmd0OyAwLjE8L3RleHQ+DQo8dGV4dCB4PSIxMDIiIHk9IjU0MyIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjNTU1Ij4xIG1vcmUgZmluZGluZyhzKSBpbiB0aGUgcmVwb3J0IHRhYmxlPC90ZXh0Pg0KPHRleHQgeD0iNDI1LjAwIiB5PSI0NDQuMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiI+VGFibGUgdm9sdGFnZSAoVik8L3RleHQ+DQo8dGV4dCB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxOCAyMjYuMDApIHJvdGF0ZSgtOTApIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiPkN1cnJlbnQgKEEpPC90ZXh0Pg0KPHRleHQgeD0iNDIwIiB5PSI0MiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjNTU1Ij50aGljayBkYXNoZWQ9Y29tYmluZWQgdHlwIGN1cnZlczwvdGV4dD4NCjwvc3ZnPg==" alt="I-V Pullup/Pulldown Curves for abi_out" loading="lazy"></p>
+<h5>I-V pullup/pulldown 0 V detail</h5>
+<a id="curve-abi-out-iv-zero"></a>
+<p><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDAiIGhlaWdodD0iNTIwIiB2aWV3Qm94PSIwIDAgODAwIDUyMCI+DQo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmZmZmZmIi8+DQo8dGV4dCB4PSI3OCIgeT0iMjUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZm9udC13ZWlnaHQ9IjcwMCI+YWJpX291dCBJLVYgUHVsbHVwL1B1bGxkb3duIDAgViBEZXRhaWw8L3RleHQ+DQo8cmVjdCB4PSI3OCIgeT0iNTQiIHdpZHRoPSI2OTAiIGhlaWdodD0iMzA2IiBmaWxsPSIjZmJmYmZiIiBzdHJva2U9IiNjOGM4YzgiLz4NCjxsaW5lIHgxPSI3OC4wMCIgeTE9IjU0IiB4Mj0iNzguMDAiIHkyPSIzNjAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzguMDAiIHk9IjM4MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4wPC90ZXh0Pg0KPGxpbmUgeDE9IjIxNi4wMCIgeTE9IjU0IiB4Mj0iMjE2LjAwIiB5Mj0iMzYwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjIxNi4wMCIgeT0iMzgyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPjAuMjwvdGV4dD4NCjxsaW5lIHgxPSIzNTQuMDAiIHkxPSI1NCIgeDI9IjM1NC4wMCIgeTI9IjM2MCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSIzNTQuMDAiIHk9IjM4MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4wLjQ8L3RleHQ+DQo8bGluZSB4MT0iNDkyLjAwIiB5MT0iNTQiIHgyPSI0OTIuMDAiIHkyPSIzNjAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNDkyLjAwIiB5PSIzODIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+MC42PC90ZXh0Pg0KPGxpbmUgeDE9IjYzMC4wMCIgeTE9IjU0IiB4Mj0iNjMwLjAwIiB5Mj0iMzYwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjYzMC4wMCIgeT0iMzgyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPjAuODwvdGV4dD4NCjxsaW5lIHgxPSI3NjguMDAiIHkxPSI1NCIgeDI9Ijc2OC4wMCIgeTI9IjM2MCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI3NjguMDAiIHk9IjM4MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4xPC90ZXh0Pg0KPGxpbmUgeDE9Ijc4IiB5MT0iMzYwLjAwIiB4Mj0iNzY4IiB5Mj0iMzYwLjAwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjcwIiB5PSIzNjQuMDAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+LTAuMDMxMTwvdGV4dD4NCjxsaW5lIHgxPSI3OCIgeTE9IjI5OC44MCIgeDI9Ijc2OCIgeTI9IjI5OC44MCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI3MCIgeT0iMzAyLjgwIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPi0wLjAxODY8L3RleHQ+DQo8bGluZSB4MT0iNzgiIHkxPSIyMzcuNjAiIHgyPSI3NjgiIHkyPSIyMzcuNjAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzAiIHk9IjI0MS42MCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4tMC4wMDYyMTwvdGV4dD4NCjxsaW5lIHgxPSI3OCIgeTE9IjE3Ni40MCIgeDI9Ijc2OCIgeTI9IjE3Ni40MCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI3MCIgeT0iMTgwLjQwIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPjAuMDA2MjE8L3RleHQ+DQo8bGluZSB4MT0iNzgiIHkxPSIxMTUuMjAiIHgyPSI3NjgiIHkyPSIxMTUuMjAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzAiIHk9IjExOS4yMCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4wLjAxODY8L3RleHQ+DQo8bGluZSB4MT0iNzgiIHkxPSI1NC4wMCIgeDI9Ijc2OCIgeTI9IjU0LjAwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjcwIiB5PSI1OC4wMCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4wLjAzMTE8L3RleHQ+DQo8bGluZSB4MT0iNzguMDAiIHkxPSI1NCIgeDI9Ijc4LjAwIiB5Mj0iMzYwIiBzdHJva2U9IiM3NzciIHN0cm9rZS1kYXNoYXJyYXk9IjQgNCIvPg0KPGxpbmUgeDE9Ijc4IiB5MT0iMjA3LjAwIiB4Mj0iNzY4IiB5Mj0iMjA3LjAwIiBzdHJva2U9IiM3NzciIHN0cm9rZS1kYXNoYXJyYXk9IjQgNCIvPg0KPGxpbmUgeDE9Ijc4LjAwIiB5MT0iNTQiIHgyPSI3OC4wMCIgeTI9IjM2MCIgc3Ryb2tlPSIjNTU1IiBzdHJva2UtZGFzaGFycmF5PSIyIDQiLz4NCjx0ZXh0IHg9IjgyLjAwIiB5PSI2OCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjNTU1Ij4wVjwvdGV4dD4NCjxsaW5lIHgxPSI3NjguMDAiIHkxPSI1NCIgeDI9Ijc2OC4wMCIgeTI9IjM2MCIgc3Ryb2tlPSIjNTU1IiBzdHJva2UtZGFzaGFycmF5PSIyIDQiLz4NCjx0ZXh0IHg9Ijc3Mi4wMCIgeT0iNjgiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZmlsbD0iIzU1NSI+VmNjPC90ZXh0Pg0KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzFmNzdiNCIgc3Ryb2tlLXdpZHRoPSIxLjIiIG9wYWNpdHk9IjAuNTUiIHN0cm9rZS1kYXNoYXJyYXk9IjQgNCIgcG9pbnRzPSI3OC4wMCwyMDcuMDAgNzY4LjAwLDkxLjA5Ii8+DQo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMWY3N2I0IiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC41NSIgc3Ryb2tlLWRhc2hhcnJheT0iNCA0IiBwb2ludHM9Ijc4LjAwLDIwNy4wMCA3NjguMDAsMTIxLjMzIi8+DQo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMWY3N2I0IiBzdHJva2Utd2lkdGg9IjIuMCIgb3BhY2l0eT0iMS4wIiBwb2ludHM9Ijc4LjAwLDIwNy4wMCA3NjguMDAsMTA4LjQ4Ii8+DQo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZDYyNzI4IiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC41NSIgc3Ryb2tlLWRhc2hhcnJheT0iNCA0IiBwb2ludHM9Ijc4LjAwLDIwNy4wMCA3NjguMDAsMzIyLjkxIi8+DQo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZDYyNzI4IiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC41NSIgc3Ryb2tlLWRhc2hhcnJheT0iNCA0IiBwb2ludHM9Ijc4LjAwLDIwNy4wMCA3NjguMDAsMjkyLjY3Ii8+DQo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZDYyNzI4IiBzdHJva2Utd2lkdGg9IjIuMCIgb3BhY2l0eT0iMS4wIiBwb2ludHM9Ijc4LjAwLDIwNy4wMCA3NjguMDAsMzA1LjUyIi8+DQo8Y2lyY2xlIGN4PSI3OC4wMCIgY3k9IjIwNy4wMCIgcj0iNC4wIiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiMxZjc3YjQiIHN0cm9rZS13aWR0aD0iMS41Ii8+DQo8Y2lyY2xlIGN4PSI3OC4wMCIgY3k9IjIwNy4wMCIgcj0iMy4wIiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiMxZjc3YjQiIHN0cm9rZS13aWR0aD0iMS41Ii8+DQo8Y2lyY2xlIGN4PSI3OC4wMCIgY3k9IjIwNy4wMCIgcj0iMy4wIiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiMxZjc3YjQiIHN0cm9rZS13aWR0aD0iMS41Ii8+DQo8Y2lyY2xlIGN4PSI3OC4wMCIgY3k9IjIwNy4wMCIgcj0iNC4wIiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiNkNjI3MjgiIHN0cm9rZS13aWR0aD0iMS41Ii8+DQo8Y2lyY2xlIGN4PSI3OC4wMCIgY3k9IjIwNy4wMCIgcj0iMy4wIiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiNkNjI3MjgiIHN0cm9rZS13aWR0aD0iMS41Ii8+DQo8Y2lyY2xlIGN4PSI3OC4wMCIgY3k9IjIwNy4wMCIgcj0iMy4wIiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiNkNjI3MjgiIHN0cm9rZS13aWR0aD0iMS41Ii8+DQo8bGluZSB4MT0iNzgiIHkxPSIyMDcuMDAiIHgyPSI3NjgiIHkyPSIyMDcuMDAiIHN0cm9rZT0iI2I1NDcwOCIgc3Ryb2tlLXdpZHRoPSIxLjQiIHN0cm9rZS1kYXNoYXJyYXk9IjUgMyIvPg0KPHRleHQgeD0iNzY0IiB5PSIyMDMuMDAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZmlsbD0iI2I1NDcwOCI+KzF1QSBsZWFrYWdlIGxpbWl0PC90ZXh0Pg0KPGxpbmUgeDE9Ijc4IiB5MT0iMjA3LjAwIiB4Mj0iNzY4IiB5Mj0iMjA3LjAwIiBzdHJva2U9IiNiNTQ3MDgiIHN0cm9rZS13aWR0aD0iMS40IiBzdHJva2UtZGFzaGFycmF5PSI1IDMiLz4NCjx0ZXh0IHg9Ijc2NCIgeT0iMjAzLjAwIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiNiNTQ3MDgiPi0xdUEgbGVha2FnZSBsaW1pdDwvdGV4dD4NCjxsaW5lIHgxPSI4OCIgeTE9IjcyIiB4Mj0iMTEwIiB5Mj0iNzIiIHN0cm9rZT0iIzFmNzdiNCIgc3Ryb2tlLXdpZHRoPSIyLjQiLz4NCjx0ZXh0IHg9IjExNiIgeT0iNzYiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiI+W1B1bGxkb3duXTwvdGV4dD4NCjxsaW5lIHgxPSI4OCIgeTE9IjkwIiB4Mj0iMTEwIiB5Mj0iOTAiIHN0cm9rZT0iI2Q2MjcyOCIgc3Ryb2tlLXdpZHRoPSIyLjQiLz4NCjx0ZXh0IHg9IjExNiIgeT0iOTQiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiI+W1B1bGx1cF08L3RleHQ+DQo8dGV4dCB4PSI0MjMuMDAiIHk9IjQwNC4wMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIj5UYWJsZSB2b2x0YWdlIChWKSwgem9vbWVkIGFyb3VuZCAwIFY8L3RleHQ+DQo8dGV4dCB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxOCAyMDcuMDApIHJvdGF0ZSgtOTApIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiPkN1cnJlbnQgKEEpPC90ZXh0Pg0KPHRleHQgeD0iNDIwIiB5PSI0MiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjNTU1Ij5wdWxsdXAvcHVsbGRvd24gY3VydmVzIHNob3cgdHlwL21pbi9tYXg7IG9wZW4gY2lyY2xlcyBtYXJrIEkoMCBWKTwvdGV4dD4NCjwvc3ZnPg==" alt="I-V pullup/pulldown 0 V detail for abi_out" loading="lazy"></p>
+<h5>Zout load-line curves</h5>
+<a id="curve-abi-out-zout"></a>
+<p><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNjIwIiB2aWV3Qm94PSIwIDAgOTAwIDYyMCI+DQo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmZmZmZmIi8+DQo8dGV4dCB4PSI3MiIgeT0iMjYiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZm9udC13ZWlnaHQ9IjcwMCI+YWJpX291dCBab3V0IExvYWQtTGluZSBDdXJ2ZXM8L3RleHQ+DQo8dGV4dCB4PSI3MiIgeT0iNDUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZmlsbD0iIzU1NSI+UmxvYWQ9NTAgb2htOyBzb2xpZD1kZXZpY2UgSS1WLCBkYXNoZWQ9bG9hZCBsaW5lLCBjaXJjbGVzPW9wZXJhdGluZyBwb2ludHM8L3RleHQ+DQo8cmVjdCB4PSI3Mi4wMCIgeT0iNjIuMDAiIHdpZHRoPSIzODAuMDAiIGhlaWdodD0iMjg2LjAwIiBmaWxsPSIjZmJmYmZiIiBzdHJva2U9IiNjOGM4YzgiLz4NCjx0ZXh0IHg9IjgwLjAwIiB5PSI1MC4wMCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmb250LXdlaWdodD0iNzAwIj5bUHVsbGRvd25dIFJsb2FkIHRvIFZkZDwvdGV4dD4NCjxsaW5lIHgxPSI3Mi4wMCIgeTE9IjYyLjAwIiB4Mj0iNzIuMDAiIHkyPSIzNDguMDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzIuMDAiIHk9IjM2Ni4wMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIj4tMS4xPC90ZXh0Pg0KPGxpbmUgeDE9IjE2Ny4wMCIgeTE9IjYyLjAwIiB4Mj0iMTY3LjAwIiB5Mj0iMzQ4LjAwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjE2Ny4wMCIgeT0iMzY2LjAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiPi0wLjU0PC90ZXh0Pg0KPGxpbmUgeDE9IjI2Mi4wMCIgeTE9IjYyLjAwIiB4Mj0iMjYyLjAwIiB5Mj0iMzQ4LjAwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjI2Mi4wMCIgeT0iMzY2LjAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiPjA8L3RleHQ+DQo8bGluZSB4MT0iMzU3LjAwIiB5MT0iNjIuMDAiIHgyPSIzNTcuMDAiIHkyPSIzNDguMDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iMzU3LjAwIiB5PSIzNjYuMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCI+MC41NDwvdGV4dD4NCjxsaW5lIHgxPSI0NTIuMDAiIHkxPSI2Mi4wMCIgeDI9IjQ1Mi4wMCIgeTI9IjM0OC4wMCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI0NTIuMDAiIHk9IjM2Ni4wMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIj4xLjE8L3RleHQ+DQo8bGluZSB4MT0iNzIuMDAiIHkxPSIzNDguMDAiIHgyPSI0NTIuMDAiIHkyPSIzNDguMDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNjUuMDAiIHk9IjM1Mi4wMCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIj4tMzE8L3RleHQ+DQo8bGluZSB4MT0iNzIuMDAiIHkxPSIyNzYuNTAiIHgyPSI0NTIuMDAiIHkyPSIyNzYuNTAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNjUuMDAiIHk9IjI4MC41MCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIj4tMTE8L3RleHQ+DQo8bGluZSB4MT0iNzIuMDAiIHkxPSIyMDUuMDAiIHgyPSI0NTIuMDAiIHkyPSIyMDUuMDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNjUuMDAiIHk9IjIwOS4wMCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIj44LjI8L3RleHQ+DQo8bGluZSB4MT0iNzIuMDAiIHkxPSIxMzMuNTAiIHgyPSI0NTIuMDAiIHkyPSIxMzMuNTAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNjUuMDAiIHk9IjEzNy41MCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIj4yODwvdGV4dD4NCjxsaW5lIHgxPSI3Mi4wMCIgeTE9IjYyLjAwIiB4Mj0iNDUyLjAwIiB5Mj0iNjIuMDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNjUuMDAiIHk9IjY2LjAwIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiPjQ4PC90ZXh0Pg0KPGxpbmUgeDE9IjI2Mi4wMCIgeTE9IjYyIiB4Mj0iMjYyLjAwIiB5Mj0iMzQ4IiBzdHJva2U9IiM3NzciIHN0cm9rZS1kYXNoYXJyYXk9IjQgNCIvPg0KPGxpbmUgeDE9IjcyLjAiIHkxPSIyMzQuOTAiIHgyPSI0NTIuMCIgeTI9IjIzNC45MCIgc3Ryb2tlPSIjNzc3IiBzdHJva2UtZGFzaGFycmF5PSI0IDQiLz4NCjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9IiMxZjc3YjQiIHN0cm9rZS13aWR0aD0iMS44IiBwb2ludHM9Ijg2LjA3LDMwNy41MSAyNjIuMDAsMjM0LjkwIDQzNy45MywxNjIuMjkiLz4NCjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9IiNmZjdmMGUiIHN0cm9rZS13aWR0aD0iMS44IiBzdHJva2UtZGFzaGFycmF5PSI1IDQiIHBvaW50cz0iODYuMDcsMzIwLjMyIDI2Mi4wMCwyMzQuOTAgNDM3LjkzLDE0OS40OCIvPg0KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzJjYTAyYyIgc3Ryb2tlLXdpZHRoPSIxLjgiIHN0cm9rZS1kYXNoYXJyYXk9IjIgNCIgcG9pbnRzPSI4Ni4wNywyOTguMDQgMjYyLjAwLDIzNC45MCA0MzcuOTMsMTcxLjc2Ii8+DQo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMWY3N2I0IiBzdHJva2Utd2lkdGg9IjEuMSIgc3Ryb2tlLWRhc2hhcnJheT0iNiA0IiBwb2ludHM9IjcyLjAwLDgzLjg3IDc2LjgxLDg1Ljg1IDgxLjYyLDg3Ljg0IDg2LjQzLDg5LjgyIDkxLjI0LDkxLjgxIDk2LjA1LDkzLjgwIDEwMC44Niw5NS43OCAxMDUuNjcsOTcuNzcgMTEwLjQ4LDk5Ljc1IDExNS4yOSwxMDEuNzQgMTIwLjEwLDEwMy43MiAxMjQuOTEsMTA1LjcxIDEyOS43MiwxMDcuNjkgMTM0LjUzLDEwOS42OCAxMzkuMzQsMTExLjY2IDE0NC4xNSwxMTMuNjUgMTQ4Ljk2LDExNS42MyAxNTMuNzcsMTE3LjYyIDE1OC41OCwxMTkuNjAgMTYzLjM5LDEyMS41OSAxNjguMjAsMTIzLjU3IDE3My4wMSwxMjUuNTYgMTc3LjgyLDEyNy41NSAxODIuNjMsMTI5LjUzIDE4Ny40NCwxMzEuNTIgMTkyLjI1LDEzMy41MCAxOTcuMDYsMTM1LjQ5IDIwMS44NywxMzcuNDcgMjA2LjY4LDEzOS40NiAyMTEuNDksMTQxLjQ0IDIxNi4zMCwxNDMuNDMgMjIxLjExLDE0NS40MSAyMjUuOTIsMTQ3LjQwIDIzMC43MywxNDkuMzggMjM1LjU0LDE1MS4zNyAyNDAuMzUsMTUzLjM1IDI0NS4xNiwxNTUuMzQgMjQ5Ljk3LDE1Ny4zMyAyNTQuNzgsMTU5LjMxIDI1OS41OSwxNjEuMzAgMjY0LjQxLDE2My4yOCAyNjkuMjIsMTY1LjI3IDI3NC4wMywxNjcuMjUgMjc4Ljg0LDE2OS4yNCAyODMuNjUsMTcxLjIyIDI4OC40NiwxNzMuMjEgMjkzLjI3LDE3NS4xOSAyOTguMDgsMTc3LjE4IDMwMi44OSwxNzkuMTYgMzA3LjcwLDE4MS4xNSAzMTIuNTEsMTgzLjEzIDMxNy4zMiwxODUuMTIgMzIyLjEzLDE4Ny4xMCAzMjYuOTQsMTg5LjA5IDMzMS43NSwxOTEuMDggMzM2LjU2LDE5My4wNiAzNDEuMzcsMTk1LjA1IDM0Ni4xOCwxOTcuMDMgMzUwLjk5LDE5OS4wMiAzNTUuODAsMjAxLjAwIDM2MC42MSwyMDIuOTkgMzY1LjQyLDIwNC45NyAzNzAuMjMsMjA2Ljk2IDM3NS4wNCwyMDguOTQgMzc5Ljg1LDIxMC45MyAzODQuNjYsMjEyLjkxIDM4OS40NywyMTQuOTAgMzk0LjI4LDIxNi44OCAzOTkuMDksMjE4Ljg3IDQwMy45MCwyMjAuODYgNDA4LjcxLDIyMi44NCA0MTMuNTIsMjI0LjgzIDQxOC4zMywyMjYuODEgNDIzLjE0LDIyOC44MCA0MjcuOTUsMjMwLjc4IDQzMi43NiwyMzIuNzcgNDM3LjU3LDIzNC43NSA0NDIuMzgsMjM2Ljc0IDQ0Ny4xOSwyMzguNzIgNDUyLjAwLDI0MC43MSIvPg0KPGNpcmNsZSBjeD0iMzQ5Ljk2IiBjeT0iMTk4LjU5IiByPSI0LjYiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0iIzFmNzdiNCIgc3Ryb2tlLXdpZHRoPSIyIi8+DQo8dGV4dCB4PSIzNTUuOTYiIHk9IjE5Mi41OSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIiBmaWxsPSIjMWY3N2I0Ij50eXAgNTAgb2htPC90ZXh0Pg0KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmN2YwZSIgc3Ryb2tlLXdpZHRoPSIxLjEiIHN0cm9rZS1kYXNoYXJyYXk9IjYgNCIgcG9pbnRzPSI3Mi4wMCw4My44NyA3Ni44MSw4NS44NSA4MS42Miw4Ny44NCA4Ni40Myw4OS44MiA5MS4yNCw5MS44MSA5Ni4wNSw5My44MCAxMDAuODYsOTUuNzggMTA1LjY3LDk3Ljc3IDExMC40OCw5OS43NSAxMTUuMjksMTAxLjc0IDEyMC4xMCwxMDMuNzIgMTI0LjkxLDEwNS43MSAxMjkuNzIsMTA3LjY5IDEzNC41MywxMDkuNjggMTM5LjM0LDExMS42NiAxNDQuMTUsMTEzLjY1IDE0OC45NiwxMTUuNjMgMTUzLjc3LDExNy42MiAxNTguNTgsMTE5LjYwIDE2My4zOSwxMjEuNTkgMTY4LjIwLDEyMy41NyAxNzMuMDEsMTI1LjU2IDE3Ny44MiwxMjcuNTUgMTgyLjYzLDEyOS41MyAxODcuNDQsMTMxLjUyIDE5Mi4yNSwxMzMuNTAgMTk3LjA2LDEzNS40OSAyMDEuODcsMTM3LjQ3IDIwNi42OCwxMzkuNDYgMjExLjQ5LDE0MS40NCAyMTYuMzAsMTQzLjQzIDIyMS4xMSwxNDUuNDEgMjI1LjkyLDE0Ny40MCAyMzAuNzMsMTQ5LjM4IDIzNS41NCwxNTEuMzcgMjQwLjM1LDE1My4zNSAyNDUuMTYsMTU1LjM0IDI0OS45NywxNTcuMzMgMjU0Ljc4LDE1OS4zMSAyNTkuNTksMTYxLjMwIDI2NC40MSwxNjMuMjggMjY5LjIyLDE2NS4yNyAyNzQuMDMsMTY3LjI1IDI3OC44NCwxNjkuMjQgMjgzLjY1LDE3MS4yMiAyODguNDYsMTczLjIxIDI5My4yNywxNzUuMTkgMjk4LjA4LDE3Ny4xOCAzMDIuODksMTc5LjE2IDMwNy43MCwxODEuMTUgMzEyLjUxLDE4My4xMyAzMTcuMzIsMTg1LjEyIDMyMi4xMywxODcuMTAgMzI2Ljk0LDE4OS4wOSAzMzEuNzUsMTkxLjA4IDMzNi41NiwxOTMuMDYgMzQxLjM3LDE5NS4wNSAzNDYuMTgsMTk3LjAzIDM1MC45OSwxOTkuMDIgMzU1LjgwLDIwMS4wMCAzNjAuNjEsMjAyLjk5IDM2NS40MiwyMDQuOTcgMzcwLjIzLDIwNi45NiAzNzUuMDQsMjA4Ljk0IDM3OS44NSwyMTAuOTMgMzg0LjY2LDIxMi45MSAzODkuNDcsMjE0LjkwIDM5NC4yOCwyMTYuODggMzk5LjA5LDIxOC44NyA0MDMuOTAsMjIwLjg2IDQwOC43MSwyMjIuODQgNDEzLjUyLDIyNC44MyA0MTguMzMsMjI2LjgxIDQyMy4xNCwyMjguODAgNDI3Ljk1LDIzMC43OCA0MzIuNzYsMjMyLjc3IDQzNy41NywyMzQuNzUgNDQyLjM4LDIzNi43NCA0NDcuMTksMjM4LjcyIDQ1Mi4wMCwyNDAuNzEiLz4NCjxjaXJjbGUgY3g9IjM0Mi44MyIgY3k9IjE5NS42NSIgcj0iNC42IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiNmZjdmMGUiIHN0cm9rZS13aWR0aD0iMiIvPg0KPHRleHQgeD0iMzQ4LjgzIiB5PSIxODkuNjUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZmlsbD0iI2ZmN2YwZSI+bWluIDQyLjUgb2htPC90ZXh0Pg0KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzJjYTAyYyIgc3Ryb2tlLXdpZHRoPSIxLjEiIHN0cm9rZS1kYXNoYXJyYXk9IjYgNCIgcG9pbnRzPSI3Mi4wMCw4My44NyA3Ni44MSw4NS44NSA4MS42Miw4Ny44NCA4Ni40Myw4OS44MiA5MS4yNCw5MS44MSA5Ni4wNSw5My44MCAxMDAuODYsOTUuNzggMTA1LjY3LDk3Ljc3IDExMC40OCw5OS43NSAxMTUuMjksMTAxLjc0IDEyMC4xMCwxMDMuNzIgMTI0LjkxLDEwNS43MSAxMjkuNzIsMTA3LjY5IDEzNC41MywxMDkuNjggMTM5LjM0LDExMS42NiAxNDQuMTUsMTEzLjY1IDE0OC45NiwxMTUuNjMgMTUzLjc3LDExNy42MiAxNTguNTgsMTE5LjYwIDE2My4zOSwxMjEuNTkgMTY4LjIwLDEyMy41NyAxNzMuMDEsMTI1LjU2IDE3Ny44MiwxMjcuNTUgMTgyLjYzLDEyOS41MyAxODcuNDQsMTMxLjUyIDE5Mi4yNSwxMzMuNTAgMTk3LjA2LDEzNS40OSAyMDEuODcsMTM3LjQ3IDIwNi42OCwxMzkuNDYgMjExLjQ5LDE0MS40NCAyMTYuMzAsMTQzLjQzIDIyMS4xMSwxNDUuNDEgMjI1LjkyLDE0Ny40MCAyMzAuNzMsMTQ5LjM4IDIzNS41NCwxNTEuMzcgMjQwLjM1LDE1My4zNSAyNDUuMTYsMTU1LjM0IDI0OS45NywxNTcuMzMgMjU0Ljc4LDE1OS4zMSAyNTkuNTksMTYxLjMwIDI2NC40MSwxNjMuMjggMjY5LjIyLDE2NS4yNyAyNzQuMDMsMTY3LjI1IDI3OC44NCwxNjkuMjQgMjgzLjY1LDE3MS4yMiAyODguNDYsMTczLjIxIDI5My4yNywxNzUuMTkgMjk4LjA4LDE3Ny4xOCAzMDIuODksMTc5LjE2IDMwNy43MCwxODEuMTUgMzEyLjUxLDE4My4xMyAzMTcuMzIsMTg1LjEyIDMyMi4xMywxODcuMTAgMzI2Ljk0LDE4OS4wOSAzMzEuNzUsMTkxLjA4IDMzNi41NiwxOTMuMDYgMzQxLjM3LDE5NS4wNSAzNDYuMTgsMTk3LjAzIDM1MC45OSwxOTkuMDIgMzU1LjgwLDIwMS4wMCAzNjAuNjEsMjAyLjk5IDM2NS40MiwyMDQuOTcgMzcwLjIzLDIwNi45NiAzNzUuMDQsMjA4Ljk0IDM3OS44NSwyMTAuOTMgMzg0LjY2LDIxMi45MSAzODkuNDcsMjE0LjkwIDM5NC4yOCwyMTYuODggMzk5LjA5LDIxOC44NyA0MDMuOTAsMjIwLjg2IDQwOC43MSwyMjIuODQgNDEzLjUyLDIyNC44MyA0MTguMzMsMjI2LjgxIDQyMy4xNCwyMjguODAgNDI3Ljk1LDIzMC43OCA0MzIuNzYsMjMyLjc3IDQzNy41NywyMzQuNzUgNDQyLjM4LDIzNi43NCA0NDcuMTksMjM4LjcyIDQ1Mi4wMCwyNDAuNzEiLz4NCjxjaXJjbGUgY3g9IjM1Ni4xMCIgY3k9IjIwMS4xMyIgcj0iNC42IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiMyY2EwMmMiIHN0cm9rZS13aWR0aD0iMiIvPg0KPHRleHQgeD0iMzYyLjEwIiB5PSIxOTUuMTMiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZmlsbD0iIzJjYTAyYyI+bWF4IDU3LjUgb2htPC90ZXh0Pg0KPGxpbmUgeDE9IjgyLjAwIiB5MT0iODAuMDAiIHgyPSIxMDQuMDAiIHkyPSI4MC4wMCIgc3Ryb2tlPSIjMWY3N2I0IiBzdHJva2Utd2lkdGg9IjIiLz4NCjx0ZXh0IHg9IjExMC4wMCIgeT0iODQuMDAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+dHlwPC90ZXh0Pg0KPGxpbmUgeDE9IjgyLjAwIiB5MT0iOTcuMDAiIHgyPSIxMDQuMDAiIHkyPSI5Ny4wMCIgc3Ryb2tlPSIjZmY3ZjBlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1kYXNoYXJyYXk9IjUgNCIvPg0KPHRleHQgeD0iMTEwLjAwIiB5PSIxMDEuMDAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+bWluPC90ZXh0Pg0KPGxpbmUgeDE9IjgyLjAwIiB5MT0iMTE0LjAwIiB4Mj0iMTA0LjAwIiB5Mj0iMTE0LjAwIiBzdHJva2U9IiMyY2EwMmMiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWRhc2hhcnJheT0iMiA0Ii8+DQo8dGV4dCB4PSIxMTAuMDAiIHk9IjExOC4wMCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj5tYXg8L3RleHQ+DQo8dGV4dCB4PSIyNjIuMDAiIHk9IjM4Ni4wMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj5PdXRwdXQgdm9sdGFnZSAoVik8L3RleHQ+DQo8dGV4dCB0cmFuc2Zvcm09InRyYW5zbGF0ZSgyMi4wMCAyMDUuMDApIHJvdGF0ZSgtOTApIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPkN1cnJlbnQgKG1BKTwvdGV4dD4NCjxyZWN0IHg9IjQ5Mi4wMCIgeT0iNjIuMDAiIHdpZHRoPSIzODAuMDAiIGhlaWdodD0iMjg2LjAwIiBmaWxsPSIjZmJmYmZiIiBzdHJva2U9IiNjOGM4YzgiLz4NCjx0ZXh0IHg9IjUwMC4wMCIgeT0iNTAuMDAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgZm9udC13ZWlnaHQ9IjcwMCI+W1B1bGx1cF0gUmxvYWQgdG8gR05EPC90ZXh0Pg0KPGxpbmUgeDE9IjQ5Mi4wMCIgeTE9IjYyLjAwIiB4Mj0iNDkyLjAwIiB5Mj0iMzQ4LjAwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjQ5Mi4wMCIgeT0iMzY2LjAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiPi0xLjE8L3RleHQ+DQo8bGluZSB4MT0iNTg3LjAwIiB5MT0iNjIuMDAiIHgyPSI1ODcuMDAiIHkyPSIzNDguMDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNTg3LjAwIiB5PSIzNjYuMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCI+LTAuNTQ8L3RleHQ+DQo8bGluZSB4MT0iNjgyLjAwIiB5MT0iNjIuMDAiIHgyPSI2ODIuMDAiIHkyPSIzNDguMDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNjgyLjAwIiB5PSIzNjYuMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCI+MDwvdGV4dD4NCjxsaW5lIHgxPSI3NzcuMDAiIHkxPSI2Mi4wMCIgeDI9Ijc3Ny4wMCIgeTI9IjM0OC4wMCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI3NzcuMDAiIHk9IjM2Ni4wMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIj4wLjU0PC90ZXh0Pg0KPGxpbmUgeDE9Ijg3Mi4wMCIgeTE9IjYyLjAwIiB4Mj0iODcyLjAwIiB5Mj0iMzQ4LjAwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9Ijg3Mi4wMCIgeT0iMzY2LjAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiPjEuMTwvdGV4dD4NCjxsaW5lIHgxPSI0OTIuMDAiIHkxPSIzNDguMDAiIHgyPSI4NzIuMDAiIHkyPSIzNDguMDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNDg1LjAwIiB5PSIzNTIuMDAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCI+LTQ4PC90ZXh0Pg0KPGxpbmUgeDE9IjQ5Mi4wMCIgeTE9IjI3Ni41MCIgeDI9Ijg3Mi4wMCIgeTI9IjI3Ni41MCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI0ODUuMDAiIHk9IjI4MC41MCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIj4tMjg8L3RleHQ+DQo8bGluZSB4MT0iNDkyLjAwIiB5MT0iMjA1LjAwIiB4Mj0iODcyLjAwIiB5Mj0iMjA1LjAwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjQ4NS4wMCIgeT0iMjA5LjAwIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiPi04LjI8L3RleHQ+DQo8bGluZSB4MT0iNDkyLjAwIiB5MT0iMTMzLjUwIiB4Mj0iODcyLjAwIiB5Mj0iMTMzLjUwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjQ4NS4wMCIgeT0iMTM3LjUwIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiPjExPC90ZXh0Pg0KPGxpbmUgeDE9IjQ5Mi4wMCIgeTE9IjYyLjAwIiB4Mj0iODcyLjAwIiB5Mj0iNjIuMDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNDg1LjAwIiB5PSI2Ni4wMCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIj4zMTwvdGV4dD4NCjxsaW5lIHgxPSI2ODIuMDAiIHkxPSI2MiIgeDI9IjY4Mi4wMCIgeTI9IjM0OCIgc3Ryb2tlPSIjNzc3IiBzdHJva2UtZGFzaGFycmF5PSI0IDQiLz4NCjxsaW5lIHgxPSI0OTIuMCIgeTE9IjE3NS4xMCIgeDI9Ijg3Mi4wIiB5Mj0iMTc1LjEwIiBzdHJva2U9IiM3NzciIHN0cm9rZS1kYXNoYXJyYXk9IjQgNCIvPg0KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzFmNzdiNCIgc3Ryb2tlLXdpZHRoPSIxLjgiIHBvaW50cz0iNTA2LjA3LDEwMi40OSA2ODIuMDAsMTc1LjEwIDg1Ny45MywyNDcuNzEiLz4NCjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9IiNmZjdmMGUiIHN0cm9rZS13aWR0aD0iMS44IiBzdHJva2UtZGFzaGFycmF5PSI1IDQiIHBvaW50cz0iNTA2LjA3LDg5LjY4IDY4Mi4wMCwxNzUuMTAgODU3LjkzLDI2MC41MiIvPg0KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzJjYTAyYyIgc3Ryb2tlLXdpZHRoPSIxLjgiIHN0cm9rZS1kYXNoYXJyYXk9IjIgNCIgcG9pbnRzPSI1MDYuMDcsMTExLjk2IDY4Mi4wMCwxNzUuMTAgODU3LjkzLDIzOC4yNCIvPg0KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzFmNzdiNCIgc3Ryb2tlLXdpZHRoPSIxLjEiIHN0cm9rZS1kYXNoYXJyYXk9IjYgNCIgcG9pbnRzPSI0OTIuMDAsMzI2LjEzIDQ5Ni44MSwzMjQuMTUgNTAxLjYyLDMyMi4xNiA1MDYuNDMsMzIwLjE4IDUxMS4yNCwzMTguMTkgNTE2LjA1LDMxNi4yMCA1MjAuODYsMzE0LjIyIDUyNS42NywzMTIuMjMgNTMwLjQ4LDMxMC4yNSA1MzUuMjksMzA4LjI2IDU0MC4xMCwzMDYuMjggNTQ0LjkxLDMwNC4yOSA1NDkuNzIsMzAyLjMxIDU1NC41MywzMDAuMzIgNTU5LjM0LDI5OC4zNCA1NjQuMTUsMjk2LjM1IDU2OC45NiwyOTQuMzcgNTczLjc3LDI5Mi4zOCA1NzguNTgsMjkwLjQwIDU4My4zOSwyODguNDEgNTg4LjIwLDI4Ni40MyA1OTMuMDEsMjg0LjQ0IDU5Ny44MiwyODIuNDUgNjAyLjYzLDI4MC40NyA2MDcuNDQsMjc4LjQ4IDYxMi4yNSwyNzYuNTAgNjE3LjA2LDI3NC41MSA2MjEuODcsMjcyLjUzIDYyNi42OCwyNzAuNTQgNjMxLjQ5LDI2OC41NiA2MzYuMzAsMjY2LjU3IDY0MS4xMSwyNjQuNTkgNjQ1LjkyLDI2Mi42MCA2NTAuNzMsMjYwLjYyIDY1NS41NCwyNTguNjMgNjYwLjM1LDI1Ni42NSA2NjUuMTYsMjU0LjY2IDY2OS45NywyNTIuNjcgNjc0Ljc4LDI1MC42OSA2NzkuNTksMjQ4LjcwIDY4NC40MSwyNDYuNzIgNjg5LjIyLDI0NC43MyA2OTQuMDMsMjQyLjc1IDY5OC44NCwyNDAuNzYgNzAzLjY1LDIzOC43OCA3MDguNDYsMjM2Ljc5IDcxMy4yNywyMzQuODEgNzE4LjA4LDIzMi44MiA3MjIuODksMjMwLjg0IDcyNy43MCwyMjguODUgNzMyLjUxLDIyNi44NyA3MzcuMzIsMjI0Ljg4IDc0Mi4xMywyMjIuOTAgNzQ2Ljk0LDIyMC45MSA3NTEuNzUsMjE4LjkyIDc1Ni41NiwyMTYuOTQgNzYxLjM3LDIxNC45NSA3NjYuMTgsMjEyLjk3IDc3MC45OSwyMTAuOTggNzc1LjgwLDIwOS4wMCA3ODAuNjEsMjA3LjAxIDc4NS40MiwyMDUuMDMgNzkwLjIzLDIwMy4wNCA3OTUuMDQsMjAxLjA2IDc5OS44NSwxOTkuMDcgODA0LjY2LDE5Ny4wOSA4MDkuNDcsMTk1LjEwIDgxNC4yOCwxOTMuMTIgODE5LjA5LDE5MS4xMyA4MjMuOTAsMTg5LjE0IDgyOC43MSwxODcuMTYgODMzLjUyLDE4NS4xNyA4MzguMzMsMTgzLjE5IDg0My4xNCwxODEuMjAgODQ3Ljk1LDE3OS4yMiA4NTIuNzYsMTc3LjIzIDg1Ny41NywxNzUuMjUgODYyLjM4LDE3My4yNiA4NjcuMTksMTcxLjI4IDg3Mi4wMCwxNjkuMjkiLz4NCjxjaXJjbGUgY3g9Ijc2OS45NiIgY3k9IjIxMS40MSIgcj0iNC42IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiMxZjc3YjQiIHN0cm9rZS13aWR0aD0iMiIvPg0KPHRleHQgeD0iNzc1Ljk2IiB5PSIyMDUuNDEiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZmlsbD0iIzFmNzdiNCI+dHlwIDUwIG9obTwvdGV4dD4NCjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9IiNmZjdmMGUiIHN0cm9rZS13aWR0aD0iMS4xIiBzdHJva2UtZGFzaGFycmF5PSI2IDQiIHBvaW50cz0iNDkyLjAwLDMyNi4xMyA0OTYuODEsMzI0LjE1IDUwMS42MiwzMjIuMTYgNTA2LjQzLDMyMC4xOCA1MTEuMjQsMzE4LjE5IDUxNi4wNSwzMTYuMjAgNTIwLjg2LDMxNC4yMiA1MjUuNjcsMzEyLjIzIDUzMC40OCwzMTAuMjUgNTM1LjI5LDMwOC4yNiA1NDAuMTAsMzA2LjI4IDU0NC45MSwzMDQuMjkgNTQ5LjcyLDMwMi4zMSA1NTQuNTMsMzAwLjMyIDU1OS4zNCwyOTguMzQgNTY0LjE1LDI5Ni4zNSA1NjguOTYsMjk0LjM3IDU3My43NywyOTIuMzggNTc4LjU4LDI5MC40MCA1ODMuMzksMjg4LjQxIDU4OC4yMCwyODYuNDMgNTkzLjAxLDI4NC40NCA1OTcuODIsMjgyLjQ1IDYwMi42MywyODAuNDcgNjA3LjQ0LDI3OC40OCA2MTIuMjUsMjc2LjUwIDYxNy4wNiwyNzQuNTEgNjIxLjg3LDI3Mi41MyA2MjYuNjgsMjcwLjU0IDYzMS40OSwyNjguNTYgNjM2LjMwLDI2Ni41NyA2NDEuMTEsMjY0LjU5IDY0NS45MiwyNjIuNjAgNjUwLjczLDI2MC42MiA2NTUuNTQsMjU4LjYzIDY2MC4zNSwyNTYuNjUgNjY1LjE2LDI1NC42NiA2NjkuOTcsMjUyLjY3IDY3NC43OCwyNTAuNjkgNjc5LjU5LDI0OC43MCA2ODQuNDEsMjQ2LjcyIDY4OS4yMiwyNDQuNzMgNjk0LjAzLDI0Mi43NSA2OTguODQsMjQwLjc2IDcwMy42NSwyMzguNzggNzA4LjQ2LDIzNi43OSA3MTMuMjcsMjM0LjgxIDcxOC4wOCwyMzIuODIgNzIyLjg5LDIzMC44NCA3MjcuNzAsMjI4Ljg1IDczMi41MSwyMjYuODcgNzM3LjMyLDIyNC44OCA3NDIuMTMsMjIyLjkwIDc0Ni45NCwyMjAuOTEgNzUxLjc1LDIxOC45MiA3NTYuNTYsMjE2Ljk0IDc2MS4zNywyMTQuOTUgNzY2LjE4LDIxMi45NyA3NzAuOTksMjEwLjk4IDc3NS44MCwyMDkuMDAgNzgwLjYxLDIwNy4wMSA3ODUuNDIsMjA1LjAzIDc5MC4yMywyMDMuMDQgNzk1LjA0LDIwMS4wNiA3OTkuODUsMTk5LjA3IDgwNC42NiwxOTcuMDkgODA5LjQ3LDE5NS4xMCA4MTQuMjgsMTkzLjEyIDgxOS4wOSwxOTEuMTMgODIzLjkwLDE4OS4xNCA4MjguNzEsMTg3LjE2IDgzMy41MiwxODUuMTcgODM4LjMzLDE4My4xOSA4NDMuMTQsMTgxLjIwIDg0Ny45NSwxNzkuMjIgODUyLjc2LDE3Ny4yMyA4NTcuNTcsMTc1LjI1IDg2Mi4zOCwxNzMuMjYgODY3LjE5LDE3MS4yOCA4NzIuMDAsMTY5LjI5Ii8+DQo8Y2lyY2xlIGN4PSI3NjIuODMiIGN5PSIyMTQuMzUiIHI9IjQuNiIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjZmY3ZjBlIiBzdHJva2Utd2lkdGg9IjIiLz4NCjx0ZXh0IHg9Ijc2OC44MyIgeT0iMjA4LjM1IiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiNmZjdmMGUiPm1pbiA0Mi41IG9obTwvdGV4dD4NCjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9IiMyY2EwMmMiIHN0cm9rZS13aWR0aD0iMS4xIiBzdHJva2UtZGFzaGFycmF5PSI2IDQiIHBvaW50cz0iNDkyLjAwLDMyNi4xMyA0OTYuODEsMzI0LjE1IDUwMS42MiwzMjIuMTYgNTA2LjQzLDMyMC4xOCA1MTEuMjQsMzE4LjE5IDUxNi4wNSwzMTYuMjAgNTIwLjg2LDMxNC4yMiA1MjUuNjcsMzEyLjIzIDUzMC40OCwzMTAuMjUgNTM1LjI5LDMwOC4yNiA1NDAuMTAsMzA2LjI4IDU0NC45MSwzMDQuMjkgNTQ5LjcyLDMwMi4zMSA1NTQuNTMsMzAwLjMyIDU1OS4zNCwyOTguMzQgNTY0LjE1LDI5Ni4zNSA1NjguOTYsMjk0LjM3IDU3My43NywyOTIuMzggNTc4LjU4LDI5MC40MCA1ODMuMzksMjg4LjQxIDU4OC4yMCwyODYuNDMgNTkzLjAxLDI4NC40NCA1OTcuODIsMjgyLjQ1IDYwMi42MywyODAuNDcgNjA3LjQ0LDI3OC40OCA2MTIuMjUsMjc2LjUwIDYxNy4wNiwyNzQuNTEgNjIxLjg3LDI3Mi41MyA2MjYuNjgsMjcwLjU0IDYzMS40OSwyNjguNTYgNjM2LjMwLDI2Ni41NyA2NDEuMTEsMjY0LjU5IDY0NS45MiwyNjIuNjAgNjUwLjczLDI2MC42MiA2NTUuNTQsMjU4LjYzIDY2MC4zNSwyNTYuNjUgNjY1LjE2LDI1NC42NiA2NjkuOTcsMjUyLjY3IDY3NC43OCwyNTAuNjkgNjc5LjU5LDI0OC43MCA2ODQuNDEsMjQ2LjcyIDY4OS4yMiwyNDQuNzMgNjk0LjAzLDI0Mi43NSA2OTguODQsMjQwLjc2IDcwMy42NSwyMzguNzggNzA4LjQ2LDIzNi43OSA3MTMuMjcsMjM0LjgxIDcxOC4wOCwyMzIuODIgNzIyLjg5LDIzMC44NCA3MjcuNzAsMjI4Ljg1IDczMi41MSwyMjYuODcgNzM3LjMyLDIyNC44OCA3NDIuMTMsMjIyLjkwIDc0Ni45NCwyMjAuOTEgNzUxLjc1LDIxOC45MiA3NTYuNTYsMjE2Ljk0IDc2MS4zNywyMTQuOTUgNzY2LjE4LDIxMi45NyA3NzAuOTksMjEwLjk4IDc3NS44MCwyMDkuMDAgNzgwLjYxLDIwNy4wMSA3ODUuNDIsMjA1LjAzIDc5MC4yMywyMDMuMDQgNzk1LjA0LDIwMS4wNiA3OTkuODUsMTk5LjA3IDgwNC42NiwxOTcuMDkgODA5LjQ3LDE5NS4xMCA4MTQuMjgsMTkzLjEyIDgxOS4wOSwxOTEuMTMgODIzLjkwLDE4OS4xNCA4MjguNzEsMTg3LjE2IDgzMy41MiwxODUuMTcgODM4LjMzLDE4My4xOSA4NDMuMTQsMTgxLjIwIDg0Ny45NSwxNzkuMjIgODUyLjc2LDE3Ny4yMyA4NTcuNTcsMTc1LjI1IDg2Mi4zOCwxNzMuMjYgODY3LjE5LDE3MS4yOCA4NzIuMDAsMTY5LjI5Ii8+DQo8Y2lyY2xlIGN4PSI3NzYuMTAiIGN5PSIyMDguODciIHI9IjQuNiIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMmNhMDJjIiBzdHJva2Utd2lkdGg9IjIiLz4NCjx0ZXh0IHg9Ijc4Mi4xMCIgeT0iMjAyLjg3IiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiMyY2EwMmMiPm1heCA1Ny41IG9obTwvdGV4dD4NCjxsaW5lIHgxPSI1MDIuMDAiIHkxPSI4MC4wMCIgeDI9IjUyNC4wMCIgeTI9IjgwLjAwIiBzdHJva2U9IiMxZjc3YjQiIHN0cm9rZS13aWR0aD0iMiIvPg0KPHRleHQgeD0iNTMwLjAwIiB5PSI4NC4wMCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj50eXA8L3RleHQ+DQo8bGluZSB4MT0iNTAyLjAwIiB5MT0iOTcuMDAiIHgyPSI1MjQuMDAiIHkyPSI5Ny4wMCIgc3Ryb2tlPSIjZmY3ZjBlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1kYXNoYXJyYXk9IjUgNCIvPg0KPHRleHQgeD0iNTMwLjAwIiB5PSIxMDEuMDAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+bWluPC90ZXh0Pg0KPGxpbmUgeDE9IjUwMi4wMCIgeTE9IjExNC4wMCIgeDI9IjUyNC4wMCIgeTI9IjExNC4wMCIgc3Ryb2tlPSIjMmNhMDJjIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1kYXNoYXJyYXk9IjIgNCIvPg0KPHRleHQgeD0iNTMwLjAwIiB5PSIxMTguMDAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+bWF4PC90ZXh0Pg0KPHRleHQgeD0iNjgyLjAwIiB5PSIzODYuMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+VmNjLXJlbGF0aXZlIHRhYmxlIHZvbHRhZ2UgKFYpPC90ZXh0Pg0KPHRleHQgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNDQyLjAwIDIwNS4wMCkgcm90YXRlKC05MCkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+Q3VycmVudCAobUEpPC90ZXh0Pg0KPHJlY3QgeD0iNzIuMDAiIHk9IjQxOC4wMCIgd2lkdGg9IjgwMC4wMCIgaGVpZ2h0PSIxNDQuMDAiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0iI2M4YzhjOCIvPg0KPHRleHQgeD0iODIuMDAiIHk9IjQzNi4wMCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iNzAwIj5PcGVyYXRpbmctcG9pbnQgc3VtbWFyeTwvdGV4dD4NCjx0ZXh0IHg9IjgyLjAwIiB5PSI0NTQuMDAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzMzMyI+VGFibGU8L3RleHQ+DQo8dGV4dCB4PSIxNzQuMDAiIHk9IjQ1NC4wMCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjMzMzIj5Db3JuZXI8L3RleHQ+DQo8dGV4dCB4PSIyNDIuMDAiIHk9IjQ1NC4wMCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjMzMzIj5Wb3V0PC90ZXh0Pg0KPHRleHQgeD0iMzMyLjAwIiB5PSI0NTQuMDAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzMzMyI+SW9wPC90ZXh0Pg0KPHRleHQgeD0iNDIyLjAwIiB5PSI0NTQuMDAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzMzMyI+Wm91dDwvdGV4dD4NCjx0ZXh0IHg9IjUxMi4wMCIgeT0iNDU0LjAwIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiMzMzMiPlJzZXJpZXM8L3RleHQ+DQo8dGV4dCB4PSI4Mi4wMCIgeT0iNDczLjAwIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiMxZjc3YjQiPnB1bGxkb3duPC90ZXh0Pg0KPHRleHQgeD0iMTc0LjAwIiB5PSI0NzMuMDAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZmlsbD0iIzFmNzdiNCI+dHlwPC90ZXh0Pg0KPHRleHQgeD0iMjQyLjAwIiB5PSI0NzMuMDAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZmlsbD0iIzFmNzdiNCI+MC41IFY8L3RleHQ+DQo8dGV4dCB4PSIzMzIuMDAiIHk9IjQ3My4wMCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIiBmaWxsPSIjMWY3N2I0Ij4xMCBtQTwvdGV4dD4NCjx0ZXh0IHg9IjQyMi4wMCIgeT0iNDczLjAwIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiMxZjc3YjQiPjUwIG9obTwvdGV4dD4NCjx0ZXh0IHg9IjUxMi4wMCIgeT0iNDczLjAwIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiMxZjc3YjQiPjAgb2htPC90ZXh0Pg0KPHRleHQgeD0iODIuMDAiIHk9IjQ5Mi4wMCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIiBmaWxsPSIjZmY3ZjBlIj5wdWxsZG93bjwvdGV4dD4NCjx0ZXh0IHg9IjE3NC4wMCIgeT0iNDkyLjAwIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiNmZjdmMGUiPm1pbjwvdGV4dD4NCjx0ZXh0IHg9IjI0Mi4wMCIgeT0iNDkyLjAwIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiNmZjdmMGUiPjAuNDU5NSBWPC90ZXh0Pg0KPHRleHQgeD0iMzMyLjAwIiB5PSI0OTIuMDAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZmlsbD0iI2ZmN2YwZSI+MTEgbUE8L3RleHQ+DQo8dGV4dCB4PSI0MjIuMDAiIHk9IjQ5Mi4wMCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIiBmaWxsPSIjZmY3ZjBlIj40Mi41IG9obTwvdGV4dD4NCjx0ZXh0IHg9IjUxMi4wMCIgeT0iNDkyLjAwIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiNmZjdmMGUiPjcuNDk5IG9obTwvdGV4dD4NCjx0ZXh0IHg9IjgyLjAwIiB5PSI1MTEuMDAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZmlsbD0iIzJjYTAyYyI+cHVsbGRvd248L3RleHQ+DQo8dGV4dCB4PSIxNzQuMDAiIHk9IjUxMS4wMCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIiBmaWxsPSIjMmNhMDJjIj5tYXg8L3RleHQ+DQo8dGV4dCB4PSIyNDIuMDAiIHk9IjUxMS4wMCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIiBmaWxsPSIjMmNhMDJjIj4wLjUzNDkgVjwvdGV4dD4NCjx0ZXh0IHg9IjMzMi4wMCIgeT0iNTExLjAwIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiMyY2EwMmMiPjkuMyBtQTwvdGV4dD4NCjx0ZXh0IHg9IjQyMi4wMCIgeT0iNTExLjAwIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiMyY2EwMmMiPjU3LjUgb2htPC90ZXh0Pg0KPHRleHQgeD0iNTEyLjAwIiB5PSI1MTEuMDAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZmlsbD0iIzJjYTAyYyI+LTcuNTAxIG9obTwvdGV4dD4NCjx0ZXh0IHg9IjgyLjAwIiB5PSI1MzAuMDAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZmlsbD0iIzFmNzdiNCI+cHVsbHVwPC90ZXh0Pg0KPHRleHQgeD0iMTc0LjAwIiB5PSI1MzAuMDAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZmlsbD0iIzFmNzdiNCI+dHlwPC90ZXh0Pg0KPHRleHQgeD0iMjQyLjAwIiB5PSI1MzAuMDAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZmlsbD0iIzFmNzdiNCI+MC41IFY8L3RleHQ+DQo8dGV4dCB4PSIzMzIuMDAiIHk9IjUzMC4wMCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIiBmaWxsPSIjMWY3N2I0Ij4tMTAgbUE8L3RleHQ+DQo8dGV4dCB4PSI0MjIuMDAiIHk9IjUzMC4wMCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIiBmaWxsPSIjMWY3N2I0Ij41MCBvaG08L3RleHQ+DQo8dGV4dCB4PSI1MTIuMDAiIHk9IjUzMC4wMCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIiBmaWxsPSIjMWY3N2I0Ij4wIG9obTwvdGV4dD4NCjx0ZXh0IHg9IjgyLjAwIiB5PSI1NDkuMDAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZmlsbD0iI2ZmN2YwZSI+cHVsbHVwPC90ZXh0Pg0KPHRleHQgeD0iMTc0LjAwIiB5PSI1NDkuMDAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZmlsbD0iI2ZmN2YwZSI+bWluPC90ZXh0Pg0KPHRleHQgeD0iMjQyLjAwIiB5PSI1NDkuMDAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZmlsbD0iI2ZmN2YwZSI+MC41NDA1IFY8L3RleHQ+DQo8dGV4dCB4PSIzMzIuMDAiIHk9IjU0OS4wMCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIiBmaWxsPSIjZmY3ZjBlIj4tMTEgbUE8L3RleHQ+DQo8dGV4dCB4PSI0MjIuMDAiIHk9IjU0OS4wMCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIiBmaWxsPSIjZmY3ZjBlIj40Mi41IG9obTwvdGV4dD4NCjx0ZXh0IHg9IjUxMi4wMCIgeT0iNTQ5LjAwIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiNmZjdmMGUiPjcuNDk5IG9obTwvdGV4dD4NCjx0ZXh0IHg9IjgyLjAwIiB5PSI1NjguMDAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZmlsbD0iIzJjYTAyYyI+cHVsbHVwPC90ZXh0Pg0KPHRleHQgeD0iMTc0LjAwIiB5PSI1NjguMDAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZmlsbD0iIzJjYTAyYyI+bWF4PC90ZXh0Pg0KPHRleHQgeD0iMjQyLjAwIiB5PSI1NjguMDAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZmlsbD0iIzJjYTAyYyI+MC40NjUxIFY8L3RleHQ+DQo8dGV4dCB4PSIzMzIuMDAiIHk9IjU2OC4wMCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIiBmaWxsPSIjMmNhMDJjIj4tOS4zIG1BPC90ZXh0Pg0KPHRleHQgeD0iNDIyLjAwIiB5PSI1NjguMDAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZmlsbD0iIzJjYTAyYyI+NTcuNSBvaG08L3RleHQ+DQo8dGV4dCB4PSI1MTIuMDAiIHk9IjU2OC4wMCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIiBmaWxsPSIjMmNhMDJjIj4tNy41MDEgb2htPC90ZXh0Pg0KPC9zdmc+" alt="Zout load-line curves for abi_out" loading="lazy"></p>
+<h3>Model: <code>refclk</code></h3>
+<ul>
+<li>Candidate model score from model-scoped checked items: IQ3</li>
+<li>Model type: Input</li>
+<li>Waveform tables: 0</li>
+</ul>
+<h4>Visual Curves</h4>
+<h5>I-V Clamp Curves</h5>
+<a id="curve-refclk-iv"></a>
+<p><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDAiIGhlaWdodD0iNTYwIiB2aWV3Qm94PSIwIDAgODAwIDU2MCI+DQo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmZmZmZmIi8+DQo8dGV4dCB4PSI3OCIgeT0iMjUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZm9udC13ZWlnaHQ9IjcwMCI+cmVmY2xrIEktViBDbGFtcCBDdXJ2ZXM8L3RleHQ+DQo8cmVjdCB4PSI3OCIgeT0iNTIiIHdpZHRoPSI2OTQiIGhlaWdodD0iMzQ4IiBmaWxsPSIjZmJmYmZiIiBzdHJva2U9IiNjOGM4YzgiLz4NCjxsaW5lIHgxPSI3OC4wMCIgeTE9IjUyIiB4Mj0iNzguMDAiIHkyPSI0MDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzguMDAiIHk9IjQyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4tMS45PC90ZXh0Pg0KPGxpbmUgeDE9IjIxNi44MCIgeTE9IjUyIiB4Mj0iMjE2LjgwIiB5Mj0iNDAwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjIxNi44MCIgeT0iNDIyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPi0xLjE8L3RleHQ+DQo8bGluZSB4MT0iMzU1LjYwIiB5MT0iNTIiIHgyPSIzNTUuNjAiIHkyPSI0MDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iMzU1LjYwIiB5PSI0MjIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+LTAuMzc0PC90ZXh0Pg0KPGxpbmUgeDE9IjQ5NC40MCIgeTE9IjUyIiB4Mj0iNDk0LjQwIiB5Mj0iNDAwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjQ5NC40MCIgeT0iNDIyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPjAuMzc0PC90ZXh0Pg0KPGxpbmUgeDE9IjYzMy4yMCIgeTE9IjUyIiB4Mj0iNjMzLjIwIiB5Mj0iNDAwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjYzMy4yMCIgeT0iNDIyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPjEuMTwvdGV4dD4NCjxsaW5lIHgxPSI3NzIuMDAiIHkxPSI1MiIgeDI9Ijc3Mi4wMCIgeTI9IjQwMCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI3NzIuMDAiIHk9IjQyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4xLjk8L3RleHQ+DQo8bGluZSB4MT0iNzgiIHkxPSI0MDAuMDAiIHgyPSI3NzIiIHkyPSI0MDAuMDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzAiIHk9IjQwNC4wMCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4tMC43ODI8L3RleHQ+DQo8bGluZSB4MT0iNzgiIHkxPSIzMzAuNDAiIHgyPSI3NzIiIHkyPSIzMzAuNDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzAiIHk9IjMzNC40MCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4tMC40Nzk8L3RleHQ+DQo8bGluZSB4MT0iNzgiIHkxPSIyNjAuODAiIHgyPSI3NzIiIHkyPSIyNjAuODAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzAiIHk9IjI2NC44MCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4tMC4xNzU8L3RleHQ+DQo8bGluZSB4MT0iNzgiIHkxPSIxOTEuMjAiIHgyPSI3NzIiIHkyPSIxOTEuMjAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzAiIHk9IjE5NS4yMCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4wLjEyODwvdGV4dD4NCjxsaW5lIHgxPSI3OCIgeTE9IjEyMS42MCIgeDI9Ijc3MiIgeTI9IjEyMS42MCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI3MCIgeT0iMTI1LjYwIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPjAuNDMyPC90ZXh0Pg0KPGxpbmUgeDE9Ijc4IiB5MT0iNTIuMDAiIHgyPSI3NzIiIHkyPSI1Mi4wMCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI3MCIgeT0iNTYuMDAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+MC43MzU8L3RleHQ+DQo8bGluZSB4MT0iNDI1LjAwIiB5MT0iNTIiIHgyPSI0MjUuMDAiIHkyPSI0MDAiIHN0cm9rZT0iIzc3NyIgc3Ryb2tlLWRhc2hhcnJheT0iNCA0Ii8+DQo8bGluZSB4MT0iNzgiIHkxPSIyMjAuNjMiIHgyPSI3NzIiIHkyPSIyMjAuNjMiIHN0cm9rZT0iIzc3NyIgc3Ryb2tlLWRhc2hhcnJheT0iNCA0Ii8+DQo8bGluZSB4MT0iOTEuMzUiIHkxPSI1MiIgeDI9IjkxLjM1IiB5Mj0iNDAwIiBzdHJva2U9IiM1NTUiIHN0cm9rZS1kYXNoYXJyYXk9IjIgNCIvPg0KPHRleHQgeD0iOTUuMzUiIHk9IjY2IiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZpbGw9IiM1NTUiPi1WY2M8L3RleHQ+DQo8bGluZSB4MT0iNzU4LjY1IiB5MT0iNTIiIHgyPSI3NTguNjUiIHkyPSI0MDAiIHN0cm9rZT0iIzU1NSIgc3Ryb2tlLWRhc2hhcnJheT0iMiA0Ii8+DQo8dGV4dCB4PSI3NjIuNjUiIHk9IjY2IiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZpbGw9IiM1NTUiPlZjYzwvdGV4dD4NCjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9IiMwZjc2NmUiIHN0cm9rZS13aWR0aD0iMi44IiBvcGFjaXR5PSIwLjk1IiBzdHJva2UtZGFzaGFycmF5PSI2IDMiIHBvaW50cz0iOTEuMzUsMzc2LjAwIDk4LjIwLDM2OS4xOSAxMDUuMDYsMzYyLjM1IDExMS45MiwzNTUuNTYgMTE4Ljc4LDM0OC43OCAxMjUuNjQsMzQyLjAxIDEzMi41MCwzMzUuMjcgMTM5LjM2LDMyOC41MiAxNDYuMjEsMzIxLjgzIDE1My4wNywzMTUuMTcgMTU5LjkzLDMwOC41NSAxNjYuNzksMzAxLjk2IDE3My42NSwyOTUuNDMgMTgwLjUxLDI4OC45NiAxODcuMzYsMjgyLjU4IDE5NC4yMiwyNzYuMzAgMjAxLjA4LDI3MC4xNSAyMDcuOTQsMjY0LjE3IDIxNC44MCwyNTguNDEgMjIxLjY2LDI1Mi45NSAyMjguNTEsMjQ3Ljg4IDIzNS4zNywyNDMuMzUgMjQyLjIzLDIzOS40NSAyNDkuMDksMjM2LjMxIDI1NS45NSwyMzMuOTMgMjYyLjgxLDIzMi4yMCAyNjkuNjcsMjMwLjg4IDI3Ni41MiwyMjkuNzUgMjgzLjM4LDIyOC43MCAyOTAuMjQsMjI3LjcwIDI5Ny4xMCwyMjYuNzUgMzAzLjk2LDIyNS44NCAzMTAuODIsMjI0Ljk4IDMxNy42NywyMjQuMTkgMzI0LjUzLDIyMy40NSAzMzEuMzksMjIyLjc5IDMzOC4yNSwyMjIuMjEgMzQ1LjExLDIyMS43MiAzNTEuOTcsMjIxLjMzIDM1OC44MywyMjEuMDMgMzY1LjY4LDIyMC44NCAzNzIuNTQsMjIwLjcyIDM3OS40MCwyMjAuNjYgMzg2LjI2LDIyMC42NCAzOTMuMTIsMjIwLjY0IDM5OS45OCwyMjAuNjQgNDA2LjgzLDIyMC42NCA0MTMuNjksMjIwLjY0IDQyMC41NSwyMjAuNjQgNDI3LjQxLDIyMC42MyA0MzQuMjcsMjIwLjYzIDQ0MS4xMywyMjAuNjMgNDQ3Ljk5LDIyMC42MyA0NTQuODQsMjIwLjYzIDQ2MS43MCwyMjAuNjMgNDY4LjU2LDIyMC42MyA0NzUuNDIsMjIwLjYzIDQ4Mi4yOCwyMjAuNjMgNDg5LjE0LDIyMC42MyA0OTUuOTksMjIwLjYzIDUwMi44NSwyMjAuNjMgNTA5LjcxLDIyMC42MyA1MTYuNTcsMjIwLjYzIDUyMy40MywyMjAuNjMgNTMwLjI5LDIyMC42MyA1MzcuMTQsMjIwLjYzIDU0NC4wMCwyMjAuNjMgNTUwLjg2LDIyMC42MyA1NTcuNzIsMjIwLjYzIDU2NC41OCwyMjAuNjMgNTcxLjQ0LDIyMC42MyA1NzguMzAsMjIwLjYzIDU4NS4xNSwyMjAuNjMgNTkyLjAxLDIyMC42MyA1OTguODcsMjIwLjYzIDYwNS43MywyMjAuNjMgNjEyLjU5LDIyMC42MyA2MTkuNDUsMjIwLjYzIDYyNi4zMCwyMjAuNjMgNjMzLjE2LDIyMC42MyA2NDAuMDIsMjIwLjYzIDY0Ni44OCwyMjAuNjMgNjUzLjc0LDIyMC42MyA2NjAuNjAsMjIwLjYzIDY2Ny40NiwyMjAuNjMgNjc0LjMxLDIyMC42MyA2ODEuMTcsMjIwLjYzIDY4OC4wMywyMjAuNjMgNjk0Ljg5LDIyMC42MyA3MDEuNzUsMjIwLjYzIDcwOC42MSwyMjAuNjMgNzE1LjQ2LDIyMC42MyA3MjIuMzIsMjIwLjYzIDcyOS4xOCwyMjAuNjMgNzM2LjA0LDIyMC42MyA3NDIuOTAsMjIwLjYzIDc0OS43NiwyMjAuNjMgNzU4LjY1LDIyMC42MyIvPg0KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzdjMmQxMiIgc3Ryb2tlLXdpZHRoPSIyLjgiIG9wYWNpdHk9IjAuOTUiIHN0cm9rZS1kYXNoYXJyYXk9IjYgMyIgcG9pbnRzPSI5MS4zNSw3Ni4wMCAxMDAuMjQsODQuNzIgMTA3LjEwLDkxLjQ0IDExMy45Niw5OC4xMyAxMjAuODIsMTA0LjgxIDEyNy42OCwxMTEuNDYgMTM0LjU0LDExOC4wOSAxNDEuMzksMTI0LjY3IDE0OC4yNSwxMzEuMjUgMTU1LjExLDEzNy43OSAxNjEuOTcsMTQ0LjI4IDE2OC44MywxNTAuNzAgMTc1LjY5LDE1Ny4wOCAxODIuNTQsMTYzLjM2IDE4OS40MCwxNjkuNTYgMTk2LjI2LDE3NS42MyAyMDMuMTIsMTgxLjU1IDIwOS45OCwxODcuMjQgMjE2Ljg0LDE5Mi42NyAyMjMuNzAsMTk3LjcxIDIzMC41NSwyMDIuMjUgMjM3LjQxLDIwNi4xNyAyNDQuMjcsMjA5LjMyIDI1MS4xMywyMTEuNjUgMjU3Ljk5LDIxMy4yNSAyNjQuODUsMjE0LjM1IDI3MS43MCwyMTUuMTYgMjc4LjU2LDIxNS44MiAyODUuNDIsMjE2LjQxIDI5Mi4yOCwyMTYuOTUgMjk5LjE0LDIxNy40NSAzMDYuMDAsMjE3LjkwIDMxMi44NiwyMTguMzIgMzE5LjcxLDIxOC42OSAzMjYuNTcsMjE5LjAzIDMzMy40MywyMTkuMzQgMzQwLjI5LDIxOS42MiAzNDcuMTUsMjE5Ljg2IDM1NC4wMSwyMjAuMDUgMzYwLjg2LDIyMC4yMCAzNjcuNzIsMjIwLjMyIDM3NC41OCwyMjAuNDEgMzgxLjQ0LDIyMC40OCAzODguMzAsMjIwLjU0IDM5NS4xNiwyMjAuNTggNDAyLjAxLDIyMC42MCA0MDguODcsMjIwLjYyIDQxNS43MywyMjAuNjMgNDIyLjU5LDIyMC42MyA0MjkuNDUsMjIwLjYzIDc1OC42NSwyMjAuNjMiLz4NCjxsaW5lIHgxPSI4OCIgeTE9IjcwIiB4Mj0iMTEwIiB5Mj0iNzAiIHN0cm9rZT0iIzBmNzY2ZSIgc3Ryb2tlLXdpZHRoPSIyLjgiIHN0cm9rZS1kYXNoYXJyYXk9IjYgMyIvPg0KPHRleHQgeD0iMTE2IiB5PSI3NCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIj5bR05EIENsYW1wXTwvdGV4dD4NCjxsaW5lIHgxPSI4OCIgeTE9Ijg4IiB4Mj0iMTEwIiB5Mj0iODgiIHN0cm9rZT0iIzdjMmQxMiIgc3Ryb2tlLXdpZHRoPSIyLjgiIHN0cm9rZS1kYXNoYXJyYXk9IjYgMyIvPg0KPHRleHQgeD0iMTE2IiB5PSI5MiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIj5bUE9XRVIgQ2xhbXBdPC90ZXh0Pg0KPHRleHQgeD0iNDI1LjAwIiB5PSI0NDQuMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiI+VGFibGUgdm9sdGFnZSAoVik8L3RleHQ+DQo8dGV4dCB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxOCAyMjYuMDApIHJvdGF0ZSgtOTApIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiPkN1cnJlbnQgKEEpPC90ZXh0Pg0KPHRleHQgeD0iNDIwIiB5PSI0MiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjNTU1Ij50aGljayBkYXNoZWQ9Y29tYmluZWQgdHlwIGN1cnZlczwvdGV4dD4NCjwvc3ZnPg==" alt="I-V Clamp Curves for refclk" loading="lazy"></p>
+<h5>I-V clamp detail</h5>
+<a id="curve-refclk-iv-clamp"></a>
+<p>Related WARN/FAIL QA items: <a href="#check-5-3-10">5.3.10</a></p>
+<p><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDAiIGhlaWdodD0iNTIwIiB2aWV3Qm94PSIwIDAgODAwIDUyMCI+DQo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmZmZmZmIi8+DQo8dGV4dCB4PSI3OCIgeT0iMjUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZm9udC13ZWlnaHQ9IjcwMCI+cmVmY2xrIEktViBDbGFtcCBEZXRhaWw8L3RleHQ+DQo8cmVjdCB4PSI3OCIgeT0iNTQiIHdpZHRoPSI2OTAiIGhlaWdodD0iMzA2IiBmaWxsPSIjZmJmYmZiIiBzdHJva2U9IiNjOGM4YzgiLz4NCjxsaW5lIHgxPSI3OC4wMCIgeTE9IjU0IiB4Mj0iNzguMDAiIHkyPSIzNjAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzguMDAiIHk9IjM4MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4wPC90ZXh0Pg0KPGxpbmUgeDE9IjIxNi4wMCIgeTE9IjU0IiB4Mj0iMjE2LjAwIiB5Mj0iMzYwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjIxNi4wMCIgeT0iMzgyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPjAuMzY8L3RleHQ+DQo8bGluZSB4MT0iMzU0LjAwIiB5MT0iNTQiIHgyPSIzNTQuMDAiIHkyPSIzNjAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iMzU0LjAwIiB5PSIzODIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+MC43MjwvdGV4dD4NCjxsaW5lIHgxPSI0OTIuMDAiIHkxPSI1NCIgeDI9IjQ5Mi4wMCIgeTI9IjM2MCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI0OTIuMDAiIHk9IjM4MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4xLjE8L3RleHQ+DQo8bGluZSB4MT0iNjMwLjAwIiB5MT0iNTQiIHgyPSI2MzAuMDAiIHkyPSIzNjAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNjMwLjAwIiB5PSIzODIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+MS40PC90ZXh0Pg0KPGxpbmUgeDE9Ijc2OC4wMCIgeTE9IjU0IiB4Mj0iNzY4LjAwIiB5Mj0iMzYwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9Ijc2OC4wMCIgeT0iMzgyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPjEuODwvdGV4dD4NCjxsaW5lIHgxPSI3OCIgeTE9IjM2MC4wMCIgeDI9Ijc2OCIgeTI9IjM2MC4wMCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI3MCIgeT0iMzY0LjAwIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPi04LjJlLTA1PC90ZXh0Pg0KPGxpbmUgeDE9Ijc4IiB5MT0iMjk4LjgwIiB4Mj0iNzY4IiB5Mj0iMjk4LjgwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjcwIiB5PSIzMDIuODAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+LTYuMWUtMDU8L3RleHQ+DQo8bGluZSB4MT0iNzgiIHkxPSIyMzcuNjAiIHgyPSI3NjgiIHkyPSIyMzcuNjAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzAiIHk9IjI0MS42MCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4tNC4wZS0wNTwvdGV4dD4NCjxsaW5lIHgxPSI3OCIgeTE9IjE3Ni40MCIgeDI9Ijc2OCIgeTI9IjE3Ni40MCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI3MCIgeT0iMTgwLjQwIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPi0xLjllLTA1PC90ZXh0Pg0KPGxpbmUgeDE9Ijc4IiB5MT0iMTE1LjIwIiB4Mj0iNzY4IiB5Mj0iMTE1LjIwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjcwIiB5PSIxMTkuMjAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+MS45ZS0wNjwvdGV4dD4NCjxsaW5lIHgxPSI3OCIgeTE9IjU0LjAwIiB4Mj0iNzY4IiB5Mj0iNTQuMDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzAiIHk9IjU4LjAwIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPjIuM2UtMDU8L3RleHQ+DQo8bGluZSB4MT0iNzguMDAiIHkxPSI1NCIgeDI9Ijc4LjAwIiB5Mj0iMzYwIiBzdHJva2U9IiM3NzciIHN0cm9rZS1kYXNoYXJyYXk9IjQgNCIvPg0KPGxpbmUgeDE9Ijc4IiB5MT0iMTIwLjY4IiB4Mj0iNzY4IiB5Mj0iMTIwLjY4IiBzdHJva2U9IiM3NzciIHN0cm9rZS1kYXNoYXJyYXk9IjQgNCIvPg0KPGxpbmUgeDE9Ijc4LjAwIiB5MT0iNTQiIHgyPSI3OC4wMCIgeTI9IjM2MCIgc3Ryb2tlPSIjNTU1IiBzdHJva2UtZGFzaGFycmF5PSIyIDQiLz4NCjx0ZXh0IHg9IjgyLjAwIiB5PSI2OCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjNTU1Ij4wVjwvdGV4dD4NCjxsaW5lIHgxPSI3NjguMDAiIHkxPSI1NCIgeDI9Ijc2OC4wMCIgeTI9IjM2MCIgc3Ryb2tlPSIjNTU1IiBzdHJva2UtZGFzaGFycmF5PSIyIDQiLz4NCjx0ZXh0IHg9Ijc3Mi4wMCIgeT0iNjgiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZmlsbD0iIzU1NSI+VmNjPC90ZXh0Pg0KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzJjYTAyYyIgc3Ryb2tlLXdpZHRoPSIxLjIiIG9wYWNpdHk9IjAuNTUiIHN0cm9rZS1kYXNoYXJyYXk9IjQgNCIgcG9pbnRzPSI3OC4wMCwzMjIuOTEgODIuOTgsMzIyLjA4IDk3LjE3LDMyMC45NiAxMTEuMzUsMzIwLjI3IDEyNS41MywzMTkuNzEgMTM5LjcyLDMxOS4xOSAxNTMuOTAsMzE4LjY5IDE2OC4wOCwzMTguMTcgMTgyLjI3LDMxNy42NiAxOTYuNDUsMzE3LjEzIDIxMC42MywzMTYuNjAgMjI0LjgyLDMxNi4wNSAyMzkuMDAsMzE1LjUwIDI1My4xOCwzMTQuOTMgMjY3LjM3LDMxNC4zNiAyODEuNTUsMzEzLjc3IDI5NS43MywzMTMuMTcgMzA5LjkyLDMxMi41NSAzMjQuMTAsMzExLjkyIDMzOC4yOCwzMTEuMjcgMzUyLjQ3LDMxMC42MCAzNjYuNjUsMzA5LjkxIDM4MC44MywzMDkuMjEgMzk1LjAyLDMwOC40OCA0MDkuMjAsMzA3LjcyIDQyMy4zOCwzMDYuOTQgNDM3LjU3LDMwNi4xMyA0NTEuNzUsMzA1LjI4IDQ2NS45MywzMDQuNDAgNDgwLjEyLDMwMy40NyA0OTQuMzAsMzAyLjQ5IDUwOC40OCwzMDEuNDYgNTIyLjY3LDMwMC4zNiA1MzYuODUsMjk5LjE5IDU1MS4wMywyOTcuOTIgNTY1LjIyLDI5Ni41NCA1NzkuNDAsMjk1LjAzIDU5My41OCwyOTMuMzMgNjA3Ljc3LDI5MS40MCA2MjEuOTUsMjg5LjE1IDYzNi4xMywyODYuNDQgNjUwLjMyLDI4My4wMiA2NjQuNTAsMjc4LjQzIDY3OC42OCwyNzEuNzIgNjkyLjg3LDI2MC42NiA3MDcuMDUsMjM5LjYzIDcyMS4yMywxOTQuODggNzM1LjQyLDEyMC42OCA3NDkuNjAsMTIwLjY4IDc2OC4wMCwxMjAuNjgiLz4NCjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9IiMyY2EwMmMiIHN0cm9rZS13aWR0aD0iMS4yIiBvcGFjaXR5PSIwLjU1IiBzdHJva2UtZGFzaGFycmF5PSI0IDQiIHBvaW50cz0iNzguMDAsMTI2LjQ1IDgyLjk4LDEyNi40NCA5Ny4xNywxMjYuNDEgMTExLjM1LDEyNi4zOCAxMjUuNTMsMTI2LjM1IDEzOS43MiwxMjYuMzIgMTUzLjkwLDEyNi4zMCAxNjguMDgsMTI2LjI3IDE4Mi4yNywxMjYuMjUgMTk2LjQ1LDEyNi4yMyAyMTAuNjMsMTI2LjIwIDIyNC44MiwxMjYuMTggMjM5LjAwLDEyNi4xNiAyNTMuMTgsMTI2LjEzIDI2Ny4zNywxMjYuMTEgMjgxLjU1LDEyNi4wOCAyOTUuNzMsMTI2LjA2IDMwOS45MiwxMjYuMDQgMzI0LjEwLDEyNi4wMSAzMzguMjgsMTI1Ljk4IDM1Mi40NywxMjUuOTYgMzY2LjY1LDEyNS45MyAzODAuODMsMTI1LjkxIDM5NS4wMiwxMjUuODggNDA5LjIwLDEyNS44NSA0MjMuMzgsMTI1LjgyIDQzNy41NywxMjUuODAgNDUxLjc1LDEyNS43NyA0NjUuOTMsMTI1Ljc0IDQ4MC4xMiwxMjUuNzEgNDk0LjMwLDEyNS42NyA1MDguNDgsMTI1LjY0IDUyMi42NywxMjUuNjEgNTM2Ljg1LDEyNS41NyA1NTEuMDMsMTI1LjU0IDU2NS4yMiwxMjUuNTAgNTc5LjQwLDEyNS40NiA1OTMuNTgsMTI1LjQyIDYwNy43NywxMjUuMzggNjIxLjk1LDEyNS4zNCA2MzYuMTMsMTI1LjI5IDY1MC4zMiwxMjUuMjUgNjY0LjUwLDEyNS4xOSA2NzguNjgsMTI1LjE0IDY5Mi44NywxMjUuMDggNzA3LjA1LDEyNS4wMSA3MjEuMjMsMTI0LjkzIDczNS40MiwxMjQuODQgNzQ5LjYwLDEyNC43MiA3NjguMDAsMTIwLjY4Ii8+DQo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMmNhMDJjIiBzdHJva2Utd2lkdGg9IjIuMCIgb3BhY2l0eT0iMS4wIiBwb2ludHM9Ijc4LjAwLDE0NS41OSA4Mi45OCwxNDUuNTQgOTcuMTcsMTQ1LjQ0IDExMS4zNSwxNDUuMzYgMTI1LjUzLDE0NS4yOCAxMzkuNzIsMTQ1LjIwIDE1My45MCwxNDUuMTIgMTY4LjA4LDE0NS4wNCAxODIuMjcsMTQ0Ljk2IDE5Ni40NSwxNDQuODggMjEwLjYzLDE0NC44MCAyMjQuODIsMTQ0LjcxIDIzOS4wMCwxNDQuNjMgMjUzLjE4LDE0NC41NCAyNjcuMzcsMTQ0LjQ2IDI4MS41NSwxNDQuMzcgMjk1LjczLDE0NC4yOCAzMDkuOTIsMTQ0LjE5IDMyNC4xMCwxNDQuMTAgMzM4LjI4LDE0NC4wMCAzNTIuNDcsMTQzLjkwIDM2Ni42NSwxNDMuODEgMzgwLjgzLDE0My43MSAzOTUuMDIsMTQzLjYwIDQwOS4yMCwxNDMuNTAgNDIzLjM4LDE0My4zOSA0MzcuNTcsMTQzLjI4IDQ1MS43NSwxNDMuMTYgNDY1LjkzLDE0My4wNSA0ODAuMTIsMTQyLjkyIDQ5NC4zMCwxNDIuODAgNTA4LjQ4LDE0Mi42NyA1MjIuNjcsMTQyLjUzIDUzNi44NSwxNDIuMzkgNTUxLjAzLDE0Mi4yNCA1NjUuMjIsMTQyLjA5IDU3OS40MCwxNDEuOTMgNTkzLjU4LDE0MS43NSA2MDcuNzcsMTQxLjU3IDYyMS45NSwxNDEuMzcgNjM2LjEzLDE0MS4xNSA2NTAuMzIsMTQwLjkxIDY2NC41MCwxNDAuNjMgNjc4LjY4LDE0MC4zMSA2OTIuODcsMTM5LjkzIDcwNy4wNSwxMzkuNDQgNzIxLjIzLDEzOC43MyA3MzUuNDIsMTM3LjU0IDc0OS42MCwxMzQuODAgNzY4LjAwLDEyMC42OCIvPg0KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzk0NjdiZCIgc3Ryb2tlLXdpZHRoPSIxLjIiIG9wYWNpdHk9IjAuNTUiIHN0cm9rZS1kYXNoYXJyYXk9IjQgNCIgcG9pbnRzPSI3OC4wMCw5MS4wOSA4Ny4yMCwxMjAuNjggNzY4LjAwLDEyMC42OCIvPg0KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzk0NjdiZCIgc3Ryb2tlLXdpZHRoPSIxLjIiIG9wYWNpdHk9IjAuNTUiIHN0cm9rZS1kYXNoYXJyYXk9IjQgNCIgcG9pbnRzPSI3OC4wMCwxMTguODggODcuMjAsMTIwLjY4IDc2OC4wMCwxMjAuNjgiLz4NCjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9IiM5NDY3YmQiIHN0cm9rZS13aWR0aD0iMi4wIiBvcGFjaXR5PSIxLjAiIHBvaW50cz0iNzguMDAsMTE0Ljc1IDg3LjIwLDEyMC42OCA3NjguMDAsMTIwLjY4Ii8+DQo8Y2lyY2xlIGN4PSI3OC4wMCIgY3k9IjE0NS41OSIgcj0iNC4wIiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiMyY2EwMmMiIHN0cm9rZS13aWR0aD0iMS41Ii8+DQo8Y2lyY2xlIGN4PSI3OC4wMCIgY3k9IjMyMi45MSIgcj0iMy4wIiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiMyY2EwMmMiIHN0cm9rZS13aWR0aD0iMS41Ii8+DQo8Y2lyY2xlIGN4PSI3OC4wMCIgY3k9IjEyNi40NSIgcj0iMy4wIiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiMyY2EwMmMiIHN0cm9rZS13aWR0aD0iMS41Ii8+DQo8Y2lyY2xlIGN4PSI3OC4wMCIgY3k9IjExNC43NSIgcj0iNC4wIiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiM5NDY3YmQiIHN0cm9rZS13aWR0aD0iMS41Ii8+DQo8Y2lyY2xlIGN4PSI3OC4wMCIgY3k9IjkxLjA5IiByPSIzLjAiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0iIzk0NjdiZCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4NCjxjaXJjbGUgY3g9Ijc4LjAwIiBjeT0iMTE4Ljg4IiByPSIzLjAiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0iIzk0NjdiZCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4NCjxsaW5lIHgxPSI4OCIgeTE9IjcyIiB4Mj0iMTEwIiB5Mj0iNzIiIHN0cm9rZT0iIzJjYTAyYyIgc3Ryb2tlLXdpZHRoPSIyLjQiLz4NCjx0ZXh0IHg9IjExNiIgeT0iNzYiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiI+W0dORCBDbGFtcF08L3RleHQ+DQo8bGluZSB4MT0iODgiIHkxPSI5MCIgeDI9IjExMCIgeTI9IjkwIiBzdHJva2U9IiM5NDY3YmQiIHN0cm9rZS13aWR0aD0iMi40Ii8+DQo8dGV4dCB4PSIxMTYiIHk9Ijk0IiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiPltQT1dFUiBDbGFtcF08L3RleHQ+DQo8dGV4dCB4PSI0MjMuMDAiIHk9IjQwNC4wMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIj5UYWJsZSB2b2x0YWdlIChWKSwgem9vbWVkIDAuLlZjYzwvdGV4dD4NCjx0ZXh0IHRyYW5zZm9ybT0idHJhbnNsYXRlKDE4IDIwNy4wMCkgcm90YXRlKC05MCkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiI+Q3VycmVudCAoQSk8L3RleHQ+DQo8dGV4dCB4PSI0MjAiIHk9IjQyIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZpbGw9IiM1NTUiPmNsYW1wIGN1cnZlcyBzaG93IHR5cC9taW4vbWF4OyBvcGVuIGNpcmNsZXMgbWFyayBjbGFtcCBJKDAgVik8L3RleHQ+DQo8cmVjdCB4PSI3OCIgeT0iNDIyIiB3aWR0aD0iNjkwIiBoZWlnaHQ9IjQ0IiBmaWxsPSIjZmZmZGY3IiBzdHJva2U9IiNkOGM2YTEiIHJ4PSI0Ii8+DQo8dGV4dCB4PSI4OCIgeT0iNDM5IiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiM0YjNiMjEiPkZpbmRpbmdzIG5lZWRpbmcgYXR0ZW50aW9uPC90ZXh0Pg0KPHJlY3QgeD0iODgiIHk9IjQ0NiIgd2lkdGg9IjciIGhlaWdodD0iNyIgZmlsbD0iI2I1NDcwOCIvPg0KPHRleHQgeD0iMTAyIiB5PSI0NTMiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSIgZmlsbD0iIzMzMyI+V0FSTiA1LjMuMTA6IENsYW1wIGxlYWthZ2UgZXZpZGVuY2UgbmVlZHMgcmV2aWV3IHwgW0dORCBDbGFtcF06IEkoMFYpPS04LjU3IHVBPC90ZXh0Pg0KPC9zdmc+" alt="I-V clamp detail for refclk" loading="lazy"></p>
+<h5>I-V clamp sweep range</h5>
+<a id="curve-refclk-iv-clamp-sweep"></a>
+<p><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDAiIGhlaWdodD0iNTYwIiB2aWV3Qm94PSIwIDAgODAwIDU2MCI+DQo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmZmZmZmIi8+DQo8dGV4dCB4PSI3OCIgeT0iMjUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZm9udC13ZWlnaHQ9IjcwMCI+cmVmY2xrIEktViBDbGFtcCBTd2VlcCBSYW5nZTwvdGV4dD4NCjxyZWN0IHg9Ijc4IiB5PSI1MiIgd2lkdGg9IjY5NCIgaGVpZ2h0PSIzNDgiIGZpbGw9IiNmYmZiZmIiIHN0cm9rZT0iI2M4YzhjOCIvPg0KPGxpbmUgeDE9Ijc4LjAwIiB5MT0iNTIiIHgyPSI3OC4wMCIgeTI9IjQwMCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI3OC4wMCIgeT0iNDIyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPi0yPC90ZXh0Pg0KPGxpbmUgeDE9IjIxNi44MCIgeTE9IjUyIiB4Mj0iMjE2LjgwIiB5Mj0iNDAwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjIxNi44MCIgeT0iNDIyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPi0xLjI8L3RleHQ+DQo8bGluZSB4MT0iMzU1LjYwIiB5MT0iNTIiIHgyPSIzNTUuNjAiIHkyPSI0MDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iMzU1LjYwIiB5PSI0MjIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+LTAuMzk2PC90ZXh0Pg0KPGxpbmUgeDE9IjQ5NC40MCIgeTE9IjUyIiB4Mj0iNDk0LjQwIiB5Mj0iNDAwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjQ5NC40MCIgeT0iNDIyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPjAuMzk2PC90ZXh0Pg0KPGxpbmUgeDE9IjYzMy4yMCIgeTE9IjUyIiB4Mj0iNjMzLjIwIiB5Mj0iNDAwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjYzMy4yMCIgeT0iNDIyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPjEuMjwvdGV4dD4NCjxsaW5lIHgxPSI3NzIuMDAiIHkxPSI1MiIgeDI9Ijc3Mi4wMCIgeTI9IjQwMCIgc3Ryb2tlPSIjZWNlY2VjIi8+DQo8dGV4dCB4PSI3NzIuMDAiIHk9IjQyMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4yPC90ZXh0Pg0KPGxpbmUgeDE9Ijc4IiB5MT0iNDAwLjAwIiB4Mj0iNzcyIiB5Mj0iNDAwLjAwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjcwIiB5PSI0MDQuMDAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+LTAuODIzPC90ZXh0Pg0KPGxpbmUgeDE9Ijc4IiB5MT0iMzMwLjQwIiB4Mj0iNzcyIiB5Mj0iMzMwLjQwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjcwIiB5PSIzMzQuNDAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+LTAuNTA1PC90ZXh0Pg0KPGxpbmUgeDE9Ijc4IiB5MT0iMjYwLjgwIiB4Mj0iNzcyIiB5Mj0iMjYwLjgwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjcwIiB5PSIyNjQuODAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+LTAuMTg3PC90ZXh0Pg0KPGxpbmUgeDE9Ijc4IiB5MT0iMTkxLjIwIiB4Mj0iNzcyIiB5Mj0iMTkxLjIwIiBzdHJva2U9IiNlY2VjZWMiLz4NCjx0ZXh0IHg9IjcwIiB5PSIxOTUuMjAiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+MC4xMzE8L3RleHQ+DQo8bGluZSB4MT0iNzgiIHkxPSIxMjEuNjAiIHgyPSI3NzIiIHkyPSIxMjEuNjAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzAiIHk9IjEyNS42MCIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIj4wLjQ0OTwvdGV4dD4NCjxsaW5lIHgxPSI3OCIgeTE9IjUyLjAwIiB4Mj0iNzcyIiB5Mj0iNTIuMDAiIHN0cm9rZT0iI2VjZWNlYyIvPg0KPHRleHQgeD0iNzAiIHk9IjU2LjAwIiB0ZXh0LWFuY2hvcj0iZW5kIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiPjAuNzY3PC90ZXh0Pg0KPGxpbmUgeDE9IjQyNS4wMCIgeTE9IjUyIiB4Mj0iNDI1LjAwIiB5Mj0iNDAwIiBzdHJva2U9IiM3NzciIHN0cm9rZS1kYXNoYXJyYXk9IjQgNCIvPg0KPGxpbmUgeDE9Ijc4IiB5MT0iMjE5LjkzIiB4Mj0iNzcyIiB5Mj0iMjE5LjkzIiBzdHJva2U9IiM3NzciIHN0cm9rZS1kYXNoYXJyYXk9IjQgNCIvPg0KPGxpbmUgeDE9IjEwOS41NSIgeTE9IjUyIiB4Mj0iMTA5LjU1IiB5Mj0iNDAwIiBzdHJva2U9IiM1NTUiIHN0cm9rZS1kYXNoYXJyYXk9IjIgNCIvPg0KPHRleHQgeD0iMTEzLjU1IiB5PSI2NiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjNTU1Ij4tVmNjPC90ZXh0Pg0KPGxpbmUgeDE9Ijc0MC40NSIgeTE9IjUyIiB4Mj0iNzQwLjQ1IiB5Mj0iNDAwIiBzdHJva2U9IiM1NTUiIHN0cm9rZS1kYXNoYXJyYXk9IjIgNCIvPg0KPHRleHQgeD0iNzQ0LjQ1IiB5PSI2NiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjNTU1Ij5WY2M8L3RleHQ+DQo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMmNhMDJjIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC41NSIgc3Ryb2tlLWRhc2hhcnJheT0iNCA0IiBwb2ludHM9IjEwOS41NSwzNzYuMDAgMTE2LjAzLDM2OS43NiAxMjIuNTEsMzYzLjUyIDEyOS4wMCwzNTcuMzEgMTM1LjQ4LDM1MS4xMSAxNDEuOTcsMzQ0LjkyIDE0OC40NSwzMzguNzQgMTU0Ljk0LDMzMi42MSAxNjEuNDIsMzI2LjQ5IDE2Ny45MCwzMjAuMzggMTc0LjM5LDMxNC4yOSAxODAuODcsMzA4LjI3IDE4Ny4zNiwzMDIuMjUgMTkzLjg0LDI5Ni4zMCAyMDAuMzMsMjkwLjM5IDIwNi44MSwyODQuNTQgMjEzLjI5LDI3OC43NyAyMTkuNzgsMjczLjEwIDIyNi4yNiwyNjcuNTEgMjMyLjc1LDI2Mi4wNiAyMzkuMjMsMjU2Ljc5IDI0NS43MiwyNTEuNzMgMjUyLjIwLDI0Ni45NCAyNTguNjksMjQyLjQ3IDI2NS4xNywyMzguNDMgMjcxLjY1LDIzNC44NyAyNzguMTQsMjMxLjg2IDI4NC42MiwyMjkuNDEgMjkxLjExLDIyNy40OSAyOTcuNTksMjI2LjA1IDMwNC4wOCwyMjQuOTcgMzEwLjU2LDIyNC4xMyAzMTcuMDQsMjIzLjQ0IDMyMy41MywyMjIuODMgMzMwLjAxLDIyMi4yOSAzMzYuNTAsMjIxLjgwIDM0Mi45OCwyMjEuMzcgMzQ5LjQ3LDIyMS4wMCAzNTUuOTUsMjIwLjY4IDM2Mi40MywyMjAuNDMgMzY4LjkyLDIyMC4yNCAzNzUuNDAsMjIwLjExIDM4MS44OSwyMjAuMDIgMzg4LjM3LDIxOS45OCAzOTQuODYsMjE5Ljk1IDQwMS4zNCwyMTkuOTUgNDA3LjgzLDIxOS45NCA0MTQuMzEsMjE5Ljk0IDQyMC43OSwyMTkuOTQgNDI3LjI4LDIxOS45NCA0MzMuNzYsMjE5Ljk0IDQ0MC4yNSwyMTkuOTQgNDQ2LjczLDIxOS45NCA0NTMuMjIsMjE5Ljk0IDQ1OS43MCwyMTkuOTQgNDY2LjE4LDIxOS45NCA0NzIuNjcsMjE5Ljk0IDQ3OS4xNSwyMTkuOTQgNDg1LjY0LDIxOS45NCA0OTIuMTIsMjE5Ljk0IDQ5OC42MSwyMTkuOTQgNTA1LjA5LDIxOS45NCA1MTEuNTcsMjE5Ljk0IDUxOC4wNiwyMTkuOTQgNTI0LjU0LDIxOS45NCA1MzEuMDMsMjE5Ljk0IDUzNy41MSwyMTkuOTQgNTQ0LjAwLDIxOS45NCA1NTAuNDgsMjE5Ljk0IDU1Ni45NywyMTkuOTQgNTYzLjQ1LDIxOS45NCA1NjkuOTMsMjE5Ljk0IDU3Ni40MiwyMTkuOTQgNTgyLjkwLDIxOS45NCA1ODkuMzksMjE5Ljk0IDU5NS44NywyMTkuOTQgNjAyLjM2LDIxOS45NCA2MDguODQsMjE5Ljk0IDYxNS4zMiwyMTkuOTQgNjIxLjgxLDIxOS45NCA2MjguMjksMjE5Ljk0IDYzNC43OCwyMTkuOTQgNjQxLjI2LDIxOS45NCA2NDcuNzUsMjE5Ljk0IDY1NC4yMywyMTkuOTQgNjYwLjcxLDIxOS45NCA2NjcuMjAsMjE5Ljk0IDY3My42OCwyMTkuOTQgNjgwLjE3LDIxOS45NCA2ODYuNjUsMjE5Ljk0IDY5My4xNCwyMTkuOTQgNjk5LjYyLDIxOS45NCA3MDYuMTEsMjE5Ljk0IDcxMi41OSwyMTkuOTMgNzE5LjA3LDIxOS45MyA3MjUuNTYsMjE5LjkzIDczMi4wNCwyMTkuOTMgNzQwLjQ1LDIxOS45MyIvPg0KPHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzJjYTAyYyIgc3Ryb2tlLXdpZHRoPSIxLjIiIG9wYWNpdHk9IjAuNTUiIHN0cm9rZS1kYXNoYXJyYXk9IjQgNCIgcG9pbnRzPSIxMDkuNTUsMzY0LjAwIDExNi4wMywzNTcuMzEgMTIyLjUxLDM1MC41OSAxMjkuMDAsMzQzLjkxIDEzNS40OCwzMzcuMjMgMTQxLjk3LDMzMC41OCAxNDguNDUsMzIzLjk1IDE1NC45NCwzMTcuMzQgMTYxLjQyLDMxMC43NyAxNjcuOTAsMzA0LjIyIDE3NC4zOSwyOTcuNzIgMTgwLjg3LDI5MS4yOSAxODcuMzYsMjg0LjkyIDE5My44NCwyNzguNjMgMjAwLjMzLDI3Mi40OCAyMDYuODEsMjY2LjQ5IDIxMy4yOSwyNjAuNjggMjE5Ljc4LDI1NS4yMSAyMjYuMjYsMjUwLjIwIDIzMi43NSwyNDUuODAgMjM5LjIzLDI0Mi4yMSAyNDUuNzIsMjM5LjU3IDI1Mi4yMCwyMzcuNzAgMjU4LjY5LDIzNi4yMyAyNjUuMTcsMjM0Ljg4IDI3MS42NSwyMzMuNTggMjc4LjE0LDIzMi4zMCAyODQuNjIsMjMxLjA0IDI5MS4xMSwyMjkuODEgMjk3LjU5LDIyOC42MSAzMDQuMDgsMjI3LjQ1IDMxMC41NiwyMjYuMzQgMzE3LjA0LDIyNS4yOCAzMjMuNTMsMjI0LjI4IDMzMC4wMSwyMjMuMzYgMzM2LjUwLDIyMi41MyAzNDIuOTgsMjIxLjc5IDM0OS40NywyMjEuMTcgMzU1Ljk1LDIyMC42OSAzNjIuNDMsMjIwLjM0IDM2OC45MiwyMjAuMTEgMzc1LjQwLDIxOS45OSAzODEuODksMjE5Ljk0IDM4OC4zNywyMTkuOTMgMzk0Ljg2LDIxOS45MyA0MDEuMzQsMjE5LjkzIDQwNy44MywyMTkuOTMgNDE0LjMxLDIxOS45MyA0MjAuNzksMjE5LjkzIDQyNy4yOCwyMTkuOTMgNDMzLjc2LDIxOS45MyA0NDAuMjUsMjE5LjkzIDQ0Ni43MywyMTkuOTMgNDUzLjIyLDIxOS45MyA0NTkuNzAsMjE5LjkzIDQ2Ni4xOCwyMTkuOTMgNDcyLjY3LDIxOS45MyA0NzkuMTUsMjE5LjkzIDQ4NS42NCwyMTkuOTMgNDkyLjEyLDIxOS45MyA0OTguNjEsMjE5LjkzIDUwNS4wOSwyMTkuOTMgNTExLjU3LDIxOS45MyA1MTguMDYsMjE5LjkzIDUyNC41NCwyMTkuOTMgNTMxLjAzLDIxOS45MyA1MzcuNTEsMjE5LjkzIDU0NC4wMCwyMTkuOTMgNTUwLjQ4LDIxOS45MyA1NTYuOTcsMjE5LjkzIDU2My40NSwyMTkuOTMgNTY5LjkzLDIxOS45MyA1NzYuNDIsMjE5LjkzIDU4Mi45MCwyMTkuOTMgNTg5LjM5LDIxOS45MyA1OTUuODcsMjE5LjkzIDYwMi4zNiwyMTkuOTMgNjA4Ljg0LDIxOS45MyA2MTUuMzIsMjE5LjkzIDYyMS44MSwyMTkuOTMgNjI4LjI5LDIxOS45MyA2MzQuNzgsMjE5LjkzIDY0MS4yNiwyMTkuOTMgNjQ3Ljc1LDIxOS45MyA2NTQuMjMsMjE5LjkzIDY2MC43MSwyMTkuOTMgNjY3LjIwLDIxOS45MyA2NzMuNjgsMjE5LjkzIDY4MC4xNywyMTkuOTMgNjg2LjY1LDIxOS45MyA2OTMuMTQsMjE5LjkzIDY5OS42MiwyMTkuOTMgNzA2LjExLDIxOS45MyA3MTIuNTksMjE5LjkzIDcxOS4wNywyMTkuOTMgNzI1LjU2LDIxOS45MyA3MzIuMDQsMjE5LjkzIDc0MC40NSwyMTkuOTMiLz4NCjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9IiMyY2EwMmMiIHN0cm9rZS13aWR0aD0iMi4wIiBvcGFjaXR5PSIxLjAiIHBvaW50cz0iMTA5LjU1LDM2OC4yMSAxMTYuMDMsMzYxLjcxIDEyMi41MSwzNTUuMTggMTI5LjAwLDM0OC43MCAxMzUuNDgsMzQyLjIyIDE0MS45NywzMzUuNzcgMTQ4LjQ1LDMyOS4zMyAxNTQuOTQsMzIyLjkwIDE2MS40MiwzMTYuNTAgMTY3LjkwLDMxMC4xNiAxNzQuMzksMzAzLjgzIDE4MC44NywyOTcuNTUgMTg3LjM2LDI5MS4zMSAxOTMuODQsMjg1LjE0IDIwMC4zMywyNzkuMDUgMjA2LjgxLDI3My4wNSAyMTMuMjksMjY3LjE5IDIxOS43OCwyNjEuNDcgMjI2LjI2LDI1NS45OCAyMzIuNzUsMjUwLjc3IDIzOS4yMywyNDUuOTMgMjQ1LjcyLDI0MS42MCAyNTIuMjAsMjM3Ljg5IDI1OC42OSwyMzQuODkgMjY1LjE3LDIzMi42MiAyNzEuNjUsMjMwLjk3IDI3OC4xNCwyMjkuNzEgMjg0LjYyLDIyOC42MyAyOTEuMTEsMjI3LjYzIDI5Ny41OSwyMjYuNjcgMzA0LjA4LDIyNS43NiAzMTAuNTYsMjI0LjkwIDMxNy4wNCwyMjQuMDggMzIzLjUzLDIyMy4zMiAzMzAuMDEsMjIyLjYxIDMzNi41MCwyMjEuOTggMzQyLjk4LDIyMS40MyAzNDkuNDcsMjIwLjk2IDM1NS45NSwyMjAuNTkgMzYyLjQzLDIyMC4zMSAzNjguOTIsMjIwLjEyIDM3NS40MCwyMjAuMDEgMzgxLjg5LDIxOS45NSAzODguMzcsMjE5Ljk0IDM5NC44NiwyMTkuOTMgNDAxLjM0LDIxOS45MyA0MDcuODMsMjE5LjkzIDQxNC4zMSwyMTkuOTMgNDIwLjc5LDIxOS45MyA0MjcuMjgsMjE5LjkzIDQzMy43NiwyMTkuOTMgNDQwLjI1LDIxOS45MyA0NDYuNzMsMjE5LjkzIDQ1My4yMiwyMTkuOTMgNDU5LjcwLDIxOS45MyA0NjYuMTgsMjE5LjkzIDQ3Mi42NywyMTkuOTMgNDc5LjE1LDIxOS45MyA0ODUuNjQsMjE5LjkzIDQ5Mi4xMiwyMTkuOTMgNDk4LjYxLDIxOS45MyA1MDUuMDksMjE5LjkzIDUxMS41NywyMTkuOTMgNTE4LjA2LDIxOS45MyA1MjQuNTQsMjE5LjkzIDUzMS4wMywyMTkuOTMgNTM3LjUxLDIxOS45MyA1NDQuMDAsMjE5LjkzIDU1MC40OCwyMTkuOTMgNTU2Ljk3LDIxOS45MyA1NjMuNDUsMjE5LjkzIDU2OS45MywyMTkuOTMgNTc2LjQyLDIxOS45MyA1ODIuOTAsMjE5LjkzIDU4OS4zOSwyMTkuOTMgNTk1Ljg3LDIxOS45MyA2MDIuMzYsMjE5LjkzIDYwOC44NCwyMTkuOTMgNjE1LjMyLDIxOS45MyA2MjEuODEsMjE5LjkzIDYyOC4yOSwyMTkuOTMgNjM0Ljc4LDIxOS45MyA2NDEuMjYsMjE5LjkzIDY0Ny43NSwyMTkuOTMgNjU0LjIzLDIxOS45MyA2NjAuNzEsMjE5LjkzIDY2Ny4yMCwyMTkuOTMgNjczLjY4LDIxOS45MyA2ODAuMTcsMjE5LjkzIDY4Ni42NSwyMTkuOTMgNjkzLjE0LDIxOS45MyA2OTkuNjIsMjE5LjkzIDcwNi4xMSwyMTkuOTMgNzEyLjU5LDIxOS45MyA3MTkuMDcsMjE5LjkzIDcyNS41NiwyMTkuOTMgNzMyLjA0LDIxOS45MyA3NDAuNDUsMjE5LjkzIi8+DQo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOTQ2N2JkIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC41NSIgc3Ryb2tlLWRhc2hhcnJheT0iNCA0IiBwb2ludHM9IjEwOS41NSw3Ni4wMCAxMTcuOTYsODMuOTUgMTI0LjQ0LDkwLjA1IDEzMC45Myw5Ni4xNiAxMzcuNDEsMTAyLjIyIDE0My44OSwxMDguMjkgMTUwLjM4LDExNC4zMyAxNTYuODYsMTIwLjMzIDE2My4zNSwxMjYuMzIgMTY5LjgzLDEzMi4yOCAxNzYuMzIsMTM4LjE5IDE4Mi44MCwxNDQuMDggMTg5LjI5LDE0OS45MCAxOTUuNzcsMTU1LjY4IDIwMi4yNSwxNjEuMzcgMjA4Ljc0LDE2Ny4wMCAyMTUuMjIsMTcyLjUzIDIyMS43MSwxNzcuOTQgMjI4LjE5LDE4My4xOSAyMzQuNjgsMTg4LjI3IDI0MS4xNiwxOTMuMTEgMjQ3LjY0LDE5Ny42NiAyNTQuMTMsMjAxLjgyIDI2MC42MSwyMDUuNTQgMjY3LjEwLDIwOC43MiAyNzMuNTgsMjExLjMyIDI4MC4wNywyMTMuMzIgMjg2LjU1LDIxNC43NyAyOTMuMDMsMjE1Ljc5IDI5OS41MiwyMTYuNTMgMzA2LjAwLDIxNy4wNyAzMTIuNDksMjE3LjUwIDMxOC45NywyMTcuODYgMzI1LjQ2LDIxOC4xNiAzMzEuOTQsMjE4LjQzIDMzOC40MywyMTguNjcgMzQ0LjkxLDIxOC44OSAzNTEuMzksMjE5LjA5IDM1Ny44OCwyMTkuMjYgMzY0LjM2LDIxOS40MSAzNzAuODUsMjE5LjUzIDM3Ny4zMywyMTkuNjMgMzgzLjgyLDIxOS43MSAzOTAuMzAsMjE5Ljc4IDM5Ni43OCwyMTkuODMgNDAzLjI3LDIxOS44NiA0MDkuNzUsMjE5Ljg5IDQxNi4yNCwyMTkuOTEgNDIyLjcyLDIxOS45MiA0MjkuMjEsMjE5LjkzIDc0MC40NSwyMTkuOTMiLz4NCjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2U9IiM5NDY3YmQiIHN0cm9rZS13aWR0aD0iMS4yIiBvcGFjaXR5PSIwLjU1IiBzdHJva2UtZGFzaGFycmF5PSI0IDQiIHBvaW50cz0iMTA5LjU1LDg0Ljg0IDExNy45Niw5My40NSAxMjQuNDQsMTAwLjA2IDEzMC45MywxMDYuNjUgMTM3LjQxLDExMy4yMyAxNDMuODksMTE5LjgwIDE1MC4zOCwxMjYuMzIgMTU2Ljg2LDEzMi44NSAxNjMuMzUsMTM5LjMxIDE2OS44MywxNDUuNzQgMTc2LjMyLDE1Mi4xMyAxODIuODAsMTU4LjQ4IDE4OS4yOSwxNjQuNzIgMTk1Ljc3LDE3MC44OSAyMDIuMjUsMTc2LjkxIDIwOC43NCwxODIuNzggMjE1LjIyLDE4OC40MCAyMjEuNzEsMTkzLjcwIDIyOC4xOSwxOTguNTIgMjM0LjY4LDIwMi43MCAyNDEuMTYsMjA2LjAyIDI0Ny42NCwyMDguMzcgMjU0LjEzLDIwOS45MSAyNjAuNjEsMjEwLjk5IDI2Ny4xMCwyMTEuODcgMjczLjU4LDIxMi42OCAyODAuMDcsMjEzLjQ2IDI4Ni41NSwyMTQuMTkgMjkzLjAzLDIxNC44OSAyOTkuNTIsMjE1LjU1IDMwNi4wMCwyMTYuMTYgMzEyLjQ5LDIxNi43MiAzMTguOTcsMjE3LjI0IDMyNS40NiwyMTcuNzAgMzMxLjk0LDIxOC4xMiAzMzguNDMsMjE4LjUxIDM0NC45MSwyMTguODUgMzUxLjM5LDIxOS4xMiAzNTcuODgsMjE5LjMyIDM2NC4zNiwyMTkuNDkgMzcwLjg1LDIxOS42MiAzNzcuMzMsMjE5LjcyIDM4My44MiwyMTkuODAgMzkwLjMwLDIxOS44NSAzOTYuNzgsMjE5Ljg5IDQwMy4yNywyMTkuOTEgNDA5Ljc1LDIxOS45MiA0MTYuMjQsMjE5LjkyIDQyMi43MiwyMTkuOTMgNDI5LjIxLDIxOS45MyA3NDAuNDUsMjE5LjkzIi8+DQo8cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOTQ2N2JkIiBzdHJva2Utd2lkdGg9IjIuMCIgb3BhY2l0eT0iMS4wIiBwb2ludHM9IjEwOS41NSw4MS44OSAxMTcuOTYsOTAuMjEgMTI0LjQ0LDk2LjYyIDEzMC45MywxMDMuMDEgMTM3LjQxLDEwOS4zOCAxNDMuODksMTE1LjczIDE1MC4zOCwxMjIuMDYgMTU2Ljg2LDEyOC4zNCAxNjMuMzUsMTM0LjYyIDE2OS44MywxNDAuODYgMTc2LjMyLDE0Ny4wNSAxODIuODAsMTUzLjE4IDE4OS4yOSwxNTkuMjcgMTk1Ljc3LDE2NS4yNyAyMDIuMjUsMTcxLjE4IDIwOC43NCwxNzYuOTggMjE1LjIyLDE4Mi42MyAyMjEuNzEsMTg4LjA1IDIyOC4xOSwxOTMuMjQgMjM0LjY4LDE5OC4wNSAyNDEuMTYsMjAyLjM5IDI0Ny42NCwyMDYuMTIgMjU0LjEzLDIwOS4xMyAyNjAuNjEsMjExLjM1IDI2Ny4xMCwyMTIuODggMjczLjU4LDIxMy45MyAyODAuMDcsMjE0LjcwIDI4Ni41NSwyMTUuMzMgMjkzLjAzLDIxNS44OSAyOTkuNTIsMjE2LjQxIDMwNi4wMCwyMTYuODggMzEyLjQ5LDIxNy4zMiAzMTguOTcsMjE3LjcyIDMyNS40NiwyMTguMDggMzMxLjk0LDIxOC40MCAzMzguNDMsMjE4LjY5IDM0NC45MSwyMTguOTYgMzUxLjM5LDIxOS4xOCAzNTcuODgsMjE5LjM2IDM2NC4zNiwyMTkuNTEgMzcwLjg1LDIxOS42MiAzNzcuMzMsMjE5LjcxIDM4My44MiwyMTkuNzggMzkwLjMwLDIxOS44NCAzOTYuNzgsMjE5Ljg3IDQwMy4yNywyMTkuOTAgNDA5Ljc1LDIxOS45MSA0MTYuMjQsMjE5LjkyIDQyMi43MiwyMTkuOTIgNDI5LjIxLDIxOS45MyA3NDAuNDUsMjE5LjkzIi8+DQo8bGluZSB4MT0iODgiIHkxPSI3MCIgeDI9IjExMCIgeTI9IjcwIiBzdHJva2U9IiMyY2EwMmMiIHN0cm9rZS13aWR0aD0iMi40Ii8+DQo8dGV4dCB4PSIxMTYiIHk9Ijc0IiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiPltHTkQgQ2xhbXBdPC90ZXh0Pg0KPGxpbmUgeDE9Ijg4IiB5MT0iODgiIHgyPSIxMTAiIHkyPSI4OCIgc3Ryb2tlPSIjOTQ2N2JkIiBzdHJva2Utd2lkdGg9IjIuNCIvPg0KPHRleHQgeD0iMTE2IiB5PSI5MiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIj5bUE9XRVIgQ2xhbXBdPC90ZXh0Pg0KPHRleHQgeD0iNDI1LjAwIiB5PSI0NDQuMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiI+VGFibGUgdm9sdGFnZSAoVik8L3RleHQ+DQo8dGV4dCB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxOCAyMjYuMDApIHJvdGF0ZSgtOTApIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiPkN1cnJlbnQgKEEpPC90ZXh0Pg0KPHRleHQgeD0iNDIwIiB5PSI0MiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjNTU1Ij5zb2xpZD10eXAsIGRhc2hlZD1taW4vbWF4OyBkYXNoZWQgdmVydGljYWw9cmVxdWlyZWQgc3dlZXAgYm91bmRhcnkgKDUuMy40LzUuMy41KTwvdGV4dD4NCjwvc3ZnPg==" alt="I-V clamp sweep range for refclk" loading="lazy"></p>
+<h2>Manual Review Items</h2>
+<a id="manual-review-items"></a>
+<p>Manual items require external evidence such as datasheets, extraction notes, SPICE/measurement data, package files, or model-maker documentation.</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Check</th>
+<th>Scope</th>
+<th>Subject</th>
+<th>Decision</th>
+<th>Evidence / Reference</th>
+<th>Comment / Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LEVEL 2</td>
+<td>4.2 - Default [Model Selector] entries are consistent</td>
+<td>Component</td>
+<td>ABI_Serdes</td>
+<td>Pending</td>
+<td>Default model selector consistency depends on product configuration and likely use cases.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 2</td>
+<td>5.1.3 - [Temperature Range] is reasonable</td>
+<td>Model</td>
+<td>abi_in</td>
+<td>Pending</td>
+<td>Requires extraction conditions, technology behavior, and datasheet operating temperature comparison.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 2</td>
+<td>5.1.3 - [Temperature Range] is reasonable</td>
+<td>Model</td>
+<td>abi_out</td>
+<td>Pending</td>
+<td>Requires extraction conditions, technology behavior, and datasheet operating temperature comparison.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 2</td>
+<td>5.1.3 - [Temperature Range] is reasonable</td>
+<td>Model</td>
+<td>refclk</td>
+<td>Pending</td>
+<td>Requires extraction conditions, technology behavior, and datasheet operating temperature comparison.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 2</td>
+<td>5.2.5 - [Model Spec] S_Overshoot subparameters complete and match data sheet</td>
+<td>Model</td>
+<td>abi_in</td>
+<td>Pending</td>
+<td>Requires datasheet functional overshoot limits.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 2</td>
+<td>5.2.5 - [Model Spec] S_Overshoot subparameters complete and match data sheet</td>
+<td>Model</td>
+<td>abi_out</td>
+<td>Pending</td>
+<td>Requires datasheet functional overshoot limits.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 2</td>
+<td>5.2.5 - [Model Spec] S_Overshoot subparameters complete and match data sheet</td>
+<td>Model</td>
+<td>refclk</td>
+<td>Pending</td>
+<td>Requires datasheet functional overshoot limits.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 2</td>
+<td>5.2.7 - [Model Spec] D_Overshoot_* subparameters complete and match data sheet</td>
+<td>Model</td>
+<td>abi_in</td>
+<td>Pending</td>
+<td>Requires datasheet dynamic overshoot limits and documented conversion method.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 2</td>
+<td>5.2.7 - [Model Spec] D_Overshoot_* subparameters complete and match data sheet</td>
+<td>Model</td>
+<td>abi_out</td>
+<td>Pending</td>
+<td>Requires datasheet dynamic overshoot limits and documented conversion method.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 2</td>
+<td>5.2.7 - [Model Spec] D_Overshoot_* subparameters complete and match data sheet</td>
+<td>Model</td>
+<td>refclk</td>
+<td>Pending</td>
+<td>Requires datasheet dynamic overshoot limits and documented conversion method.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 2</td>
+<td>5.3.11 - I-V behavior not double-counted</td>
+<td>Model</td>
+<td>abi_in</td>
+<td>Pending</td>
+<td>Double-counting of clamp, driver, and termination behavior needs curve/context review.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 2</td>
+<td>5.3.11 - I-V behavior not double-counted</td>
+<td>Model</td>
+<td>abi_out</td>
+<td>Pending</td>
+<td>Double-counting of clamp, driver, and termination behavior needs curve/context review.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 2</td>
+<td>5.3.11 - I-V behavior not double-counted</td>
+<td>Model</td>
+<td>refclk</td>
+<td>Pending</td>
+<td>Double-counting of clamp, driver, and termination behavior needs curve/context review.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 2</td>
+<td>5.3.12 - On-die termination modeling documented</td>
+<td>Model</td>
+<td>abi_in</td>
+<td>Pending</td>
+<td>Requires documentation review for on-die termination modeling method.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 2</td>
+<td>5.3.12 - On-die termination modeling documented</td>
+<td>Model</td>
+<td>abi_out</td>
+<td>Pending</td>
+<td>Requires documentation review for on-die termination modeling method.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 2</td>
+<td>5.3.12 - On-die termination modeling documented</td>
+<td>Model</td>
+<td>refclk</td>
+<td>Pending</td>
+<td>Requires documentation review for on-die termination modeling method.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.1 - [Model] Vinl and Vinh reasonable</td>
+<td>Model</td>
+<td>abi_in</td>
+<td>Pending</td>
+<td>Requires comparing thresholds against datasheet and Vmeas intent.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.1 - [Model] Vinl and Vinh reasonable</td>
+<td>Model</td>
+<td>abi_out</td>
+<td>Pending</td>
+<td>Requires comparing thresholds against datasheet and Vmeas intent.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.1 - [Model] Vinl and Vinh reasonable</td>
+<td>Model</td>
+<td>refclk</td>
+<td>Pending</td>
+<td>Requires comparing thresholds against datasheet and Vmeas intent.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.2 - [Model Spec] Vinl and Vinh reasonable</td>
+<td>Model</td>
+<td>abi_in</td>
+<td>Pending</td>
+<td>Requires datasheet threshold ranges and supply variation interpretation.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.2 - [Model Spec] Vinl and Vinh reasonable</td>
+<td>Model</td>
+<td>abi_out</td>
+<td>Pending</td>
+<td>Requires datasheet threshold ranges and supply variation interpretation.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.2 - [Model Spec] Vinl and Vinh reasonable</td>
+<td>Model</td>
+<td>refclk</td>
+<td>Pending</td>
+<td>Requires datasheet threshold ranges and supply variation interpretation.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.3 - [Model Spec] Vinl+/- and Vinh+/- complete and reasonable</td>
+<td>Model</td>
+<td>abi_in</td>
+<td>Pending</td>
+<td>Requires datasheet/hysteresis intent plus comment review for exceptions.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.3 - [Model Spec] Vinl+/- and Vinh+/- complete and reasonable</td>
+<td>Model</td>
+<td>abi_out</td>
+<td>Pending</td>
+<td>Requires datasheet/hysteresis intent plus comment review for exceptions.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.3 - [Model Spec] Vinl+/- and Vinh+/- complete and reasonable</td>
+<td>Model</td>
+<td>refclk</td>
+<td>Pending</td>
+<td>Requires datasheet/hysteresis intent plus comment review for exceptions.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.9 - [Receiver Thresholds] Vth present and matches data sheet, if needed</td>
+<td>Model</td>
+<td>abi_in</td>
+<td>Pending</td>
+<td>Requires datasheet timing threshold and receiver-threshold applicability.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.9 - [Receiver Thresholds] Vth present and matches data sheet, if needed</td>
+<td>Model</td>
+<td>abi_out</td>
+<td>Pending</td>
+<td>Requires datasheet timing threshold and receiver-threshold applicability.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.9 - [Receiver Thresholds] Vth present and matches data sheet, if needed</td>
+<td>Model</td>
+<td>refclk</td>
+<td>Pending</td>
+<td>Requires datasheet timing threshold and receiver-threshold applicability.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.10 - [Receiver Thresholds] Vth_min and Vth_max present and match data sheet, if needed</td>
+<td>Model</td>
+<td>abi_in</td>
+<td>Pending</td>
+<td>Requires datasheet Vth tolerance interpretation.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.10 - [Receiver Thresholds] Vth_min and Vth_max present and match data sheet, if needed</td>
+<td>Model</td>
+<td>abi_out</td>
+<td>Pending</td>
+<td>Requires datasheet Vth tolerance interpretation.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.10 - [Receiver Thresholds] Vth_min and Vth_max present and match data sheet, if needed</td>
+<td>Model</td>
+<td>refclk</td>
+<td>Pending</td>
+<td>Requires datasheet Vth tolerance interpretation.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.11 - [Receiver Thresholds] Vinh_ac, Vinl_ac present and match data sheet, if needed</td>
+<td>Model</td>
+<td>abi_in</td>
+<td>Pending</td>
+<td>Requires datasheet AC threshold values and offset conversion review.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.11 - [Receiver Thresholds] Vinh_ac, Vinl_ac present and match data sheet, if needed</td>
+<td>Model</td>
+<td>abi_out</td>
+<td>Pending</td>
+<td>Requires datasheet AC threshold values and offset conversion review.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.11 - [Receiver Thresholds] Vinh_ac, Vinl_ac present and match data sheet, if needed</td>
+<td>Model</td>
+<td>refclk</td>
+<td>Pending</td>
+<td>Requires datasheet AC threshold values and offset conversion review.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.12 - [Receiver Thresholds] Vinh_dc, Vinl_dc present and match data sheet, if needed</td>
+<td>Model</td>
+<td>abi_in</td>
+<td>Pending</td>
+<td>Requires datasheet DC threshold values and offset conversion review.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.12 - [Receiver Thresholds] Vinh_dc, Vinl_dc present and match data sheet, if needed</td>
+<td>Model</td>
+<td>abi_out</td>
+<td>Pending</td>
+<td>Requires datasheet DC threshold values and offset conversion review.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.12 - [Receiver Thresholds] Vinh_dc, Vinl_dc present and match data sheet, if needed</td>
+<td>Model</td>
+<td>refclk</td>
+<td>Pending</td>
+<td>Requires datasheet DC threshold values and offset conversion review.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.13 - [Receiver Thresholds] Tslew_ac/Tdiffslew_ac present and match data sheet, if needed</td>
+<td>Model</td>
+<td>abi_in</td>
+<td>Pending</td>
+<td>Requires datasheet slew-limit values and differential/single-ended applicability.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.13 - [Receiver Thresholds] Tslew_ac/Tdiffslew_ac present and match data sheet, if needed</td>
+<td>Model</td>
+<td>abi_out</td>
+<td>Pending</td>
+<td>Requires datasheet slew-limit values and differential/single-ended applicability.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.13 - [Receiver Thresholds] Tslew_ac/Tdiffslew_ac present and match data sheet, if needed</td>
+<td>Model</td>
+<td>refclk</td>
+<td>Pending</td>
+<td>Requires datasheet slew-limit values and differential/single-ended applicability.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.14 - [Receiver Thresholds] Threshold_sensitivity and Ext_ref present and match data sheet, if needed</td>
+<td>Model</td>
+<td>abi_in</td>
+<td>Pending</td>
+<td>Requires datasheet/reference-supply behavior.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.14 - [Receiver Thresholds] Threshold_sensitivity and Ext_ref present and match data sheet, if needed</td>
+<td>Model</td>
+<td>abi_out</td>
+<td>Pending</td>
+<td>Requires datasheet/reference-supply behavior.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.2.14 - [Receiver Thresholds] Threshold_sensitivity and Ext_ref present and match data sheet, if needed</td>
+<td>Model</td>
+<td>refclk</td>
+<td>Pending</td>
+<td>Requires datasheet/reference-supply behavior.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.6.1 - [Model Spec] Vmeas and Vref used if typ/min/max variation</td>
+<td>Model</td>
+<td>abi_in</td>
+<td>Pending</td>
+<td>Requires deciding whether Vmeas/Vref variation exists across corners.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.6.1 - [Model Spec] Vmeas and Vref used if typ/min/max variation</td>
+<td>Model</td>
+<td>abi_out</td>
+<td>Pending</td>
+<td>Requires deciding whether Vmeas/Vref variation exists across corners.</td>
+<td></td>
+</tr>
+<tr>
+<td>LEVEL 3</td>
+<td>5.6.1 - [Model Spec] Vmeas and Vref used if typ/min/max variation</td>
+<td>Model</td>
+<td>refclk</td>
+<td>Pending</td>
+<td>Requires deciding whether Vmeas/Vref variation exists across corners.</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2>Appendix A: IQ Levels</h2>
+<a id="appendix-a-iq-levels"></a>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Name</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IQ0</td>
+<td>Not Checked</td>
+<td>No documented quality checking has been performed.</td>
+</tr>
+<tr>
+<td>IQ1</td>
+<td>Passes IBISCHK</td>
+<td>IBISCHK has been run with zero errors and documented handling of warnings.</td>
+</tr>
+<tr>
+<td>IQ2</td>
+<td>Suitable for Waveform Simulation</td>
+<td>IQ1 plus all LEVEL 2 checks for basic waveform simulation data.</td>
+</tr>
+<tr>
+<td>IQ3</td>
+<td>Suitable for Timing Analysis</td>
+<td>IQ2 plus all LEVEL 3 checks for timing analysis data.</td>
+</tr>
+</tbody>
+</table>
+<h2>Appendix B: Special Designators</h2>
+<a id="appendix-b-special-designators"></a>
+<p>Special letters may be appended to the IQ score when the supporting evidence is documented.</p>
+<table>
+<thead>
+<tr>
+<th>Designator</th>
+<th>Name</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>G</td>
+<td>Contains Golden Waveforms</td>
+<td>The file contains golden waveform data using [Test Data] and [Test Load] or equivalent external documentation.</td>
+</tr>
+<tr>
+<td>M</td>
+<td>Measurement Correlated</td>
+<td>IBIS simulation has been correlated against hardware measurements with documented methods/results.</td>
+</tr>
+<tr>
+<td>S</td>
+<td>Simulation Correlated</td>
+<td>IBIS simulation has been correlated against a reference simulation such as SPICE with documented methods/results.</td>
+</tr>
+<tr>
+<td>X</td>
+<td>Exceptions</td>
+<td>One or more checks require documented exceptions in [Notes] or comments.</td>
+</tr>
+</tbody>
+</table>
+<h2>Appendix C: Scoring Notes</h2>
+<a id="appendix-c-scoring-notes"></a>
+<ul>
+<li>Base level: The summary IQ number is the highest level for which all required checks at that level and below pass, are NA, or are accepted exceptions.</li>
+<li>Optional checks: OPTIONAL checks are good practice but do not change the summary IQ number.</li>
+<li>Correlation designators: Append M, S, and/or G when measurement correlation, simulation correlation, and/or golden waveform evidence is documented for a reasonable set of models.</li>
+<li>Exception designator: Append X when any check passes only by documented exception or any remaining parser warning needs user attention.</li>
+<li>Writeback: The summary IQ score must be written into the IBIS file, preferably in [Notes]; detailed per-check status is better stored in a quality report.</li>
+</ul>
+</main>
+</body>
+</html>
+

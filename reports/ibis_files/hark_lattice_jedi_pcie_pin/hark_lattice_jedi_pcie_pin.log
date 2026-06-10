@@ -1,0 +1,44 @@
+Parsing ibis_lattice_jedi_d1_80k_484cabga_12242020_latticeupdate_122520_12um_l2_3_pcie_pin.ibs ...
+  1 component(s), 0 model(s)
+  Target level IQ3: skipping higher-level checks
+  PACKAGE/PIN-MAPPING FRAGMENT DETECTED — bypassing QA checks. Unresolved [Pin] model name(s): signal (48 of 122 pins)
+Parsing ibis_lattice_jedi_d1_80k_484cabga_12242020_latticeupdate_122520_12um_l2_3_pcie_pin.ibs ...
+  1 component(s), 0 model(s)
+  Target level IQ3: skipping higher-level checks
+  PACKAGE/PIN-MAPPING FRAGMENT DETECTED — bypassing QA checks. Unresolved [Pin] model name(s): signal (48 of 122 pins)
+Parsing ibis_lattice_jedi_d1_80k_484cabga_12242020_latticeupdate_122520_12um_l2_3_pcie_pin.ibs ...
+  1 component(s), 0 model(s)
+  Target level IQ3: skipping higher-level checks
+  PACKAGE/PIN-MAPPING FRAGMENT DETECTED — bypassing QA checks. Unresolved [Pin] model name(s): signal (48 of 122 pins)
+Parsing ibis_lattice_jedi_d1_80k_484cabga_12242020_latticeupdate_122520_12um_l2_3_pcie_pin.ibs ...
+  1 component(s), 0 model(s)
+  Target level IQ3: skipping higher-level checks
+  PACKAGE/PIN-MAPPING FRAGMENT DETECTED — bypassing QA checks. Unresolved [Pin] model name(s): signal (48 of 122 pins)
+Wrote spreadsheet report: C:\Users\simom\Desktop\Projects\IBIS_QA\reports\ibis_files\hark_lattice_jedi_pcie_pin\hark_lattice_jedi_pcie_pin.xlsx
+========================================================================
+IBIS QA Report — AUTO Checks and SEMI-AUTO Evidence
+File   : C:\Users\simom\Desktop\Projects\IBIS Files\Hark Labs\FPGA-MD-02047-1-1-CertusPro-NX-IBIS-AMI Model_file\ibis_lattice_jedi_d1_80k_484cabga_12242020_latticeupdate_122520_12um_l2_3_pcie_pin.ibs
+Target : IQ3
+IBIS Ver: 5.0   File Rev: 1.0   Date: February 22,2021
+IQ Score in file: (not found)
+========================================================================
+
+*** PACKAGE/PIN-MAPPING FRAGMENT — QA CHECKS BYPASSED ***
+This file defines no [Model]s and its [Pin] entries reference model name(s) signal (48 of 122 pins) that are not POWER/GND/NC and have no [Model] definition in this file. Per the IBIS spec, [Pin] model names must resolve within the same file — there is no cross-file include mechanism — so this is not a valid standalone IBIS model file. It is treated as a package/pin-mapping fragment and the remaining QA checks have been skipped.
+========================================================================
+
+========================================================================
+SUMMARY
+  FAIL  : 0
+  WARN  : 0
+  PASS  : 0
+  NA    : 0
+  ERROR : 0
+  Total results: 0
+========================================================================
+
+REVIEW SIGNOFF
+  Final signoff ready : NO
+  Hard blockers       : 0
+  Semi-auto pending   : 0 / 0
+  Manual pending      : 16 / 16

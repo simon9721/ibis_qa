@@ -1,0 +1,197 @@
+Parsing Arbel_I3C_IBIS.ibs ...
+  1 component(s), 6 model(s)
+  Target level IQ3: skipping higher-level checks
+Parsing Arbel_I3C_IBIS.ibs ...
+  1 component(s), 6 model(s)
+  Target level IQ3: skipping higher-level checks
+Parsing Arbel_I3C_IBIS.ibs ...
+  1 component(s), 6 model(s)
+  Target level IQ3: skipping higher-level checks
+Parsing Arbel_I3C_IBIS.ibs ...
+  1 component(s), 6 model(s)
+  Target level IQ3: skipping higher-level checks
+Wrote spreadsheet report: C:\Users\simom\Desktop\Projects\IBIS_QA\reports\ibis_files\arbel\arbel.xlsx
+========================================================================
+IBIS QA Report — AUTO Checks and SEMI-AUTO Evidence
+File   : C:\Users\simom\Desktop\Projects\IBIS Files\Arbel_I3C_IBIS.ibs
+Target : IQ3
+IBIS Ver: 4.0   File Rev: 1   Date: Wed Nov 17 18:32:16 IST 2021
+IQ Score in file: (not found)
+========================================================================
+
+[4.1] ⚠  (0 fail, 0 pass, 0 NA, total 1)
+  ⚠ [arbel_i3c_ibis.ibs] [Model Selector] mpad_1 description evidence needs review
+      mpad_1_S7_1P0: weak or missing description
+      mpad_1_S7_1P0_I3C: weak or missing description
+      mpad_1_S7_1P2: weak or missing description
+      mpad_1_S7_1P2_I3C: weak or missing description
+      mpad_1_S7_1P8: weak or missing description
+      mpad_1_S7_1P8_I3C: weak or missing description
+
+[5.3.6] ⚠  (0 fail, 0 pass, 0 NA, total 6)
+  ⚠ [mpad_1_S7_1P0] I-V stair-step evidence needs review
+      [GND Clamp]: roughness=0.633 > 0.1
+      [POWER Clamp]: roughness=0.689 > 0.1
+  ⚠ [mpad_1_S7_1P0_I3C] I-V stair-step evidence needs review
+      [GND Clamp]: roughness=0.633 > 0.1
+      [POWER Clamp]: roughness=0.689 > 0.1
+  ⚠ [mpad_1_S7_1P2] I-V stair-step evidence needs review
+      [GND Clamp]: roughness=0.315 > 0.1
+      [POWER Clamp]: roughness=0.335 > 0.1
+  ⚠ [mpad_1_S7_1P2_I3C] I-V stair-step evidence needs review
+      [GND Clamp]: roughness=0.315 > 0.1
+      [POWER Clamp]: roughness=0.335 > 0.1
+  ⚠ [mpad_1_S7_1P8] I-V stair-step evidence needs review
+      [GND Clamp]: roughness=0.114 > 0.1
+      [POWER Clamp]: roughness=0.116 > 0.1
+  ⚠ [mpad_1_S7_1P8_I3C] I-V stair-step evidence needs review
+      [GND Clamp]: roughness=0.114 > 0.1
+      [POWER Clamp]: roughness=0.116 > 0.1
+
+[5.3.7] ✗  (12 fail, 0 pass, 0 NA, total 12)
+  ✗ [mpad_1_S7_1P0] [Pulldown] + [GND Clamp] combined curve non-monotonic (6 violation(s))
+      V=1.5: combined current decreases from 43.09mA to 42.35mA
+      V=1.6: combined current decreases from 42.35mA to 40.5mA
+      V=1.7: combined current decreases from 40.5mA to 37.99mA
+      V=1.8: combined current decreases from 37.99mA to 35.06mA
+      V=1.9: combined current decreases from 35.06mA to 31.81mA
+      V=2: combined current decreases from 31.81mA to 28.4mA
+  ✗ [mpad_1_S7_1P0] [Pullup] + [POWER Clamp] combined curve non-monotonic (6 violation(s))
+      V=1.5: combined current increases from -41.72mA to -41.09mA
+      V=1.6: combined current increases from -41.09mA to -39.48mA
+      V=1.7: combined current increases from -39.48mA to -37.29mA
+      V=1.8: combined current increases from -37.29mA to -34.72mA
+      V=1.9: combined current increases from -34.72mA to -31.9mA
+      V=2: combined current increases from -31.9mA to -28.9mA
+  ✗ [mpad_1_S7_1P0_I3C] [Pulldown] + [GND Clamp] combined curve non-monotonic (6 violation(s))
+      V=1.5: combined current decreases from 30.43mA to 29.84mA
+      V=1.6: combined current decreases from 29.84mA to 28.43mA
+      V=1.7: combined current decreases from 28.43mA to 26.55mA
+      V=1.8: combined current decreases from 26.55mA to 24.36mA
+      V=1.9: combined current decreases from 24.36mA to 22.01mA
+      V=2: combined current decreases from 22.01mA to 19.6mA
+  ✗ [mpad_1_S7_1P0_I3C] [Pullup] + [POWER Clamp] combined curve non-monotonic (6 violation(s))
+      V=1.5: combined current increases from -31.66mA to -31.27mA
+      V=1.6: combined current increases from -31.27mA to -30.13mA
+      V=1.7: combined current increases from -30.13mA to -28.5mA
+      V=1.8: combined current increases from -28.5mA to -26.55mA
+      V=1.9: combined current increases from -26.55mA to -24.4mA
+      V=2: combined current increases from -24.4mA to -22.1mA
+  ✗ [mpad_1_S7_1P2] [Pulldown] + [GND Clamp] combined curve non-monotonic (7 violation(s))
+      V=1.8: combined current decreases from 67.25mA to 66.58mA
+      V=1.9: combined current decreases from 66.58mA to 65.04mA
+      V=2: combined current decreases from 65.04mA to 62.94mA
+      V=2.1: combined current decreases from 62.94mA to 60.41mA
+      V=2.2: combined current decreases from 60.41mA to 57.5mA
+      V=2.3: combined current decreases from 57.5mA to 54.4mA
+      V=2.4: combined current decreases from 54.4mA to 51mA
+  ✗ [mpad_1_S7_1P2] [Pullup] + [POWER Clamp] combined curve non-monotonic (6 violation(s))
+      V=1.9: combined current increases from -65.52mA to -64.65mA
+      V=2: combined current increases from -64.65mA to -63.18mA
+      V=2.1: combined current increases from -63.18mA to -61.3mA
+      V=2.2: combined current increases from -61.3mA to -59mA
+      V=2.3: combined current increases from -59mA to -56.4mA
+      V=2.4: combined current increases from -56.4mA to -53.5mA
+  ✗ [mpad_1_S7_1P2_I3C] [Pulldown] + [GND Clamp] combined curve non-monotonic (7 violation(s))
+      V=1.8: combined current decreases from 47.59mA to 46.97mA
+      V=1.9: combined current decreases from 46.97mA to 45.72mA
+      V=2: combined current decreases from 45.72mA to 44.06mA
+      V=2.1: combined current decreases from 44.06mA to 42.11mA
+      V=2.2: combined current decreases from 42.11mA to 40.1mA
+      V=2.3: combined current decreases from 40.1mA to 37.9mA
+      V=2.4: combined current decreases from 37.9mA to 35.6mA
+  ✗ [mpad_1_S7_1P2_I3C] [Pullup] + [POWER Clamp] combined curve non-monotonic (6 violation(s))
+      V=1.9: combined current increases from -49.92mA to -49.38mA
+      V=2: combined current increases from -49.38mA to -48.32mA
+      V=2.1: combined current increases from -48.32mA to -46.9mA
+      V=2.2: combined current increases from -46.9mA to -45.1mA
+      V=2.3: combined current increases from -45.1mA to -43.1mA
+      V=2.4: combined current increases from -43.1mA to -41mA
+  ✗ [mpad_1_S7_1P8] [Pulldown] + [GND Clamp] combined curve non-monotonic (14 violation(s))
+      V=2.3: combined current decreases from 71.2mA to 70.89mA
+      V=2.4: combined current decreases from 70.89mA to 69.54mA
+      V=2.5: combined current decreases from 69.54mA to 67.53mA
+      V=2.6: combined current decreases from 67.53mA to 65.13mA
+      V=2.7: combined current decreases from 65.13mA to 62.41mA
+      V=2.8: combined current decreases from 62.41mA to 59.5mA
+      V=2.9: combined current decreases from 59.5mA to 56.5mA
+      V=3: combined current decreases from 56.5mA to 53.2mA
+      V=3.1: combined current decreases from 53.2mA to 50mA
+      V=3.2: combined current decreases from 50mA to 46mA
+  ✗ [mpad_1_S7_1P8] [Pullup] + [POWER Clamp] combined curve non-monotonic (13 violation(s))
+      V=2.4: combined current increases from -75.93mA to -75.44mA
+      V=2.5: combined current increases from -75.44mA to -74.17mA
+      V=2.6: combined current increases from -74.17mA to -72.35mA
+      V=2.7: combined current increases from -72.35mA to -70.1mA
+      V=2.8: combined current increases from -70.1mA to -67.5mA
+      V=2.9: combined current increases from -67.5mA to -64.7mA
+      V=3: combined current increases from -64.7mA to -61.7mA
+      V=3.1: combined current increases from -61.7mA to -58.4mA
+      V=3.2: combined current increases from -58.4mA to -55mA
+      V=3.3: combined current increases from -55mA to -51mA
+  ✗ [mpad_1_S7_1P8_I3C] [Pulldown] + [GND Clamp] combined curve non-monotonic (13 violation(s))
+      V=2.4: combined current decreases from 55.84mA to 55.18mA
+      V=2.5: combined current decreases from 55.18mA to 54.06mA
+      V=2.6: combined current decreases from 54.06mA to 52.64mA
+      V=2.7: combined current decreases from 52.64mA to 51.01mA
+      V=2.8: combined current decreases from 51.01mA to 49.3mA
+      V=2.9: combined current decreases from 49.3mA to 47.6mA
+      V=3: combined current decreases from 47.6mA to 45.7mA
+      V=3.1: combined current decreases from 45.7mA to 44mA
+      V=3.2: combined current decreases from 44mA to 41mA
+      V=3.3: combined current decreases from 41mA to 39mA
+  ✗ [mpad_1_S7_1P8_I3C] [Pullup] + [POWER Clamp] combined curve non-monotonic (12 violation(s))
+      V=2.5: combined current increases from -62.02mA to -61.69mA
+      V=2.6: combined current increases from -61.69mA to -60.98mA
+      V=2.7: combined current increases from -60.98mA to -60mA
+      V=2.8: combined current increases from -60mA to -58.7mA
+      V=2.9: combined current increases from -58.7mA to -57.3mA
+      V=3: combined current increases from -57.3mA to -55.7mA
+      V=3.1: combined current increases from -55.7mA to -53.4mA
+      V=3.2: combined current increases from -53.4mA to -51mA
+      V=3.3: combined current increases from -51mA to -49mA
+      V=3.4: combined current increases from -49mA to -47mA
+
+[5.3.14] ⚠  (0 fail, 0 pass, 0 NA, total 6)
+  ⚠ [mpad_1_S7_1P0] I-V point distribution evidence needs review
+      [POWER Clamp]: 11 point(s) < 20
+  ⚠ [mpad_1_S7_1P0_I3C] I-V point distribution evidence needs review
+      [POWER Clamp]: 11 point(s) < 20
+  ⚠ [mpad_1_S7_1P2] I-V point distribution evidence needs review
+      [POWER Clamp]: 13 point(s) < 20
+  ⚠ [mpad_1_S7_1P2_I3C] I-V point distribution evidence needs review
+      [POWER Clamp]: 13 point(s) < 20
+  ⚠ [mpad_1_S7_1P8] I-V point distribution evidence needs review
+      [POWER Clamp]: 19 point(s) < 20
+  ⚠ [mpad_1_S7_1P8_I3C] I-V point distribution evidence needs review
+      [POWER Clamp]: 19 point(s) < 20
+
+[5.5.4] ⚠  (0 fail, 0 pass, 0 NA, total 6)
+  ⚠ [mpad_1_S7_1P0] Ramp dt versus V-T 20-80% evidence needs review
+      avg Ramp dt=5.414e-08s, avg V-T 20-80% span=3.520e-08s, diff=53.8%
+  ⚠ [mpad_1_S7_1P0_I3C] Ramp dt versus V-T 20-80% evidence needs review
+      avg Ramp dt=5.829e-09s, avg V-T 20-80% span=7.763e-09s, diff=24.9%
+  ⚠ [mpad_1_S7_1P2] Ramp dt versus V-T 20-80% evidence needs review
+      avg Ramp dt=5.421e-08s, avg V-T 20-80% span=3.525e-08s, diff=53.8%
+  ⚠ [mpad_1_S7_1P2_I3C] Ramp dt versus V-T 20-80% evidence needs review
+      avg Ramp dt=3.562e-09s, avg V-T 20-80% span=7.384e-09s, diff=51.8%
+  ⚠ [mpad_1_S7_1P8] Ramp dt versus V-T 20-80% evidence needs review
+      avg Ramp dt=5.394e-08s, avg V-T 20-80% span=3.542e-08s, diff=52.3%
+  ⚠ [mpad_1_S7_1P8_I3C] Ramp dt versus V-T 20-80% evidence needs review
+      avg Ramp dt=2.673e-09s, avg V-T 20-80% span=7.011e-09s, diff=61.9%
+
+========================================================================
+SUMMARY
+  FAIL  : 12
+  WARN  : 19
+  PASS  : 130
+  NA    : 23
+  ERROR : 0
+  Total results: 184
+========================================================================
+
+REVIEW SIGNOFF
+  Final signoff ready : NO
+  Hard blockers       : 12
+  Semi-auto pending   : 19 / 19
+  Manual pending      : 91 / 91

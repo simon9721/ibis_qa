@@ -1,0 +1,137 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="620" viewBox="0 0 900 620">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="72" y="26" font-family="Arial, sans-serif" font-size="16" font-weight="700">abi_out Zout Load-Line Curves</text>
+<text x="72" y="45" font-family="Arial, sans-serif" font-size="11" fill="#555">Rload=50 ohm; solid=device I-V, dashed=load line, circles=operating points</text>
+<rect x="72.00" y="62.00" width="380.00" height="286.00" fill="#fbfbfb" stroke="#c8c8c8"/>
+<text x="80.00" y="50.00" font-family="Arial, sans-serif" font-size="13" font-weight="700">[Pulldown] Rload to Vdd</text>
+<line x1="72.00" y1="62.00" x2="72.00" y2="348.00" stroke="#ececec"/>
+<text x="72.00" y="366.00" text-anchor="middle" font-family="Arial, sans-serif" font-size="10">-1.1</text>
+<line x1="167.00" y1="62.00" x2="167.00" y2="348.00" stroke="#ececec"/>
+<text x="167.00" y="366.00" text-anchor="middle" font-family="Arial, sans-serif" font-size="10">-0.54</text>
+<line x1="262.00" y1="62.00" x2="262.00" y2="348.00" stroke="#ececec"/>
+<text x="262.00" y="366.00" text-anchor="middle" font-family="Arial, sans-serif" font-size="10">0</text>
+<line x1="357.00" y1="62.00" x2="357.00" y2="348.00" stroke="#ececec"/>
+<text x="357.00" y="366.00" text-anchor="middle" font-family="Arial, sans-serif" font-size="10">0.54</text>
+<line x1="452.00" y1="62.00" x2="452.00" y2="348.00" stroke="#ececec"/>
+<text x="452.00" y="366.00" text-anchor="middle" font-family="Arial, sans-serif" font-size="10">1.1</text>
+<line x1="72.00" y1="348.00" x2="452.00" y2="348.00" stroke="#ececec"/>
+<text x="65.00" y="352.00" text-anchor="end" font-family="Arial, sans-serif" font-size="10">-31</text>
+<line x1="72.00" y1="276.50" x2="452.00" y2="276.50" stroke="#ececec"/>
+<text x="65.00" y="280.50" text-anchor="end" font-family="Arial, sans-serif" font-size="10">-11</text>
+<line x1="72.00" y1="205.00" x2="452.00" y2="205.00" stroke="#ececec"/>
+<text x="65.00" y="209.00" text-anchor="end" font-family="Arial, sans-serif" font-size="10">8.2</text>
+<line x1="72.00" y1="133.50" x2="452.00" y2="133.50" stroke="#ececec"/>
+<text x="65.00" y="137.50" text-anchor="end" font-family="Arial, sans-serif" font-size="10">28</text>
+<line x1="72.00" y1="62.00" x2="452.00" y2="62.00" stroke="#ececec"/>
+<text x="65.00" y="66.00" text-anchor="end" font-family="Arial, sans-serif" font-size="10">48</text>
+<line x1="262.00" y1="62" x2="262.00" y2="348" stroke="#777" stroke-dasharray="4 4"/>
+<line x1="72.0" y1="234.90" x2="452.0" y2="234.90" stroke="#777" stroke-dasharray="4 4"/>
+<polyline fill="none" stroke="#1f77b4" stroke-width="1.8" points="86.07,307.51 262.00,234.90 437.93,162.29"/>
+<polyline fill="none" stroke="#ff7f0e" stroke-width="1.8" stroke-dasharray="5 4" points="86.07,320.32 262.00,234.90 437.93,149.48"/>
+<polyline fill="none" stroke="#2ca02c" stroke-width="1.8" stroke-dasharray="2 4" points="86.07,298.04 262.00,234.90 437.93,171.76"/>
+<polyline fill="none" stroke="#1f77b4" stroke-width="1.1" stroke-dasharray="6 4" points="72.00,83.87 76.81,85.85 81.62,87.84 86.43,89.82 91.24,91.81 96.05,93.80 100.86,95.78 105.67,97.77 110.48,99.75 115.29,101.74 120.10,103.72 124.91,105.71 129.72,107.69 134.53,109.68 139.34,111.66 144.15,113.65 148.96,115.63 153.77,117.62 158.58,119.60 163.39,121.59 168.20,123.57 173.01,125.56 177.82,127.55 182.63,129.53 187.44,131.52 192.25,133.50 197.06,135.49 201.87,137.47 206.68,139.46 211.49,141.44 216.30,143.43 221.11,145.41 225.92,147.40 230.73,149.38 235.54,151.37 240.35,153.35 245.16,155.34 249.97,157.33 254.78,159.31 259.59,161.30 264.41,163.28 269.22,165.27 274.03,167.25 278.84,169.24 283.65,171.22 288.46,173.21 293.27,175.19 298.08,177.18 302.89,179.16 307.70,181.15 312.51,183.13 317.32,185.12 322.13,187.10 326.94,189.09 331.75,191.08 336.56,193.06 341.37,195.05 346.18,197.03 350.99,199.02 355.80,201.00 360.61,202.99 365.42,204.97 370.23,206.96 375.04,208.94 379.85,210.93 384.66,212.91 389.47,214.90 394.28,216.88 399.09,218.87 403.90,220.86 408.71,222.84 413.52,224.83 418.33,226.81 423.14,228.80 427.95,230.78 432.76,232.77 437.57,234.75 442.38,236.74 447.19,238.72 452.00,240.71"/>
+<circle cx="349.96" cy="198.59" r="4.6" fill="#ffffff" stroke="#1f77b4" stroke-width="2"/>
+<text x="355.96" y="192.59" font-family="Arial, sans-serif" font-size="10" fill="#1f77b4">typ 50 ohm</text>
+<polyline fill="none" stroke="#ff7f0e" stroke-width="1.1" stroke-dasharray="6 4" points="72.00,83.87 76.81,85.85 81.62,87.84 86.43,89.82 91.24,91.81 96.05,93.80 100.86,95.78 105.67,97.77 110.48,99.75 115.29,101.74 120.10,103.72 124.91,105.71 129.72,107.69 134.53,109.68 139.34,111.66 144.15,113.65 148.96,115.63 153.77,117.62 158.58,119.60 163.39,121.59 168.20,123.57 173.01,125.56 177.82,127.55 182.63,129.53 187.44,131.52 192.25,133.50 197.06,135.49 201.87,137.47 206.68,139.46 211.49,141.44 216.30,143.43 221.11,145.41 225.92,147.40 230.73,149.38 235.54,151.37 240.35,153.35 245.16,155.34 249.97,157.33 254.78,159.31 259.59,161.30 264.41,163.28 269.22,165.27 274.03,167.25 278.84,169.24 283.65,171.22 288.46,173.21 293.27,175.19 298.08,177.18 302.89,179.16 307.70,181.15 312.51,183.13 317.32,185.12 322.13,187.10 326.94,189.09 331.75,191.08 336.56,193.06 341.37,195.05 346.18,197.03 350.99,199.02 355.80,201.00 360.61,202.99 365.42,204.97 370.23,206.96 375.04,208.94 379.85,210.93 384.66,212.91 389.47,214.90 394.28,216.88 399.09,218.87 403.90,220.86 408.71,222.84 413.52,224.83 418.33,226.81 423.14,228.80 427.95,230.78 432.76,232.77 437.57,234.75 442.38,236.74 447.19,238.72 452.00,240.71"/>
+<circle cx="342.83" cy="195.65" r="4.6" fill="#ffffff" stroke="#ff7f0e" stroke-width="2"/>
+<text x="348.83" y="189.65" font-family="Arial, sans-serif" font-size="10" fill="#ff7f0e">min 42.5 ohm</text>
+<polyline fill="none" stroke="#2ca02c" stroke-width="1.1" stroke-dasharray="6 4" points="72.00,83.87 76.81,85.85 81.62,87.84 86.43,89.82 91.24,91.81 96.05,93.80 100.86,95.78 105.67,97.77 110.48,99.75 115.29,101.74 120.10,103.72 124.91,105.71 129.72,107.69 134.53,109.68 139.34,111.66 144.15,113.65 148.96,115.63 153.77,117.62 158.58,119.60 163.39,121.59 168.20,123.57 173.01,125.56 177.82,127.55 182.63,129.53 187.44,131.52 192.25,133.50 197.06,135.49 201.87,137.47 206.68,139.46 211.49,141.44 216.30,143.43 221.11,145.41 225.92,147.40 230.73,149.38 235.54,151.37 240.35,153.35 245.16,155.34 249.97,157.33 254.78,159.31 259.59,161.30 264.41,163.28 269.22,165.27 274.03,167.25 278.84,169.24 283.65,171.22 288.46,173.21 293.27,175.19 298.08,177.18 302.89,179.16 307.70,181.15 312.51,183.13 317.32,185.12 322.13,187.10 326.94,189.09 331.75,191.08 336.56,193.06 341.37,195.05 346.18,197.03 350.99,199.02 355.80,201.00 360.61,202.99 365.42,204.97 370.23,206.96 375.04,208.94 379.85,210.93 384.66,212.91 389.47,214.90 394.28,216.88 399.09,218.87 403.90,220.86 408.71,222.84 413.52,224.83 418.33,226.81 423.14,228.80 427.95,230.78 432.76,232.77 437.57,234.75 442.38,236.74 447.19,238.72 452.00,240.71"/>
+<circle cx="356.10" cy="201.13" r="4.6" fill="#ffffff" stroke="#2ca02c" stroke-width="2"/>
+<text x="362.10" y="195.13" font-family="Arial, sans-serif" font-size="10" fill="#2ca02c">max 57.5 ohm</text>
+<line x1="82.00" y1="80.00" x2="104.00" y2="80.00" stroke="#1f77b4" stroke-width="2"/>
+<text x="110.00" y="84.00" font-family="Arial, sans-serif" font-size="11">typ</text>
+<line x1="82.00" y1="97.00" x2="104.00" y2="97.00" stroke="#ff7f0e" stroke-width="2" stroke-dasharray="5 4"/>
+<text x="110.00" y="101.00" font-family="Arial, sans-serif" font-size="11">min</text>
+<line x1="82.00" y1="114.00" x2="104.00" y2="114.00" stroke="#2ca02c" stroke-width="2" stroke-dasharray="2 4"/>
+<text x="110.00" y="118.00" font-family="Arial, sans-serif" font-size="11">max</text>
+<text x="262.00" y="386.00" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">Output voltage (V)</text>
+<text transform="translate(22.00 205.00) rotate(-90)" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">Current (mA)</text>
+<rect x="492.00" y="62.00" width="380.00" height="286.00" fill="#fbfbfb" stroke="#c8c8c8"/>
+<text x="500.00" y="50.00" font-family="Arial, sans-serif" font-size="13" font-weight="700">[Pullup] Rload to GND</text>
+<line x1="492.00" y1="62.00" x2="492.00" y2="348.00" stroke="#ececec"/>
+<text x="492.00" y="366.00" text-anchor="middle" font-family="Arial, sans-serif" font-size="10">-1.1</text>
+<line x1="587.00" y1="62.00" x2="587.00" y2="348.00" stroke="#ececec"/>
+<text x="587.00" y="366.00" text-anchor="middle" font-family="Arial, sans-serif" font-size="10">-0.54</text>
+<line x1="682.00" y1="62.00" x2="682.00" y2="348.00" stroke="#ececec"/>
+<text x="682.00" y="366.00" text-anchor="middle" font-family="Arial, sans-serif" font-size="10">0</text>
+<line x1="777.00" y1="62.00" x2="777.00" y2="348.00" stroke="#ececec"/>
+<text x="777.00" y="366.00" text-anchor="middle" font-family="Arial, sans-serif" font-size="10">0.54</text>
+<line x1="872.00" y1="62.00" x2="872.00" y2="348.00" stroke="#ececec"/>
+<text x="872.00" y="366.00" text-anchor="middle" font-family="Arial, sans-serif" font-size="10">1.1</text>
+<line x1="492.00" y1="348.00" x2="872.00" y2="348.00" stroke="#ececec"/>
+<text x="485.00" y="352.00" text-anchor="end" font-family="Arial, sans-serif" font-size="10">-48</text>
+<line x1="492.00" y1="276.50" x2="872.00" y2="276.50" stroke="#ececec"/>
+<text x="485.00" y="280.50" text-anchor="end" font-family="Arial, sans-serif" font-size="10">-28</text>
+<line x1="492.00" y1="205.00" x2="872.00" y2="205.00" stroke="#ececec"/>
+<text x="485.00" y="209.00" text-anchor="end" font-family="Arial, sans-serif" font-size="10">-8.2</text>
+<line x1="492.00" y1="133.50" x2="872.00" y2="133.50" stroke="#ececec"/>
+<text x="485.00" y="137.50" text-anchor="end" font-family="Arial, sans-serif" font-size="10">11</text>
+<line x1="492.00" y1="62.00" x2="872.00" y2="62.00" stroke="#ececec"/>
+<text x="485.00" y="66.00" text-anchor="end" font-family="Arial, sans-serif" font-size="10">31</text>
+<line x1="682.00" y1="62" x2="682.00" y2="348" stroke="#777" stroke-dasharray="4 4"/>
+<line x1="492.0" y1="175.10" x2="872.0" y2="175.10" stroke="#777" stroke-dasharray="4 4"/>
+<polyline fill="none" stroke="#1f77b4" stroke-width="1.8" points="506.07,102.49 682.00,175.10 857.93,247.71"/>
+<polyline fill="none" stroke="#ff7f0e" stroke-width="1.8" stroke-dasharray="5 4" points="506.07,89.68 682.00,175.10 857.93,260.52"/>
+<polyline fill="none" stroke="#2ca02c" stroke-width="1.8" stroke-dasharray="2 4" points="506.07,111.96 682.00,175.10 857.93,238.24"/>
+<polyline fill="none" stroke="#1f77b4" stroke-width="1.1" stroke-dasharray="6 4" points="492.00,326.13 496.81,324.15 501.62,322.16 506.43,320.18 511.24,318.19 516.05,316.20 520.86,314.22 525.67,312.23 530.48,310.25 535.29,308.26 540.10,306.28 544.91,304.29 549.72,302.31 554.53,300.32 559.34,298.34 564.15,296.35 568.96,294.37 573.77,292.38 578.58,290.40 583.39,288.41 588.20,286.43 593.01,284.44 597.82,282.45 602.63,280.47 607.44,278.48 612.25,276.50 617.06,274.51 621.87,272.53 626.68,270.54 631.49,268.56 636.30,266.57 641.11,264.59 645.92,262.60 650.73,260.62 655.54,258.63 660.35,256.65 665.16,254.66 669.97,252.67 674.78,250.69 679.59,248.70 684.41,246.72 689.22,244.73 694.03,242.75 698.84,240.76 703.65,238.78 708.46,236.79 713.27,234.81 718.08,232.82 722.89,230.84 727.70,228.85 732.51,226.87 737.32,224.88 742.13,222.90 746.94,220.91 751.75,218.92 756.56,216.94 761.37,214.95 766.18,212.97 770.99,210.98 775.80,209.00 780.61,207.01 785.42,205.03 790.23,203.04 795.04,201.06 799.85,199.07 804.66,197.09 809.47,195.10 814.28,193.12 819.09,191.13 823.90,189.14 828.71,187.16 833.52,185.17 838.33,183.19 843.14,181.20 847.95,179.22 852.76,177.23 857.57,175.25 862.38,173.26 867.19,171.28 872.00,169.29"/>
+<circle cx="769.96" cy="211.41" r="4.6" fill="#ffffff" stroke="#1f77b4" stroke-width="2"/>
+<text x="775.96" y="205.41" font-family="Arial, sans-serif" font-size="10" fill="#1f77b4">typ 50 ohm</text>
+<polyline fill="none" stroke="#ff7f0e" stroke-width="1.1" stroke-dasharray="6 4" points="492.00,326.13 496.81,324.15 501.62,322.16 506.43,320.18 511.24,318.19 516.05,316.20 520.86,314.22 525.67,312.23 530.48,310.25 535.29,308.26 540.10,306.28 544.91,304.29 549.72,302.31 554.53,300.32 559.34,298.34 564.15,296.35 568.96,294.37 573.77,292.38 578.58,290.40 583.39,288.41 588.20,286.43 593.01,284.44 597.82,282.45 602.63,280.47 607.44,278.48 612.25,276.50 617.06,274.51 621.87,272.53 626.68,270.54 631.49,268.56 636.30,266.57 641.11,264.59 645.92,262.60 650.73,260.62 655.54,258.63 660.35,256.65 665.16,254.66 669.97,252.67 674.78,250.69 679.59,248.70 684.41,246.72 689.22,244.73 694.03,242.75 698.84,240.76 703.65,238.78 708.46,236.79 713.27,234.81 718.08,232.82 722.89,230.84 727.70,228.85 732.51,226.87 737.32,224.88 742.13,222.90 746.94,220.91 751.75,218.92 756.56,216.94 761.37,214.95 766.18,212.97 770.99,210.98 775.80,209.00 780.61,207.01 785.42,205.03 790.23,203.04 795.04,201.06 799.85,199.07 804.66,197.09 809.47,195.10 814.28,193.12 819.09,191.13 823.90,189.14 828.71,187.16 833.52,185.17 838.33,183.19 843.14,181.20 847.95,179.22 852.76,177.23 857.57,175.25 862.38,173.26 867.19,171.28 872.00,169.29"/>
+<circle cx="762.83" cy="214.35" r="4.6" fill="#ffffff" stroke="#ff7f0e" stroke-width="2"/>
+<text x="768.83" y="208.35" font-family="Arial, sans-serif" font-size="10" fill="#ff7f0e">min 42.5 ohm</text>
+<polyline fill="none" stroke="#2ca02c" stroke-width="1.1" stroke-dasharray="6 4" points="492.00,326.13 496.81,324.15 501.62,322.16 506.43,320.18 511.24,318.19 516.05,316.20 520.86,314.22 525.67,312.23 530.48,310.25 535.29,308.26 540.10,306.28 544.91,304.29 549.72,302.31 554.53,300.32 559.34,298.34 564.15,296.35 568.96,294.37 573.77,292.38 578.58,290.40 583.39,288.41 588.20,286.43 593.01,284.44 597.82,282.45 602.63,280.47 607.44,278.48 612.25,276.50 617.06,274.51 621.87,272.53 626.68,270.54 631.49,268.56 636.30,266.57 641.11,264.59 645.92,262.60 650.73,260.62 655.54,258.63 660.35,256.65 665.16,254.66 669.97,252.67 674.78,250.69 679.59,248.70 684.41,246.72 689.22,244.73 694.03,242.75 698.84,240.76 703.65,238.78 708.46,236.79 713.27,234.81 718.08,232.82 722.89,230.84 727.70,228.85 732.51,226.87 737.32,224.88 742.13,222.90 746.94,220.91 751.75,218.92 756.56,216.94 761.37,214.95 766.18,212.97 770.99,210.98 775.80,209.00 780.61,207.01 785.42,205.03 790.23,203.04 795.04,201.06 799.85,199.07 804.66,197.09 809.47,195.10 814.28,193.12 819.09,191.13 823.90,189.14 828.71,187.16 833.52,185.17 838.33,183.19 843.14,181.20 847.95,179.22 852.76,177.23 857.57,175.25 862.38,173.26 867.19,171.28 872.00,169.29"/>
+<circle cx="776.10" cy="208.87" r="4.6" fill="#ffffff" stroke="#2ca02c" stroke-width="2"/>
+<text x="782.10" y="202.87" font-family="Arial, sans-serif" font-size="10" fill="#2ca02c">max 57.5 ohm</text>
+<line x1="502.00" y1="80.00" x2="524.00" y2="80.00" stroke="#1f77b4" stroke-width="2"/>
+<text x="530.00" y="84.00" font-family="Arial, sans-serif" font-size="11">typ</text>
+<line x1="502.00" y1="97.00" x2="524.00" y2="97.00" stroke="#ff7f0e" stroke-width="2" stroke-dasharray="5 4"/>
+<text x="530.00" y="101.00" font-family="Arial, sans-serif" font-size="11">min</text>
+<line x1="502.00" y1="114.00" x2="524.00" y2="114.00" stroke="#2ca02c" stroke-width="2" stroke-dasharray="2 4"/>
+<text x="530.00" y="118.00" font-family="Arial, sans-serif" font-size="11">max</text>
+<text x="682.00" y="386.00" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">Vcc-relative table voltage (V)</text>
+<text transform="translate(442.00 205.00) rotate(-90)" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">Current (mA)</text>
+<rect x="72.00" y="418.00" width="800.00" height="144.00" fill="#ffffff" stroke="#c8c8c8"/>
+<text x="82.00" y="436.00" font-family="Arial, sans-serif" font-size="12" font-weight="700">Operating-point summary</text>
+<text x="82.00" y="454.00" font-family="Arial, sans-serif" font-size="10" font-weight="700" fill="#333">Table</text>
+<text x="174.00" y="454.00" font-family="Arial, sans-serif" font-size="10" font-weight="700" fill="#333">Corner</text>
+<text x="242.00" y="454.00" font-family="Arial, sans-serif" font-size="10" font-weight="700" fill="#333">Vout</text>
+<text x="332.00" y="454.00" font-family="Arial, sans-serif" font-size="10" font-weight="700" fill="#333">Iop</text>
+<text x="422.00" y="454.00" font-family="Arial, sans-serif" font-size="10" font-weight="700" fill="#333">Zout</text>
+<text x="512.00" y="454.00" font-family="Arial, sans-serif" font-size="10" font-weight="700" fill="#333">Rseries</text>
+<text x="82.00" y="473.00" font-family="Arial, sans-serif" font-size="10" fill="#1f77b4">pulldown</text>
+<text x="174.00" y="473.00" font-family="Arial, sans-serif" font-size="10" fill="#1f77b4">typ</text>
+<text x="242.00" y="473.00" font-family="Arial, sans-serif" font-size="10" fill="#1f77b4">0.5 V</text>
+<text x="332.00" y="473.00" font-family="Arial, sans-serif" font-size="10" fill="#1f77b4">10 mA</text>
+<text x="422.00" y="473.00" font-family="Arial, sans-serif" font-size="10" fill="#1f77b4">50 ohm</text>
+<text x="512.00" y="473.00" font-family="Arial, sans-serif" font-size="10" fill="#1f77b4">0 ohm</text>
+<text x="82.00" y="492.00" font-family="Arial, sans-serif" font-size="10" fill="#ff7f0e">pulldown</text>
+<text x="174.00" y="492.00" font-family="Arial, sans-serif" font-size="10" fill="#ff7f0e">min</text>
+<text x="242.00" y="492.00" font-family="Arial, sans-serif" font-size="10" fill="#ff7f0e">0.4595 V</text>
+<text x="332.00" y="492.00" font-family="Arial, sans-serif" font-size="10" fill="#ff7f0e">11 mA</text>
+<text x="422.00" y="492.00" font-family="Arial, sans-serif" font-size="10" fill="#ff7f0e">42.5 ohm</text>
+<text x="512.00" y="492.00" font-family="Arial, sans-serif" font-size="10" fill="#ff7f0e">7.499 ohm</text>
+<text x="82.00" y="511.00" font-family="Arial, sans-serif" font-size="10" fill="#2ca02c">pulldown</text>
+<text x="174.00" y="511.00" font-family="Arial, sans-serif" font-size="10" fill="#2ca02c">max</text>
+<text x="242.00" y="511.00" font-family="Arial, sans-serif" font-size="10" fill="#2ca02c">0.5349 V</text>
+<text x="332.00" y="511.00" font-family="Arial, sans-serif" font-size="10" fill="#2ca02c">9.3 mA</text>
+<text x="422.00" y="511.00" font-family="Arial, sans-serif" font-size="10" fill="#2ca02c">57.5 ohm</text>
+<text x="512.00" y="511.00" font-family="Arial, sans-serif" font-size="10" fill="#2ca02c">-7.501 ohm</text>
+<text x="82.00" y="530.00" font-family="Arial, sans-serif" font-size="10" fill="#1f77b4">pullup</text>
+<text x="174.00" y="530.00" font-family="Arial, sans-serif" font-size="10" fill="#1f77b4">typ</text>
+<text x="242.00" y="530.00" font-family="Arial, sans-serif" font-size="10" fill="#1f77b4">0.5 V</text>
+<text x="332.00" y="530.00" font-family="Arial, sans-serif" font-size="10" fill="#1f77b4">-10 mA</text>
+<text x="422.00" y="530.00" font-family="Arial, sans-serif" font-size="10" fill="#1f77b4">50 ohm</text>
+<text x="512.00" y="530.00" font-family="Arial, sans-serif" font-size="10" fill="#1f77b4">0 ohm</text>
+<text x="82.00" y="549.00" font-family="Arial, sans-serif" font-size="10" fill="#ff7f0e">pullup</text>
+<text x="174.00" y="549.00" font-family="Arial, sans-serif" font-size="10" fill="#ff7f0e">min</text>
+<text x="242.00" y="549.00" font-family="Arial, sans-serif" font-size="10" fill="#ff7f0e">0.5405 V</text>
+<text x="332.00" y="549.00" font-family="Arial, sans-serif" font-size="10" fill="#ff7f0e">-11 mA</text>
+<text x="422.00" y="549.00" font-family="Arial, sans-serif" font-size="10" fill="#ff7f0e">42.5 ohm</text>
+<text x="512.00" y="549.00" font-family="Arial, sans-serif" font-size="10" fill="#ff7f0e">7.499 ohm</text>
+<text x="82.00" y="568.00" font-family="Arial, sans-serif" font-size="10" fill="#2ca02c">pullup</text>
+<text x="174.00" y="568.00" font-family="Arial, sans-serif" font-size="10" fill="#2ca02c">max</text>
+<text x="242.00" y="568.00" font-family="Arial, sans-serif" font-size="10" fill="#2ca02c">0.4651 V</text>
+<text x="332.00" y="568.00" font-family="Arial, sans-serif" font-size="10" fill="#2ca02c">-9.3 mA</text>
+<text x="422.00" y="568.00" font-family="Arial, sans-serif" font-size="10" fill="#2ca02c">57.5 ohm</text>
+<text x="512.00" y="568.00" font-family="Arial, sans-serif" font-size="10" fill="#2ca02c">-7.501 ohm</text>
+</svg>

@@ -1,0 +1,74 @@
+Parsing lfd2nx_ami_tx.ibs ...
+  1 component(s), 1 model(s)
+  Target level IQ3: skipping higher-level checks
+Parsing lfd2nx_ami_tx.ibs ...
+  1 component(s), 1 model(s)
+  Target level IQ3: skipping higher-level checks
+Parsing lfd2nx_ami_tx.ibs ...
+  1 component(s), 1 model(s)
+  Target level IQ3: skipping higher-level checks
+Parsing lfd2nx_ami_tx.ibs ...
+  1 component(s), 1 model(s)
+  Target level IQ3: skipping higher-level checks
+Wrote spreadsheet report: C:\Users\simom\Desktop\Projects\IBIS_QA\reports\ibis_files\hark_lfd2nx_ami_tx\hark_lfd2nx_ami_tx.xlsx
+========================================================================
+IBIS QA Report — AUTO Checks and SEMI-AUTO Evidence
+File   : C:\Users\simom\Desktop\Projects\IBIS Files\Hark Labs\FPGA-MD-02115-1-0-Certus-NX-IBIS-AMI-File\FPGA-MD-02115-1-0-Certus-NX-IBIS-AMI-File\model_files\lfd2nx_ami_tx.ibs
+Target : IQ3
+IBIS Ver: 6.0   File Rev: 1.0   Date: July 17, 2025
+IQ Score in file: (not found)
+========================================================================
+
+[3.2.2] ✗  (1 fail, 0 pass, 0 NA, total 1)
+  ✗ [lfd2nx_Serdes_Tx] 2 pin RLC issue(s)
+      Pin 2: missing L/C values
+      Pin 3: missing L/C values
+
+[5.3.2] ✗  (1 fail, 0 pass, 0 NA, total 1)
+  ✗ [lfd2nx_out] [Pullup] voltage sweep insufficient
+      High end: table ends at 1V, need ≥ 2V
+
+[5.3.3] ✗  (1 fail, 0 pass, 0 NA, total 1)
+  ✗ [lfd2nx_out] [Pulldown] voltage sweep insufficient
+      High end: table ends at 1V, need ≥ 2V
+
+[5.3.6] ⚠  (0 fail, 0 pass, 0 NA, total 1)
+  ⚠ [lfd2nx_out] I-V stair-step evidence needs review
+      [Pulldown]: roughness=0.5 > 0.1
+      [Pullup]: roughness=0.5 > 0.1
+
+[5.3.14] ⚠  (0 fail, 0 pass, 0 NA, total 1)
+  ⚠ [lfd2nx_out] I-V point distribution evidence needs review
+      [Pulldown]: 3 point(s) < 20
+      [Pullup]: 3 point(s) < 20
+
+[5.5.3] ✗  (1 fail, 0 pass, 0 NA, total 1)
+  ✗ [lfd2nx_out] [Ramp] dV inconsistent with I-V load-line (6 corner(s))
+      Rise dV/typ: ramp=1V, expected≈0.3333V (200.0% error, limit 10.0%)
+      Rise dV/min: ramp=1V, expected≈0.3125V (220.0% error, limit 10.0%)
+      Rise dV/max: ramp=1V, expected≈0.3529V (183.3% error, limit 10.0%)
+      Fall dV/typ: ramp=1V, expected≈0.3333V (200.0% error, limit 10.0%)
+      Fall dV/min: ramp=1V, expected≈0.3125V (220.0% error, limit 10.0%)
+      Fall dV/max: ramp=1V, expected≈0.3529V (183.3% error, limit 10.0%)
+      Rise dV/typ: ramp=1V, expected≈0.3333V from Vhigh=0.5556V, Vlow=0V, error=200.0% (push-pull fixture=0V)
+      Rise dV/min: ramp=1V, expected≈0.3125V from Vhigh=0.5208V, Vlow=0V, error=220.0% (push-pull fixture=0V)
+      Rise dV/max: ramp=1V, expected≈0.3529V from Vhigh=0.5882V, Vlow=0V, error=183.3% (push-pull fixture=0V)
+      Fall dV/typ: ramp=1V, expected≈0.3333V from Vhigh=1V, Vlow=0.4444V, error=200.0% (push-pull fixture=1V)
+      Fall dV/min: ramp=1V, expected≈0.3125V from Vhigh=1V, Vlow=0.4792V, error=220.0% (push-pull fixture=1V)
+      Fall dV/max: ramp=1V, expected≈0.3529V from Vhigh=1V, Vlow=0.4118V, error=183.3% (push-pull fixture=1V)
+
+========================================================================
+SUMMARY
+  FAIL  : 4
+  WARN  : 2
+  PASS  : 20
+  NA    : 9
+  ERROR : 0
+  Total results: 35
+========================================================================
+
+REVIEW SIGNOFF
+  Final signoff ready : NO
+  Hard blockers       : 4
+  Semi-auto pending   : 2 / 2
+  Manual pending      : 16 / 16
