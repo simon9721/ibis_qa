@@ -34,8 +34,15 @@ MAX_LEVEL_CHOICES = ["IQ1", "IQ2", "IQ3", "IQ4"]
 def run_qa_report(path: Path, max_level: int | None = 3) -> dict:
     """Run the existing parser/checker/reporter pipeline and return a report dict."""
     ibis_file = IBISParser().parse(path)
-    results = CheckRunner(max_level=max_level).run(ibis_file)
-    return Reporter(results, ibis_file, verbose=True, max_level=max_level).as_dict()
+    file_classification = ibis_file.package_pin_only_info()
+    if file_classification:
+        results = []
+    else:
+        results = CheckRunner(max_level=max_level).run(ibis_file)
+    return Reporter(
+        results, ibis_file, verbose=True, max_level=max_level,
+        file_classification=file_classification,
+    ).as_dict()
 
 
 class IbisQaGui(tk.Tk):

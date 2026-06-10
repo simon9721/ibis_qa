@@ -297,6 +297,45 @@ class IBISFile:
     pkg_models:     dict[str, DefinePackageModel] = field(default_factory=dict)
     raw_lines:      list[str]                   = field(default_factory=list)
 
+    # Model names that the IBIS spec reserves for special pin connections
+    # rather than requiring a [Model] definition.
+    _RESERVED_MODEL_NAMES = {"power", "gnd", "nc"}
+
+    def package_pin_only_info(self) -> Optional[dict]:
+        """
+        Detect "package/pin-mapping only" files: files with no [Model]
+        definitions whose [Pin] entries reference model names that cannot
+        be resolved (i.e. are not POWER/GND/NC). Per the IBIS spec, every
+        [Pin] model_name must resolve to a [Model] defined in the same file
+        or to one of those reserved names — there is no cross-file include
+        mechanism. Such files are package/pin-map fragments meant to be
+        merged into a real model file, not standalone IBIS models.
+
+        Returns None for normal files, otherwise a dict describing the
+        unresolved model name references.
+        """
+        if self.models:
+            return None
+
+        unresolved: dict[str, int] = {}
+        total_pins = 0
+        for comp in self.components:
+            total_pins += len(comp.pins)
+            for pin in comp.pins:
+                model_name = (pin.model_name or "").strip()
+                if not model_name or model_name.lower() in self._RESERVED_MODEL_NAMES:
+                    continue
+                unresolved[model_name] = unresolved.get(model_name, 0) + 1
+
+        if not unresolved:
+            return None
+
+        return {
+            "unresolved_models": sorted(unresolved),
+            "unresolved_pin_count": sum(unresolved.values()),
+            "total_pin_count": total_pins,
+        }
+
 
 # ── Parser ────────────────────────────────────────────────────────────────────
 

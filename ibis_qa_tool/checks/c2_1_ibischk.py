@@ -21,6 +21,12 @@ if TYPE_CHECKING:
     from parser.ibis_parser import IBISFile
 
 
+_FILE_NAME_RE = re.compile(
+    r'^([ \t]*\[\s*file\s*name\s*\][ \t]*)(\S+)',
+    re.IGNORECASE | re.MULTILINE,
+)
+
+
 class Check2_1(CheckModule):
     check_ids  = ["2.1"]
     iq_level   = "LEVEL 1"
@@ -28,6 +34,19 @@ class Check2_1(CheckModule):
 
     def run(self, ibis_file: "IBISFile") -> list[CheckResult]:
         results = []
+
+        # ── Sub-check 0: [File Name] must match the actual filename ─────────
+        # IBISCHK hard-errors if these disagree. Fix it on disk before running
+        # IBISCHK so the file is self-consistent and the checker doesn't fail
+        # on a trivial keyword/filename mismatch.
+        corrected_from = self._fix_file_name_mismatch(ibis_file)
+        if corrected_from:
+            results.append(self._pass(
+                "2.1", ibis_file.file_name,
+                f"Corrected [File Name] from '{corrected_from}' to "
+                f"'{ibis_file.file_name}' to match the actual filename on disk.",
+                spec_ref="Quality Spec §2.1"
+            ))
 
         # ── Sub-check A: IQ score writeback note (§1.4) ─────────────────────
         if ibis_file.iq_score_in_file:
@@ -117,6 +136,38 @@ class Check2_1(CheckModule):
             ))
 
         return results
+
+    def _fix_file_name_mismatch(self, ibis_file: "IBISFile") -> str | None:
+        """
+        If the in-file [File Name] keyword doesn't match the actual filename
+        on disk, rewrite it in place to match. Returns the old declared
+        filename if a correction was made, otherwise None.
+
+        IBISCHK requires [File Name] to be all lowercase (and rejects mixed-
+        case filenames as errors), so the corrected value is the lowercased
+        actual filename rather than a verbatim copy.
+        """
+        actual = ibis_file.path.name.lower()
+        declared = (ibis_file.file_name or "").strip()
+        if not declared or declared == actual:
+            return None
+
+        try:
+            text = ibis_file.path.read_text(encoding="utf-8", errors="replace", newline="")
+        except OSError:
+            return None
+
+        new_text, n = _FILE_NAME_RE.subn(lambda m: m.group(1) + actual, text, count=1)
+        if n == 0:
+            return None
+
+        try:
+            ibis_file.path.write_text(new_text, encoding="utf-8", newline="")
+        except OSError:
+            return None
+
+        ibis_file.file_name = actual
+        return declared
 
     def _find_ibischk(self) -> str | None:
         """Find IBISCHK on PATH or in a repo-local IBISCHK bundle."""

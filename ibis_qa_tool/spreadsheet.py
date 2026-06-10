@@ -159,6 +159,8 @@ def _summary_sheet(
     ibischk = _ibischk_data(report)
     level1_passed = _level1_passed(report)
 
+    file_classification = report.get("file_classification")
+
     rows: list[list[object]] = [
         [Cell("IBIS Quality Spreadsheet Report", 1)],
         ["Generated", datetime.now().astimezone().isoformat(timespec="seconds")],
@@ -172,6 +174,26 @@ def _summary_sheet(
         ["Review overlay", f"{len(review_decisions)} decision(s) loaded" if review_decisions else "None"],
         ["Candidate level from checked items", score.get("tool_score") or score.get("implemented_check_score", "")],
         ["Final IQ score", "To be assigned after manual review and accepted exceptions"],
+    ]
+
+    if file_classification:
+        rows.extend([
+            [],
+            [Cell("File Classification: Package/Pin-Mapping Fragment (QA checks bypassed)", 3)],
+            ["Unresolved [Pin] model name(s)", ", ".join(file_classification.get("unresolved_models", []))],
+            ["Unresolved pins",
+             f"{file_classification.get('unresolved_pin_count', 0)} of "
+             f"{file_classification.get('total_pin_count', 0)}"],
+            ["Note",
+             "This file defines no [Model]s and references model name(s) "
+             "with no [Model] definition in this file and that are not "
+             "POWER/GND/NC. Per the IBIS spec there is no cross-file "
+             "include mechanism, so this is a package/pin-mapping "
+             "fragment, not a standalone IBIS model file. QA checks "
+             "were skipped."],
+        ])
+
+    rows.extend([
         [],
         [Cell("IBISCHK Parser Information", 3)],
         ["Version", ibischk.get("version", "")],
@@ -182,7 +204,7 @@ def _summary_sheet(
         [],
         [Cell("Result Summary", 3)],
         [Cell("Status", 2), Cell("Count", 2)],
-    ]
+    ])
     for status in ("PASS", "FAIL", "WARN", "NA", "ERROR"):
         rows.append([status, summary.get(status, 0)])
 

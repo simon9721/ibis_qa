@@ -122,9 +122,22 @@ def main():
           f"{len(ibis_file.models)} model(s)", file=sys.stderr)
     print(f"  Target level IQ{args.max_level}: skipping higher-level checks", file=sys.stderr)
 
-    # 2. Run checks
-    runner = CheckRunner(max_level=args.max_level)
-    results = runner.run(ibis_file)
+    # 2. Run checks (unless this is a package/pin-mapping fragment, not a
+    # standalone IBIS model file)
+    file_classification = ibis_file.package_pin_only_info()
+    if file_classification:
+        print(
+            "  PACKAGE/PIN-MAPPING FRAGMENT DETECTED — bypassing QA checks. "
+            f"Unresolved [Pin] model name(s): "
+            f"{', '.join(file_classification['unresolved_models'])} "
+            f"({file_classification['unresolved_pin_count']} of "
+            f"{file_classification['total_pin_count']} pins)",
+            file=sys.stderr,
+        )
+        results = []
+    else:
+        runner = CheckRunner(max_level=args.max_level)
+        results = runner.run(ibis_file)
 
     # 3. Report
     reporter = Reporter(
@@ -134,6 +147,7 @@ def main():
         max_level=args.max_level,
         zout_rload_ohm=args.zout_rload,
         review_decisions=args.review,
+        file_classification=file_classification,
     )
     report_dict = reporter.as_dict()
     active_review_decisions = args.review

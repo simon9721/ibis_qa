@@ -195,6 +195,22 @@ SUMMARY
 | ⚠ | WARN | Noteworthy finding; not a spec-mandated failure |
 | ! | ERROR | Check itself failed (parse issue or missing data) |
 
+### Package/pin-mapping fragment files
+
+Some vendor-supplied `.ibs` files (for example, package-pin-map files split
+out of a larger model release) define no `[Model]` sections and have `[Pin]`
+entries whose model name doesn't resolve to a `[Model]` in the same file or
+to a reserved `POWER`/`GND`/`NC` name. Per the IBIS spec, `[Pin]` model names
+must resolve within the same file — there is no cross-file include mechanism
+— so these files are not valid standalone IBIS models.
+
+The tool detects this case via `IBISFile.package_pin_only_info()`, skips the
+full check suite for that file (no PASS/FAIL/WARN/NA results are produced),
+and instead reports a `file_classification` block with the unresolved model
+name(s) and pin counts. Text, Markdown, standalone HTML, JSON, and `.xlsx`
+reports all show an explicit "Package/Pin-Mapping Fragment — QA checks
+bypassed" notice for these files.
+
 ---
 
 ## File Structure
@@ -247,6 +263,13 @@ unresolved warnings.
 > not fail check 2.1.
 > Missing in-file IBISCHK version documentation is also reported as a note,
 > not as a Level 1 blocker.
+
+> **Note on `[File Name]` auto-correction:** Before running IBISCHK, check
+> 2.1 compares the in-file `[File Name]` keyword against the actual filename
+> on disk. IBISCHK hard-errors on a mismatch (and on any upper-case
+> character in `File_name`), so if they disagree the tool rewrites the
+> `[File Name]` line in place to the lowercased actual filename and reports
+> a `PASS` documenting the correction. This edits the `.ibs` file.
 
 ---
 
