@@ -406,6 +406,8 @@ def _plot_keys_for_check(check_id: str) -> list[str]:
         return ["iv_clamp"]
     if check_id in {"5.3.8", "5.3.9"}:
         return ["iv_zero"]
+    if check_id in {"5.3.4", "5.3.5"}:
+        return ["iv_clamp_sweep"]
     if check_id.startswith("5.3."):
         return ["iv"]
     if check_id.startswith("5.7."):
@@ -419,6 +421,7 @@ _CURVE_LABELS = {
     "iv": "I-V curves",
     "iv_clamp": "I-V clamp detail",
     "iv_zero": "I-V pullup/pulldown 0 V detail",
+    "iv_clamp_sweep": "I-V clamp sweep range",
     "isso": "ISSO curves",
     "waveform": "V-T curves",
     "zout": "Zout load-line curves",
@@ -472,16 +475,22 @@ def _qa_links_for_visual(model_results: list[dict], curve_key: str) -> str:
 
 
 
-def _render_toc(lines: list[str], max_level: int | None, has_report_diff: bool = False) -> None:
+def _render_toc(lines: list[str], max_level: int | None, has_report_diff: bool = False,
+                 has_file_classification: bool = False) -> None:
     score_cap = max_level or 4
     lines.extend([
         "",
         "## Table of Contents",
         '<a id="table-of-contents"></a>',
         "",
+    ])
+    if has_file_classification:
+        lines.append("- [File Classification: Package/Pin-Mapping Fragment](#file-classification)")
+    lines.extend([
         "- [Score Assessment](#score-assessment)",
         "- [Review Signoff Summary](#review-signoff-summary)",
         "- [Result Summary](#result-summary)",
+        "- [Failed & Error Items](#failed-error-items)",
         "- [Passed Items Per Level](#passed-items-per-level)",
         "- [Zout Estimates](#zout-estimates)",
         "- [Quality Check Results](#quality-check-results)",
@@ -506,6 +515,90 @@ def _render_toc(lines: list[str], max_level: int | None, has_report_diff: bool =
         "- [Manual Review Items](#manual-review-items)",
         "- [Appendix A: IQ Levels](#appendix-a-iq-levels)",
         "- [Appendix B: Special Designators](#appendix-b-special-designators)",
+    ])
+
+
+_FAILURE_STATUS_RANK = {Status.ERROR.value: 0, Status.FAIL.value: 1}
+
+
+def _render_failures_overview(
+        lines: list[str],
+        report: dict,
+        plot_refs: dict[str, dict[str, str]] | None = None) -> None:
+    plot_refs = plot_refs or {}
+    results = report.get("results", [])
+    failures = [
+        result for result in results
+        if (result.get("effective_status") or result.get("status")) in _FAILURE_STATUS_RANK
+    ]
+
+    lines.extend([
+        "",
+        "## Failed & Error Items",
+        '<a id="failed-error-items"></a>',
+        "",
+    ])
+
+    if not failures:
+        lines.extend([
+            "No FAIL or ERROR items were found.",
+            "",
+            "[Back to table of contents](#table-of-contents)",
+        ])
+        return
+
+    lines.extend([
+        f"{len(failures)} item(s) require attention. Each entry links to its full write-up in "
+        "Quality Check Results and shows the most relevant visual where the issue is reflected "
+        "in a plot. Items without an associated plot are rule/range checks best understood from "
+        "the explanation text.",
+        "",
+    ])
+
+    failures_sorted = sorted(failures, key=lambda result: (
+        _FAILURE_STATUS_RANK.get(result.get("effective_status") or result.get("status", ""), 9),
+        _check_sort_key(result.get("check_id", "")),
+        result.get("subject", ""),
+    ))
+
+    for result in failures_sorted:
+        status = result.get("effective_status") or result.get("status")
+        check_id = result.get("check_id", "")
+        subject = result.get("subject", "")
+        lines.extend([
+            "",
+            f"### {status}: {check_id} - {_md_cell(subject)}",
+            "",
+            f"- {_md_cell(result.get('message', ''))}",
+            f"- [Full check details](#check-{_anchor_id(check_id)})",
+        ])
+        for detail in result.get("details", [])[:10]:
+            lines.append(f"- {_md_cell(detail)}")
+
+        model_name = result.get("model_name")
+        shown_visual = False
+        if model_name and model_name in plot_refs:
+            for curve_key in _plot_keys_for_check(check_id):
+                ref = plot_refs[model_name].get(curve_key)
+                if not ref:
+                    continue
+                label = _CURVE_LABELS.get(curve_key, "curves")
+                anchor = _visual_anchor(model_name, curve_key)
+                lines.extend([
+                    "",
+                    f"![{model_name} {label}]({ref})",
+                    f"[Jump to {label} for {model_name}](#{anchor})",
+                ])
+                shown_visual = True
+        if not shown_visual:
+            lines.append("")
+            lines.append(
+                "_No directly associated plot for this item; see the explanation above._"
+            )
+
+    lines.extend([
+        "",
+        "[Back to table of contents](#table-of-contents)",
     ])
 
 
@@ -972,6 +1065,27 @@ def _score_summary_from_levels(level_summary: list[dict]) -> dict:
     }
 
 
+def _render_package_pin_only_notice(file_classification: dict) -> list[str]:
+    c = file_classification
+    return [
+        "",
+        "## File Classification: Package/Pin-Mapping Fragment",
+        '<a id="file-classification"></a>',
+        "",
+        "**QA checks were bypassed for this file.**",
+        "",
+        "This file defines no `[Model]` sections, and its `[Pin]` entries "
+        f"reference model name(s) {_md_cell(', '.join(c['unresolved_models']))} "
+        f"({c['unresolved_pin_count']} of {c['total_pin_count']} pins) that "
+        "are not `POWER`/`GND`/`NC` and have no `[Model]` definition in this "
+        "file. Per the IBIS spec, every `[Pin]` model name must resolve to a "
+        "`[Model]` defined in the same file (or to a reserved name) — there "
+        "is no cross-file include mechanism. This file is therefore a "
+        "package/pin-mapping fragment, not a valid standalone IBIS model "
+        "file, and the remaining QA checks have been skipped.",
+    ]
+
+
 def render_markdown_report(
         report: dict,
         asset_dir: str | Path | None = None,
@@ -1018,7 +1132,11 @@ def render_markdown_report(
         f"- Zout estimates: {zout_summary.get('models_with_estimates', 0)} model(s), {zout_summary.get('estimate_count', 0)} table/corner point(s)",
     ]
 
-    _render_toc(lines, max_level, bool(report.get("report_diff")))
+    file_classification = report.get("file_classification")
+    if file_classification:
+        lines.extend(_render_package_pin_only_notice(file_classification))
+
+    _render_toc(lines, max_level, bool(report.get("report_diff")), bool(file_classification))
 
     lines.extend([
         "",
@@ -1046,8 +1164,13 @@ def render_markdown_report(
 
     for status in ("PASS", "FAIL", "WARN", "NA", "ERROR", "EXCEPTION"):
         lines.append(f"| {status} | {summary.get(status, 0)} | {effective_summary.get(status, 0)} |")
+    lines.append(
+        f"| Total | {sum(summary.get(status, 0) for status in ('PASS', 'FAIL', 'WARN', 'NA', 'ERROR'))} | {sum(effective_summary.get(status, 0) for status in ('PASS', 'FAIL', 'WARN', 'NA', 'ERROR', 'EXCEPTION'))} |"
+    )
+
+    _render_failures_overview(lines, report, plot_refs)
+
     lines.extend([
-        f"| Total | {sum(summary.get(status, 0) for status in ('PASS', 'FAIL', 'WARN', 'NA', 'ERROR'))} | {sum(effective_summary.get(status, 0) for status in ('PASS', 'FAIL', 'WARN', 'NA', 'ERROR', 'EXCEPTION'))} |",
         "",
         "## Passed Items Per Level",
         '<a id="passed-items-per-level"></a>',
@@ -1101,6 +1224,7 @@ def render_markdown_report(
                 ("iv", model_plot_refs.get("iv_label", "I-V curves"), model_plot_refs.get("iv")),
                 ("iv_clamp", "I-V clamp detail", model_plot_refs.get("iv_clamp")),
                 ("iv_zero", "I-V pullup/pulldown 0 V detail", model_plot_refs.get("iv_zero")),
+                ("iv_clamp_sweep", "I-V clamp sweep range", model_plot_refs.get("iv_clamp_sweep")),
                 ("zout", "Zout load-line curves", model_plot_refs.get("zout")),
                 ("isso", "ISSO curves", model_plot_refs.get("isso")),
                 ("waveform", waveform_label, model_plot_refs.get("waveform")),
@@ -1515,13 +1639,15 @@ class Reporter:
                  ibis_file: "IBISFile", verbose: bool = False,
                  max_level: int | None = None,
                  zout_rload_ohm: float = DEFAULT_ZOUT_RLOAD_OHM,
-                 review_decisions: dict | str | Path | None = None):
+                 review_decisions: dict | str | Path | None = None,
+                 file_classification: dict | None = None):
         self.results   = results
         self.ibis_file = ibis_file
         self.verbose   = verbose
         self.max_level = max_level
         self.zout_rload_ohm = zout_rload_ohm
         self.review_decisions = review_decisions
+        self.file_classification = file_classification
 
     # ── Text report ───────────────────────────────────────────────────────────
 
@@ -1536,6 +1662,9 @@ class Reporter:
         lines.append(f"IBIS Ver: {f.ibis_ver}   File Rev: {f.file_rev}   Date: {f.date}")
         lines.append(f"IQ Score in file: {f.iq_score_in_file or '(not found)'}")
         lines.append("=" * 72)
+
+        if self.file_classification:
+            lines.extend(self._package_pin_only_banner())
 
         # Group by check_id
         by_check: dict[str, list[CheckResult]] = {}
@@ -1590,6 +1719,24 @@ class Reporter:
 
         return "\n".join(lines)
 
+    def _package_pin_only_banner(self) -> list[str]:
+        c = self.file_classification
+        lines = [
+            "",
+            "*** PACKAGE/PIN-MAPPING FRAGMENT — QA CHECKS BYPASSED ***",
+            "This file defines no [Model]s and its [Pin] entries reference "
+            "model name(s) " + ", ".join(c["unresolved_models"]) +
+            f" ({c['unresolved_pin_count']} of {c['total_pin_count']} pins) "
+            "that are not POWER/GND/NC and have no [Model] definition in "
+            "this file. Per the IBIS spec, [Pin] model names must resolve "
+            "within the same file — there is no cross-file include "
+            "mechanism — so this is not a valid standalone IBIS model file. "
+            "It is treated as a package/pin-mapping fragment and the "
+            "remaining QA checks have been skipped.",
+            "=" * 72,
+        ]
+        return lines
+
     # ── JSON report ───────────────────────────────────────────────────────────
 
     def as_dict(self) -> dict:
@@ -1607,6 +1754,7 @@ class Reporter:
             "ibis_ver": f.ibis_ver,
             "file_rev": f.file_rev,
             "iq_score_in_file": f.iq_score_in_file,
+            "file_classification": self.file_classification,
             "header": self._header_dict(),
             "components": self._components_dict(scoped_results),
             "models": self._models_dict(scoped_results, zout_by_model),

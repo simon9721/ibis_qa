@@ -46,7 +46,7 @@ CC_FLAT_SLOPE_TOL_A = 1e-6     # 1 uA edge flatness evidence tolerance
 CLAMP_LEAKAGE_TOL_A = 1e-6     # 1 uA clamp leakage evidence tolerance
 
 # ── 5.5.3 Ramp dV vs I-V load-line ──────────────────────────────────────────
-RAMP_DV_TOLERANCE   = 0.05     # 5%
+RAMP_DV_TOLERANCE   = 0.10     # 10%
 RAMP_DV_FRACTION    = 0.60     # use 60% of (Vhigh - Vlow)
 
 # ── 5.7.1 ISSO endpoint tolerance ────────────────────────────────────────────

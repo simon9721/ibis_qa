@@ -7,6 +7,8 @@ import re
 from pathlib import Path
 from xml.sax.saxutils import escape
 
+from config import IV_RANGE_TOLERANCE, ZERO_CROSS_TOL_A
+
 
 _IV_COLORS = {
     "pulldown": "#1f77b4",
@@ -60,11 +62,13 @@ _FAMILY_PREFIXES = {
     "iv": ("5.3",),
     "iv_clamp": ("5.3",),
     "iv_zero": ("5.3",),
+    "iv_clamp_sweep": ("5.3",),
     "isso": ("5.7",),
     "waveform": ("5.5", "5.8"),
 }
 _IV_CLAMP_CHECKS = {"5.3.10"}
 _IV_ZERO_CHECKS = {"5.3.8", "5.3.9"}
+_IV_CLAMP_SWEEP_CHECKS = {"5.3.4", "5.3.5"}
 
 
 def write_markdown_plot_assets(
@@ -116,6 +120,12 @@ def write_markdown_plot_assets(
                 zero_name = f"iv_zero_{safe_model}.svg"
                 (asset_path / zero_name).write_text(zero_svg, encoding="utf-8")
                 model_refs["iv_zero"] = f"{ref_prefix.rstrip('/')}/{zero_name}"
+
+            clamp_sweep_svg = _render_iv_clamp_sweep_svg(model_name, model_info, iv_tables)
+            if clamp_sweep_svg:
+                clamp_sweep_name = f"iv_clamp_sweep_{safe_model}.svg"
+                (asset_path / clamp_sweep_name).write_text(clamp_sweep_svg, encoding="utf-8")
+                model_refs["iv_clamp_sweep"] = f"{ref_prefix.rstrip('/')}/{clamp_sweep_name}"
 
             zout_svg = _render_zout_loadline_svg(model_name, model_info, iv_tables)
             if zout_svg:
@@ -191,14 +201,20 @@ def _render_table_svg(
     if x_guides == "iv":
         curves = _combined_iv_curves(tables)
         combined_curves = curves
+        mono_points = _monotonicity_violation_points(model_info)
     else:
         curves = _table_curves(tables, colors, labels)
         combined_curves = []
+        mono_points = []
 
     xs = [x for curve in curves for x, _y in curve["points"]]
     ys = [y for curve in curves for _x, y in curve["points"]]
     if not xs or not ys:
         return _empty_svg(width, height, title)
+
+    for point in mono_points:
+        xs.append(point["v2"])
+        ys.append(point["i2"])
 
     x_min, x_max = _padded_range(min(xs), max(xs), 0.02)
     y_min, y_max = _padded_range(min(ys), max(ys), 0.08)
@@ -232,6 +248,8 @@ def _render_table_svg(
 
     if x_guides != "iv":
         _append_zero_current_markers(parts, tables, colors, labels, x_min, x_max, y_min, y_max, sx, sy)
+    else:
+        _append_monotonicity_markers(parts, mono_points, x_min, x_max, y_min, y_max, sx, sy)
     _append_table_legend(
         parts,
         tables,
@@ -405,6 +423,85 @@ def _render_iv_zero_detail_svg(model_name: str, model_info: dict, tables: dict) 
         x_axis_label="Table voltage (V), zoomed around 0 V",
         note="pullup/pulldown curves show typ/min/max; open circles mark I(0 V)",
     )
+
+
+def _render_iv_clamp_sweep_svg(model_name: str, model_info: dict, tables: dict) -> str | None:
+    clamp_tables = {
+        name: tables.get(name)
+        for name in ("gnd_clamp", "power_clamp")
+        if (tables.get(name) or {}).get("rows")
+    }
+    if not clamp_tables:
+        return None
+
+    width = 800
+    height = 560
+    left = 78
+    right = 28
+    top = 52
+    bottom = 160
+    plot_w = width - left - right
+    plot_h = height - top - bottom
+
+    curves = _table_curves(clamp_tables, _IV_COLORS, _IV_LABELS)
+    sweep_findings = [
+        finding for finding in _sweep_range_findings(model_info)
+        if finding["table"] in clamp_tables
+    ]
+
+    xs = [x for curve in curves for x, _y in curve["points"]]
+    ys = [y for curve in curves for _x, y in curve["points"]]
+    if not xs or not ys:
+        return None
+
+    for finding in sweep_findings:
+        xs.append(finding["value"])
+
+    x_min, x_max = _padded_range(min(xs), max(xs), 0.05)
+    y_min, y_max = _padded_range(min(ys), max(ys), 0.08)
+
+    sx = lambda value: left + (value - x_min) / (x_max - x_min) * plot_w
+    sy = lambda value: top + (y_max - value) / (y_max - y_min) * plot_h
+
+    parts = [
+        _svg_open(width, height),
+        '<rect width="100%" height="100%" fill="#ffffff"/>',
+        f'<text x="{left}" y="25" font-family="Arial, sans-serif" font-size="16" font-weight="700">{escape(model_name)} I-V Clamp Sweep Range</text>',
+        f'<rect x="{left}" y="{top}" width="{plot_w}" height="{plot_h}" fill="#fbfbfb" stroke="#c8c8c8"/>',
+    ]
+    _append_xy_grid(parts, left, top, plot_w, plot_h, x_min, x_max, y_min, y_max, sx, sy)
+    _append_zero_guides(parts, left, top, plot_w, plot_h, x_min, x_max, y_min, y_max, sx, sy)
+    _append_voltage_guides(parts, model_info, "iv", top, plot_h, x_min, x_max, sx)
+
+    for curve in curves:
+        points = " ".join(f"{sx(x):.2f},{sy(y):.2f}" for x, y in curve["points"])
+        dash = f' stroke-dasharray="{curve["dash"]}"' if curve["dash"] else ""
+        parts.append(
+            f'<polyline fill="none" stroke="{curve["color"]}" stroke-width="{curve["width"]}" '
+            f'opacity="{curve["opacity"]}"{dash} points="{points}"/>'
+        )
+
+    _append_sweep_range_markers(
+        parts, sweep_findings, top, plot_h, x_min, x_max, sx,
+        color_for=lambda finding: _IV_COLORS.get(finding["table"], "#b42318"),
+    )
+
+    _append_table_legend(parts, clamp_tables, _IV_COLORS, _IV_LABELS, left + 10, top + 18)
+    _append_findings_panel(
+        parts,
+        _plot_findings(model_info, "iv_clamp_sweep"),
+        left,
+        top + plot_h + 64,
+        plot_w,
+        max_lines=3,
+    )
+    parts.extend([
+        f'<text x="{left + plot_w / 2:.2f}" y="{top + plot_h + 44:.2f}" text-anchor="middle" font-family="Arial, sans-serif" font-size="12">Table voltage (V)</text>',
+        f'<text transform="translate(18 {top + plot_h / 2:.2f}) rotate(-90)" text-anchor="middle" font-family="Arial, sans-serif" font-size="12">Current (A)</text>',
+        '<text x="420" y="42" font-family="Arial, sans-serif" font-size="11" fill="#555">solid=typ, dashed=min/max; dashed vertical=required sweep boundary (5.3.4/5.3.5)</text>',
+        '</svg>',
+    ])
+    return "\n".join(parts)
 
 
 def _render_zout_loadline_svg(model_name: str, model_info: dict, tables: dict) -> str | None:
@@ -702,6 +799,10 @@ def _render_iv_window_svg(
     if not y_values:
         return None
 
+    if family == "iv_zero":
+        y_values.append(ZERO_CROSS_TOL_A)
+        y_values.append(-ZERO_CROSS_TOL_A)
+
     y_min, y_max = _padded_range(min(y_values), max(y_values), 0.16)
     sx = lambda value: left + (value - x_min) / (x_max - x_min) * plot_w
     sy = lambda value: top + (y_max - value) / (y_max - y_min) * plot_h
@@ -729,6 +830,22 @@ def _render_iv_window_svg(
             f'<circle cx="{sx(0.0):.2f}" cy="{sy(marker["value"]):.2f}" r="{marker["radius"]:.1f}" '
             f'fill="#ffffff" stroke="{marker["color"]}" stroke-width="1.5"/>'
         )
+
+    if family == "iv_zero":
+        for bound_value, label in (
+            (ZERO_CROSS_TOL_A, f"+{ZERO_CROSS_TOL_A * 1e6:.0f}uA leakage limit"),
+            (-ZERO_CROSS_TOL_A, f"-{ZERO_CROSS_TOL_A * 1e6:.0f}uA leakage limit"),
+        ):
+            if y_min <= bound_value <= y_max:
+                y = sy(bound_value)
+                parts.append(
+                    f'<line x1="{left}" y1="{y:.2f}" x2="{left + plot_w}" y2="{y:.2f}" '
+                    f'stroke="#b54708" stroke-width="1.4" stroke-dasharray="5 3"/>'
+                )
+                parts.append(
+                    f'<text x="{left + plot_w - 4}" y="{y - 4:.2f}" text-anchor="end" '
+                    f'font-family="Arial, sans-serif" font-size="10" fill="#b54708">{escape(label)}</text>'
+                )
 
     _append_table_legend(
         parts,
@@ -1021,6 +1138,124 @@ def _combined_iv_curves(tables: dict) -> list[dict]:
     return curves
 
 
+_SWEEP_TABLE_TO_COMBO = {
+    "pulldown": "pd_gnd",
+    "gnd_clamp": "pd_gnd",
+    "pullup": "pu_pwr",
+    "power_clamp": "pu_pwr",
+}
+
+
+def _sweep_range_findings(model_info: dict) -> list[dict]:
+    """FAIL results carrying 5.3.x sweep-range data, mapped to combined curves."""
+    findings = []
+    for result in model_info.get("results", []):
+        if result.get("status") != "FAIL":
+            continue
+        sweep = (result.get("data") or {}).get("sweep_range")
+        if not sweep:
+            continue
+        combo = _SWEEP_TABLE_TO_COMBO.get(sweep.get("table", ""))
+        if combo is None:
+            continue
+        expected_min = sweep.get("expected_min")
+        expected_max = sweep.get("expected_max")
+        actual_min = sweep.get("actual_min")
+        actual_max = sweep.get("actual_max")
+        if None in (expected_min, expected_max, actual_min, actual_max):
+            continue
+        table = sweep.get("table", "")
+        tol = abs(expected_max - expected_min) * IV_RANGE_TOLERANCE
+        if actual_min > expected_min + tol:
+            findings.append({
+                "check_id": result.get("check_id", ""),
+                "combo": combo,
+                "table": table,
+                "bound": "min",
+                "value": expected_min,
+            })
+        if actual_max < expected_max - tol:
+            findings.append({
+                "check_id": result.get("check_id", ""),
+                "combo": combo,
+                "table": table,
+                "bound": "max",
+                "value": expected_max,
+            })
+    return findings
+
+
+def _monotonicity_violation_points(model_info: dict) -> list[dict]:
+    """FAIL results carrying 5.3.7 monotonicity violation points."""
+    points = []
+    for result in model_info.get("results", []):
+        if result.get("status") != "FAIL":
+            continue
+        mono = (result.get("data") or {}).get("monotonicity_violations")
+        if not mono:
+            continue
+        for point in mono.get("points", []):
+            v2 = point.get("v2")
+            i2 = point.get("i2")
+            if v2 is None or i2 is None:
+                continue
+            points.append({
+                "check_id": result.get("check_id", ""),
+                "combo": mono.get("combo"),
+                "v2": v2,
+                "i2": i2,
+            })
+    return points
+
+
+def _append_sweep_range_markers(parts, findings: list[dict], top, plot_h, x_min, x_max, sx,
+                                 color_for=None) -> None:
+    if color_for is None:
+        color_for = lambda finding: _IV_COMBINED_COLORS.get(finding.get("combo"), "#b42318")
+    for index, finding in enumerate(findings):
+        value = finding["value"]
+        if not (x_min <= value <= x_max):
+            continue
+        color = color_for(finding)
+        x = sx(value)
+        parts.append(
+            f'<line x1="{x:.2f}" y1="{top}" x2="{x:.2f}" y2="{top + plot_h}" '
+            f'stroke="{color}" stroke-width="1.6" stroke-dasharray="6 3"/>'
+        )
+        bound_symbol = "≤" if finding["bound"] == "min" else "≥"
+        label = f'{finding["check_id"]} needs {bound_symbol}{value:.3g}V'
+        text_y = top + 14 + (index % 4) * 14
+        parts.append(
+            f'<text x="{x + 4:.2f}" y="{text_y}" font-family="Arial, sans-serif" '
+            f'font-size="11" fill="{color}">{escape(label)}</text>'
+        )
+
+
+def _append_monotonicity_markers(parts, points: list[dict], x_min, x_max, y_min, y_max, sx, sy) -> None:
+    for point in points:
+        v2, i2 = point["v2"], point["i2"]
+        if not (x_min <= v2 <= x_max and y_min <= i2 <= y_max):
+            continue
+        px, py = sx(v2), sy(i2)
+        parts.append(
+            f'<circle cx="{px:.2f}" cy="{py:.2f}" r="6" fill="none" '
+            f'stroke="#b42318" stroke-width="2"/>'
+        )
+        parts.append(
+            f'<line x1="{px - 5:.2f}" y1="{py - 5:.2f}" x2="{px + 5:.2f}" y2="{py + 5:.2f}" '
+            f'stroke="#b42318" stroke-width="1.6"/>'
+        )
+        parts.append(
+            f'<line x1="{px - 5:.2f}" y1="{py + 5:.2f}" x2="{px + 5:.2f}" y2="{py - 5:.2f}" '
+            f'stroke="#b42318" stroke-width="1.6"/>'
+        )
+    if points:
+        parts.append(
+            f'<text x="420" y="{30}" font-family="Arial, sans-serif" font-size="11" '
+            f'fill="#b42318">x = 5.3.7 monotonicity violation</text>'
+        )
+
+
 def _append_iv_operating_inset(
         parts,
         tables: dict,
@@ -1148,11 +1383,13 @@ def _plot_findings(model_info: dict, family: str) -> list[dict]:
             continue
         if not any(check_id.startswith(prefix) for prefix in prefixes):
             continue
-        if family == "iv" and check_id in (_IV_CLAMP_CHECKS | _IV_ZERO_CHECKS):
+        if family == "iv" and check_id in (_IV_CLAMP_CHECKS | _IV_ZERO_CHECKS | _IV_CLAMP_SWEEP_CHECKS):
             continue
         if family == "iv_clamp" and check_id not in _IV_CLAMP_CHECKS:
             continue
         if family == "iv_zero" and check_id not in _IV_ZERO_CHECKS:
+            continue
+        if family == "iv_clamp_sweep" and check_id not in _IV_CLAMP_SWEEP_CHECKS:
             continue
         findings.append(result)
     findings.sort(key=lambda result: (

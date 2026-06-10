@@ -57,7 +57,7 @@ class Check5_3_IVSweep(CheckModule):
             results.append(self._check_sweep(
                 "5.3.2", subj, model.pullup,
                 expected_min=-vcc, expected_max=2*vcc,
-                label="[Pullup]",
+                label="[Pullup]", table_key="pullup",
                 spec_ref="Quality Spec §5.3.2"))
         elif model.pullup is None and pullup_not_required:
             results.append(self._na("5.3.2", subj,
@@ -69,7 +69,7 @@ class Check5_3_IVSweep(CheckModule):
             results.append(self._check_sweep(
                 "5.3.3", subj, model.pulldown,
                 expected_min=-vcc, expected_max=2*vcc,
-                label="[Pulldown]",
+                label="[Pulldown]", table_key="pulldown",
                 spec_ref="Quality Spec §5.3.3"))
         elif model.pulldown is None and pulldown_not_required:
             results.append(self._na("5.3.3", subj,
@@ -77,19 +77,23 @@ class Check5_3_IVSweep(CheckModule):
                 spec_ref="Quality Spec §5.3.3"))
 
         # ── 5.3.4: [POWER Clamp] sweep ───────────────────────────────────────
+        # Minimum required coverage is -Vcc to 0 (extending to +2*Vcc is
+        # permitted/recommended but not required).
         if model.power_clamp is not None and pwr_vcc is not None:
             results.append(self._check_sweep(
                 "5.3.4", subj, model.power_clamp,
-                expected_min=-pwr_vcc, expected_max=2*pwr_vcc,
-                label="[POWER Clamp]",
+                expected_min=-pwr_vcc, expected_max=0.0,
+                label="[POWER Clamp]", table_key="power_clamp",
                 spec_ref="Quality Spec §5.3.4"))
 
         # ── 5.3.5: [GND Clamp] sweep ─────────────────────────────────────────
+        # Minimum required coverage is -Vcc to +Vcc (extending to +2*Vcc is
+        # permitted/recommended but not required).
         if model.gnd_clamp is not None and pwr_vcc is not None:
             results.append(self._check_sweep(
                 "5.3.5", subj, model.gnd_clamp,
-                expected_min=-pwr_vcc, expected_max=2*pwr_vcc,
-                label="[GND Clamp]",
+                expected_min=-pwr_vcc, expected_max=pwr_vcc,
+                label="[GND Clamp]", table_key="gnd_clamp",
                 spec_ref="Quality Spec §5.3.5"))
 
         # ── 5.3.7: Monotonicity ───────────────────────────────────────────────
@@ -206,6 +210,7 @@ class Check5_3_IVSweep(CheckModule):
     def _check_sweep(self, check_id: str, subj: str, table: "IVTable",
                      expected_min: float, expected_max: float,
                      label: str, required_max: bool = True,
+                     table_key: str = "",
                      spec_ref: str = "") -> CheckResult:
         if not table.rows:
             return self._error(check_id, subj,
@@ -225,7 +230,14 @@ class Check5_3_IVSweep(CheckModule):
         if issues:
             return self._fail(check_id, subj,
                 f"{label} voltage sweep insufficient", details=issues,
-                spec_ref=spec_ref)
+                spec_ref=spec_ref,
+                data={"sweep_range": {
+                    "table": table_key,
+                    "expected_min": expected_min,
+                    "expected_max": expected_max,
+                    "actual_min": actual_min,
+                    "actual_max": actual_max,
+                }})
         return self._pass(check_id, subj,
             f"{label} voltage sweep OK "
             f"({actual_min:.3g}V to {actual_max:.3g}V)",
@@ -243,10 +255,10 @@ class Check5_3_IVSweep(CheckModule):
         """
         results = []
         groups = [
-            ("[Pulldown] + [GND Clamp]", [model.pulldown, model.gnd_clamp], "nondecreasing"),
-            ("[Pullup] + [POWER Clamp]", [model.pullup, model.power_clamp], "nonincreasing"),
+            ("[Pulldown] + [GND Clamp]", "pd_gnd", [model.pulldown, model.gnd_clamp], "nondecreasing"),
+            ("[Pullup] + [POWER Clamp]", "pu_pwr", [model.pullup, model.power_clamp], "nonincreasing"),
         ]
-        for label, tables, direction in groups:
+        for label, combo_id, tables, direction in groups:
             present = [table for table in tables if table is not None and len(table.rows) >= 2]
             if not present:
                 continue
@@ -256,12 +268,17 @@ class Check5_3_IVSweep(CheckModule):
                     f"{label}: insufficient combined I-V data for monotonicity",
                     spec_ref="Quality Spec §5.3.7"))
                 continue
-            violations = self._monotonicity_violations(points, direction)
+            violations, violation_points = self._monotonicity_violations(points, direction)
             if violations:
                 results.append(self._fail("5.3.7", subj,
                     f"{label} combined curve non-monotonic ({len(violations)} violation(s))",
                     details=violations[:10],
-                    spec_ref="Quality Spec §5.3.7"))
+                    spec_ref="Quality Spec §5.3.7",
+                    data={"monotonicity_violations": {
+                        "combo": combo_id,
+                        "direction": direction,
+                        "points": violation_points[:10],
+                    }}))
             else:
                 results.append(self._pass("5.3.7", subj,
                     f"{label} combined curve monotonicity OK ({direction}, {len(points)} sample point(s))",
@@ -292,8 +309,9 @@ class Check5_3_IVSweep(CheckModule):
     def _monotonicity_violations(
             self,
             points: list[tuple[float, float]],
-            direction: str) -> list[str]:
+            direction: str) -> tuple[list[str], list[dict]]:
         violations = []
+        violation_points = []
         for (v1, i1), (v2, i2) in zip(points, points[1:]):
             if direction == "nonincreasing":
                 bad = v2 > v1 and i2 > i1 + MONO_TOLERANCE_A
@@ -305,7 +323,10 @@ class Check5_3_IVSweep(CheckModule):
                 violations.append(
                     f"V={v2:.4g}: combined current {wording} from {i1*1000:.4g}mA "
                     f"to {i2*1000:.4g}mA")
-        return violations
+                violation_points.append({
+                    "v1": v1, "i1": i1, "v2": v2, "i2": i2,
+                })
+        return violations, violation_points
 
     def _check_zero_crossing(self, check_id: str, subj: str,
                               table: "IVTable", model: "Model",
@@ -352,13 +373,13 @@ class Check5_3_IVSweep(CheckModule):
                 "Cannot determine ECL supply range — missing reference voltages"))
             return results
         eff_vcc = (pos_vcc or 0.0) - (neg_vcc or 0.0)
-        for label, table in [('[Pulldown]', model.pulldown),
-                              ('[Pullup]', model.pullup)]:
+        for label, table_key, table in [('[Pulldown]', 'pulldown', model.pulldown),
+                                          ('[Pullup]', 'pullup', model.pullup)]:
             if table is None:
                 continue
             results.append(self._check_sweep(
                 "5.3.13", subj, table,
                 expected_min=-eff_vcc, expected_max=2*eff_vcc,
-                label=f"ECL {label}",
+                label=f"ECL {label}", table_key=table_key,
                 spec_ref="Quality Spec §5.3.13"))
         return results

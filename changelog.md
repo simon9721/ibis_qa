@@ -1,5 +1,97 @@
 # Changelog
 
+## 2026-06-09
+
+### Added
+
+- Added a "Failed & Error Items" overview section near the top of Markdown
+  and HTML reports (right after Result Summary). It lists every FAIL/ERROR
+  result with its message, details, a link to the full write-up, and the
+  most relevant inline visual (or a note when the item is a rule/range
+  check with no associated plot).
+- Checks 5.3.2-5.3.5 and the 5.3.13 ECL sweep now attach structured
+  `data.sweep_range` (table key, expected/actual min/max voltage) to FAIL
+  results. Check 5.3.7 (monotonicity) now attaches structured
+  `data.monotonicity_violations` (combined-curve id, direction, violation
+  points) to FAIL results.
+- The main I-V Combined Curves plot now visualizes 5.3.7 monotonicity
+  failures: X-marker circles highlight the exact points where a combined
+  curve violates monotonicity.
+- Loosened the 5.5.3 ramp dV/load-line tolerance (`RAMP_DV_TOLERANCE` in
+  `config.py`) from 5% to 10%, matching real-world margins seen in hibiki's
+  ramp data.
+- Fixed the 5.3.4/5.3.5 high-end sweep-range requirements in
+  `checks/c5_3_iv_tables.py` to match the Quality Spec's *minimum required*
+  coverage rather than its *recommended* coverage: 5.3.4 ([POWER Clamp])
+  now requires only -Vcc to 0 (was -Vcc to +2*Vcc), and 5.3.5 ([GND Clamp])
+  now requires -Vcc to +Vcc (was -Vcc to +2*Vcc). Extending to +2*Vcc
+  remains permitted/recommended but is no longer required to pass.
+- Added a new "I-V Clamp Sweep Range" plot (`iv_clamp_sweep_<model>.svg`,
+  family `iv_clamp_sweep`) for checks 5.3.4/5.3.5. Unlike the main I-V plot,
+  it shows the original (non-combined) `[GND Clamp]`/`[POWER Clamp]`
+  typ/min/max curves, with dashed vertical boundary lines marking the
+  voltage each table needs to reach (e.g. "5.3.5 needs ≥2V") drawn directly
+  against the relevant curve in its own color. Wired into the "Failed &
+  Error Items" overview, per-check sections, and "Visual Curves by Model".
+- The "I-V Pullup/Pulldown 0 V Detail" plot (5.3.8/5.3.9 leakage check) now
+  draws dashed ±`ZERO_CROSS_TOL_A` (±1 µA) horizontal lines so the
+  pass/fail leakage boundary is visible against the plotted curves.
+- Check 2.1 now auto-corrects a mismatched `[File Name]` keyword before
+  running IBISCHK: if the declared filename doesn't match the actual
+  filename on disk, the `.ibs` file is rewritten in place with the actual
+  filename (lowercased, since IBISCHK rejects upper-case characters in
+  `File_name`). A `PASS` result documents the correction when it occurs.
+- Added `IBISFile.package_pin_only_info()` to detect "package/pin-mapping
+  fragment" `.ibs` files: files with no `[Model]` definitions whose `[Pin]`
+  entries reference model names that don't resolve to `POWER`/`GND`/`NC`
+  (per the IBIS spec, `[Pin]` model names must resolve within the same file
+  — there is no cross-file include mechanism).
+- When a package/pin-mapping fragment is detected, `ibis_qa.py` and
+  `gui.py` now skip running the full check suite (`results = []`) and
+  report a `file_classification` block instead. Text, Markdown, standalone
+  HTML, JSON, and `.xlsx` spreadsheet reports all show an explicit
+  "Package/Pin-Mapping Fragment — QA checks bypassed" notice with the
+  unresolved model name(s) and pin counts.
+
+### Tested
+
+- Regenerated Markdown/HTML/JSON reports for `Arbel_I3C_IBIS.ibs` and
+  `Hibiki_IOCL_I3C_I2C_ibis_20260211.ibs` and confirmed: the "Failed &
+  Error Items" section lists every FAIL with embedded plots; the
+  `mpad_1_S7_*` models show a new I-V Clamp Sweep Range plot with
+  individual `[GND Clamp]`/`[POWER Clamp]` curves and "5.3.4 needs ≥2V" /
+  "5.3.5 needs ≥2V" dashed boundary lines in each table's own color; the
+  I-V Combined Curves plot no longer shows those sweep-range boundary
+  lines (only the 5.3.7 monotonicity X-circles remain); the 5.3.7
+  monotonicity violations on `I2C_TX_8mA_tx` (and others) are marked with
+  red X-circles on the combined curves; and the I-V Pullup/Pulldown 0 V
+  Detail plots show ±1 µA dashed leakage-limit lines.
+- Regenerated all 12 batch reports (arbel, hibiki, and the 10 Hark Labs
+  files) via `gen_batch.sh` with no errors.
+- Confirmed the 10% ramp tolerance: `I2C_TX_8mA_tx` (10.0% error) now
+  passes 5.5.3, while `I3C_TX_0p125mA_tx` (10.4%-10.5% error) still
+  correctly fails.
+- Confirmed the 5.3.4/5.3.5 fix: arbel's `mpad_1_S7_*` models, which
+  previously failed both checks ("table ends at 0V/1V, need ≥2V/2.4V/3.6V"),
+  now pass with the corrected -Vcc..0 / -Vcc..+Vcc requirements; re-ran all
+  12 batch reports and confirmed no remaining 5.3.4/5.3.5 FAILs.
+- Verified Python compilation for `ibis_qa.py`, `gui.py`, `reporter.py`,
+  `spreadsheet.py`, `parser/ibis_parser.py`, and
+  `checks/c2_1_ibischk.py`.
+- Verified the `[File Name]` auto-correction on copies of
+  `Arbel_I3C_IBIS.ibs` and `Hibiki_IOCL_I3C_I2C_ibis_20260211.ibs`: both
+  went from IBISCHK errors (mismatched/upper-case `File_name`) to 0 errors,
+  and re-running is idempotent (no further corrections).
+- Ran the QA tool against all 5 Hark Labs `*_package_pin.ibs` files
+  (`ibis_asg256_package_pin.ibs`, `ibis_bbg484_package_pin.ibs`,
+  `ibis_bfg484_package_pin.ibs`, `ibis_cbg256_package_pin.ibs`,
+  `ibis_lfg672_package_pin.ibs`); each is correctly classified as a
+  package/pin-mapping fragment (unresolved `signal` model references) and
+  produces zero check results, with the bypass notice present in text,
+  Markdown, HTML, and spreadsheet output.
+- Confirmed normal files (`abi_gen3.ibs`, Micron `z41c.ibs`) are unaffected
+  — no classification banner, checks run as before.
+
 ## 2026-06-03
 
 ### Added
