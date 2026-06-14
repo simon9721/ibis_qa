@@ -492,7 +492,7 @@ def _render_toc(lines: list[str], max_level: int | None, has_report_diff: bool =
         "- [Score Assessment](#score-assessment)",
         "- [Review Signoff Summary](#review-signoff-summary)",
         "- [Result Summary](#result-summary)",
-        "- [Failed & Error Items](#failed-error-items)",
+        "- [Failed, Warning & Error Items](#failed-error-items)",
         "- [Passed Items Per Level](#passed-items-per-level)",
         "- [Zout Estimates](#zout-estimates)",
         "- [IBIS Table Plots](#ibis-table-plots)",
@@ -521,7 +521,7 @@ def _render_toc(lines: list[str], max_level: int | None, has_report_diff: bool =
     ])
 
 
-_FAILURE_STATUS_RANK = {Status.ERROR.value: 0, Status.FAIL.value: 1}
+_FAILURE_STATUS_RANK = {Status.ERROR.value: 0, Status.FAIL.value: 1, Status.WARN.value: 2}
 
 
 def _render_failures_overview(
@@ -537,21 +537,21 @@ def _render_failures_overview(
 
     lines.extend([
         "",
-        "## Failed & Error Items",
+        "## Failed, Warning & Error Items",
         '<a id="failed-error-items"></a>',
         "",
     ])
 
     if not failures:
         lines.extend([
-            "No FAIL or ERROR items were found.",
+            "No FAIL, WARN, or ERROR items were found.",
             "",
             "[Back to table of contents](#table-of-contents)",
         ])
         return
 
     lines.extend([
-        f"{len(failures)} item(s) require attention. Each entry links to its full write-up in "
+        f"{len(failures)} item(s) require attention (FAIL, WARN, or ERROR). Each entry links to its full write-up in "
         "Quality Check Results and shows the most relevant visual where the issue is reflected "
         "in a plot. Items without an associated plot are rule/range checks best understood from "
         "the explanation text.",
@@ -633,7 +633,7 @@ def _render_failures_overview(
         "",
         "---",
         "",
-        "— End of Failed & Error Items —",
+        "— End of Failed, Warning & Error Items —",
         "",
         "[Back to table of contents](#table-of-contents)",
     ])
