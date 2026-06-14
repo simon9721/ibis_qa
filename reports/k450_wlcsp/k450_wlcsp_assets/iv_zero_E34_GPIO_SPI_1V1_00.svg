@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="520" viewBox="0 0 800 520">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="78" y="25" font-family="Arial, sans-serif" font-size="16" font-weight="700">E34_GPIO_SPI_1V1_00 I-V Pullup/Pulldown 0 V Detail</text>
+<rect x="78" y="54" width="690" height="306" fill="#fbfbfb" stroke="#c8c8c8"/>
+<line x1="78.00" y1="54" x2="78.00" y2="360" stroke="#ececec"/>
+<text x="78.00" y="382" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">0</text>
+<line x1="216.00" y1="54" x2="216.00" y2="360" stroke="#ececec"/>
+<text x="216.00" y="382" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">0.22</text>
+<line x1="354.00" y1="54" x2="354.00" y2="360" stroke="#ececec"/>
+<text x="354.00" y="382" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">0.44</text>
+<line x1="492.00" y1="54" x2="492.00" y2="360" stroke="#ececec"/>
+<text x="492.00" y="382" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">0.66</text>
+<line x1="630.00" y1="54" x2="630.00" y2="360" stroke="#ececec"/>
+<text x="630.00" y="382" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">0.88</text>
+<line x1="768.00" y1="54" x2="768.00" y2="360" stroke="#ececec"/>
+<text x="768.00" y="382" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">1.1</text>
+<line x1="78" y1="360.00" x2="768" y2="360.00" stroke="#ececec"/>
+<text x="70" y="364.00" text-anchor="end" font-family="Arial, sans-serif" font-size="11">-0.00938</text>
+<line x1="78" y1="298.80" x2="768" y2="298.80" stroke="#ececec"/>
+<text x="70" y="302.80" text-anchor="end" font-family="Arial, sans-serif" font-size="11">-0.00542</text>
+<line x1="78" y1="237.60" x2="768" y2="237.60" stroke="#ececec"/>
+<text x="70" y="241.60" text-anchor="end" font-family="Arial, sans-serif" font-size="11">-0.00146</text>
+<line x1="78" y1="176.40" x2="768" y2="176.40" stroke="#ececec"/>
+<text x="70" y="180.40" text-anchor="end" font-family="Arial, sans-serif" font-size="11">0.0025</text>
+<line x1="78" y1="115.20" x2="768" y2="115.20" stroke="#ececec"/>
+<text x="70" y="119.20" text-anchor="end" font-family="Arial, sans-serif" font-size="11">0.00646</text>
+<line x1="78" y1="54.00" x2="768" y2="54.00" stroke="#ececec"/>
+<text x="70" y="58.00" text-anchor="end" font-family="Arial, sans-serif" font-size="11">0.0104</text>
+<line x1="78.00" y1="54" x2="78.00" y2="360" stroke="#777" stroke-dasharray="4 4"/>
+<line x1="78" y1="215.04" x2="768" y2="215.04" stroke="#777" stroke-dasharray="4 4"/>
+<line x1="78.00" y1="54" x2="78.00" y2="360" stroke="#555" stroke-dasharray="2 4"/>
+<text x="82.00" y="68" font-family="Arial, sans-serif" font-size="11" fill="#555">0V</text>
+<line x1="768.00" y1="54" x2="768.00" y2="360" stroke="#555" stroke-dasharray="2 4"/>
+<text x="772.00" y="68" font-family="Arial, sans-serif" font-size="11" fill="#555">Vcc</text>
+<polyline fill="none" stroke="#1f77b4" stroke-width="1.2" opacity="0.55" stroke-dasharray="4 4" points="78.00,215.04 103.09,209.83 134.45,204.03 165.82,199.04 197.18,194.86 203.45,194.12 209.73,193.41 216.00,192.74 222.27,192.10 228.55,191.49 234.82,190.91 241.09,190.36 247.36,189.84 253.64,189.36 266.18,188.48 297.55,186.77 328.91,185.66 360.27,184.97 391.64,184.50 429.27,184.05 460.64,183.73 492.00,183.44 523.36,183.17 554.73,182.92 586.09,182.68 592.36,182.63 623.73,182.41 630.00,182.36 636.27,182.32 655.09,182.19 686.45,181.99 699.00,181.91 717.82,181.79 749.18,181.59 768.00,181.48"/>
+<polyline fill="none" stroke="#1f77b4" stroke-width="1.2" opacity="0.55" stroke-dasharray="4 4" points="78.00,215.04 103.09,199.25 134.45,180.84 165.82,164.19 197.18,149.52 203.45,146.83 209.73,144.24 216.00,141.72 222.27,139.29 228.55,136.95 234.82,134.70 241.09,132.53 247.36,130.44 253.64,128.45 266.18,124.70 297.55,116.80 328.91,110.83 360.27,106.55 391.64,103.56 429.27,101.09 460.64,99.57 492.00,98.31 523.36,97.23 554.73,96.26 586.09,95.37 592.36,95.20 623.73,94.38 630.00,94.22 636.27,94.06 655.09,93.60 686.45,92.87 699.00,92.58 717.82,92.16 749.18,91.49 768.00,91.09"/>
+<polyline fill="none" stroke="#1f77b4" stroke-width="2.0" opacity="1.0" points="78.00,215.04 103.09,205.64 134.45,194.92 165.82,185.45 197.18,177.30 203.45,175.83 209.73,174.42 216.00,173.06 222.27,171.76 228.55,170.51 234.82,169.31 241.09,168.17 247.36,167.08 253.64,166.05 266.18,164.14 297.55,160.28 328.91,157.58 360.27,155.80 391.64,154.62 429.27,153.59 460.64,152.89 492.00,152.27 523.36,151.70 554.73,151.18 586.09,150.68 592.36,150.59 623.73,150.13 630.00,150.04 636.27,149.95 655.09,149.69 686.45,149.28 699.00,149.11 717.82,148.87 749.18,148.48 768.00,148.26"/>
+<polyline fill="none" stroke="#d62728" stroke-width="1.2" opacity="0.55" stroke-dasharray="4 4" points="78.00,215.04 96.82,218.50 103.09,219.59 109.36,220.66 115.64,221.69 121.91,222.69 128.18,223.67 134.45,224.61 140.73,225.52 147.00,226.40 165.82,228.88 184.64,231.13 190.91,231.83 197.18,232.50 203.45,233.14 209.73,233.76 216.00,234.35 222.27,234.92 228.55,235.47 234.82,235.99 241.09,236.48 247.36,236.94 253.64,237.39 259.91,237.80 266.18,238.20 272.45,238.57 278.73,238.91 285.00,239.23 291.27,239.53 297.55,239.81 303.82,240.07 310.09,240.30 316.36,240.52 322.64,240.73 328.91,240.92 360.27,241.67 391.64,242.21 429.27,242.73 460.64,243.10 492.00,243.44 523.36,243.74 554.73,244.02 586.09,244.28 623.73,244.57 636.27,244.67 655.09,244.80 686.45,245.02 699.00,245.10 717.82,245.22 749.18,245.42 768.00,245.53"/>
+<polyline fill="none" stroke="#d62728" stroke-width="1.2" opacity="0.55" stroke-dasharray="4 4" points="78.00,215.04 96.82,224.49 103.09,227.54 109.36,230.54 115.64,233.49 121.91,236.38 128.18,239.19 134.45,241.92 140.73,244.54 147.00,247.02 165.82,254.25 184.64,261.21 190.91,263.43 197.18,265.61 203.45,267.73 209.73,269.80 216.00,271.82 222.27,273.78 228.55,275.69 234.82,277.54 241.09,279.33 247.36,281.07 253.64,282.76 259.91,284.39 266.18,285.96 272.45,287.48 278.73,288.94 285.00,290.35 291.27,291.70 297.55,293.00 303.82,294.25 310.09,295.44 316.36,296.58 322.64,297.67 328.91,298.71 360.27,303.21 391.64,306.70 429.27,309.91 460.64,312.01 492.00,313.75 523.36,315.25 554.73,316.56 586.09,317.73 623.73,319.00 636.27,319.39 655.09,319.96 686.45,320.85 699.00,321.18 717.82,321.68 749.18,322.46 768.00,322.91"/>
+<polyline fill="none" stroke="#d62728" stroke-width="2.0" opacity="1.0" points="78.00,215.04 96.82,220.80 103.09,222.63 109.36,224.43 115.64,226.18 121.91,227.88 128.18,229.54 134.45,231.16 140.73,232.75 147.00,234.29 165.82,238.71 184.64,242.80 190.91,244.09 197.18,245.34 203.45,246.55 209.73,247.73 216.00,248.87 222.27,249.97 228.55,251.02 234.82,252.04 241.09,253.03 247.36,253.97 253.64,254.87 259.91,255.73 266.18,256.56 272.45,257.34 278.73,258.09 285.00,258.79 291.27,259.46 297.55,260.10 303.82,260.69 310.09,261.26 316.36,261.78 322.64,262.28 328.91,262.74 360.27,264.65 391.64,266.04 429.27,267.31 460.64,268.17 492.00,268.93 523.36,269.60 554.73,270.22 586.09,270.78 623.73,271.41 636.27,271.61 655.09,271.89 686.45,272.35 699.00,272.52 717.82,272.78 749.18,273.19 768.00,273.43"/>
+<circle cx="78.00" cy="215.04" r="4.0" fill="#ffffff" stroke="#1f77b4" stroke-width="1.5"/>
+<circle cx="78.00" cy="215.04" r="3.0" fill="#ffffff" stroke="#1f77b4" stroke-width="1.5"/>
+<circle cx="78.00" cy="215.04" r="3.0" fill="#ffffff" stroke="#1f77b4" stroke-width="1.5"/>
+<circle cx="78.00" cy="215.04" r="4.0" fill="#ffffff" stroke="#d62728" stroke-width="1.5"/>
+<circle cx="78.00" cy="215.04" r="3.0" fill="#ffffff" stroke="#d62728" stroke-width="1.5"/>
+<circle cx="78.00" cy="215.04" r="3.0" fill="#ffffff" stroke="#d62728" stroke-width="1.5"/>
+<line x1="78" y1="215.03" x2="768" y2="215.03" stroke="#b54708" stroke-width="1.4" stroke-dasharray="5 3"/>
+<text x="764" y="211.03" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#b54708">+1uA leakage limit</text>
+<line x1="78" y1="215.06" x2="768" y2="215.06" stroke="#b54708" stroke-width="1.4" stroke-dasharray="5 3"/>
+<text x="764" y="211.06" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#b54708">-1uA leakage limit</text>
+<line x1="88" y1="72" x2="110" y2="72" stroke="#1f77b4" stroke-width="2.4"/>
+<text x="116" y="76" font-family="Arial, sans-serif" font-size="12">[Pulldown]</text>
+<line x1="88" y1="90" x2="110" y2="90" stroke="#d62728" stroke-width="2.4"/>
+<text x="116" y="94" font-family="Arial, sans-serif" font-size="12">[Pullup]</text>
+<text x="423.00" y="404.00" text-anchor="middle" font-family="Arial, sans-serif" font-size="12">Table voltage (V), zoomed around 0 V</text>
+<text transform="translate(18 207.00) rotate(-90)" text-anchor="middle" font-family="Arial, sans-serif" font-size="12">Current (A)</text>
+<text x="420" y="42" font-family="Arial, sans-serif" font-size="11" fill="#555">pullup/pulldown curves show typ/min/max; open circles mark I(0 V)</text>
+</svg>

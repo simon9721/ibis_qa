@@ -81,14 +81,87 @@ img {
 }
 ul { padding-left: 22px; }
 p { margin: 9px 0; }
+/* ── Collapsible sections ─────────────────────────────────────────────── */
+details.sec2, details.sec3, details.sec4 { margin: 2px 0; }
+details.sec2 > summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 7px;
+  margin-top: 34px;
+  user-select: none;
+}
+details.sec2 > summary::-webkit-details-marker { display: none; }
+details.sec2 > summary::marker { display: none; }
+details.sec2 > summary::before {
+  content: "▶";
+  font-size: 11px;
+  color: var(--muted);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+details.sec2[open] > summary::before { content: "▼"; }
+details.sec2 > summary > h2 {
+  display: inline;
+  margin: 0;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+details.sec3 > summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  user-select: none;
+  margin-top: 28px;
+}
+details.sec3 > summary::-webkit-details-marker { display: none; }
+details.sec3 > summary::marker { display: none; }
+details.sec3 > summary::before {
+  content: "▶";
+  font-size: 9px;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+details.sec3[open] > summary::before { content: "▼"; }
+details.sec3 > summary > h3 { display: inline; margin: 0; }
+details.sec4 > summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  user-select: none;
+  margin-top: 24px;
+}
+details.sec4 > summary::-webkit-details-marker { display: none; }
+details.sec4 > summary::marker { display: none; }
+details.sec4 > summary::before {
+  content: "▶";
+  font-size: 8px;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+details.sec4[open] > summary::before { content: "▼"; }
+details.sec4 > summary > h4 { display: inline; margin: 0; }
+.sec-body { padding-left: 2px; }
+/* ── Nested TOC ───────────────────────────────────────────────────────── */
+ul li.toc-sub { margin-left: 18px; font-size: 12.5px; }
 </style>
 </head>
 <body>
 <main class="report">
 <h1>IBIS QA Report</h1>
-<h2>File Summary</h2>
+<details class="sec2" open>
+<summary><h2>File Summary</h2></summary>
+<div class="sec-body">
+
 <ul>
-<li>Generated: 2026-06-09T23:35:26-05:00</li>
+<li>Generated: 2026-06-12T22:46:17-05:00</li>
 <li>IBIS file: <code>ibis_jedi_fcbga67219012_rev_s_12_01_20_22u_820u_pcie_pin.ibs</code></li>
 <li>Target level: IQ3</li>
 <li>IBIS version: 5.0</li>
@@ -100,11 +173,23 @@ p { margin: 9px 0; }
 <li>Package models: 0</li>
 <li>Zout estimates: 0 model(s), 0 table/corner point(s)</li>
 </ul>
-<h2>File Classification: Package/Pin-Mapping Fragment</h2>
+
+</div>
+</details>
+<details class="sec2">
+<summary><h2>File Classification: Package/Pin-Mapping Fragment</h2></summary>
+<div class="sec-body">
+
 <a id="file-classification"></a>
 <p><strong>QA checks were bypassed for this file.</strong></p>
 <p>This file defines no <code>[Model]</code> sections, and its <code>[Pin]</code> entries reference model name(s) signal (48 of 145 pins) that are not <code>POWER</code>/<code>GND</code>/<code>NC</code> and have no <code>[Model]</code> definition in this file. Per the IBIS spec, every <code>[Pin]</code> model name must resolve to a <code>[Model]</code> defined in the same file (or to a reserved name) — there is no cross-file include mechanism. This file is therefore a package/pin-mapping fragment, not a valid standalone IBIS model file, and the remaining QA checks have been skipped.</p>
-<h2>Table of Contents</h2>
+
+</div>
+</details>
+<details class="sec2">
+<summary><h2>Table of Contents</h2></summary>
+<div class="sec-body">
+
 <a id="table-of-contents"></a>
 <ul>
 <li><a href="#file-classification">File Classification: Package/Pin-Mapping Fragment</a></li>
@@ -114,69 +199,71 @@ p { margin: 9px 0; }
 <li><a href="#failed-error-items">Failed &amp; Error Items</a></li>
 <li><a href="#passed-items-per-level">Passed Items Per Level</a></li>
 <li><a href="#zout-estimates">Zout Estimates</a></li>
+<li><a href="#ibis-table-plots">IBIS Table Plots</a></li>
 <li><a href="#quality-check-results">Quality Check Results</a></li>
 </ul>
 <p><strong>LEVEL 1 Checks</strong></p>
 <ul>
 <li><a href="#level-1-check-results">LEVEL 1 check results</a></li>
-<li><a href="#check-2-1">2.1 - IBIS file passes IBISCHK</a></li>
+<li class="toc-sub"><a href="#check-2-1">2.1 - IBIS file passes IBISCHK</a></li>
 </ul>
 <p><strong>LEVEL 2 Checks</strong></p>
 <ul>
 <li><a href="#level-2-check-results">LEVEL 2 check results</a></li>
-<li><a href="#check-3-1-1">3.1.1 - (Package) must have typ/min/max values</a></li>
-<li><a href="#check-3-1-2">3.1.2 - (Package) model values must be reasonable</a></li>
-<li><a href="#check-3-2-1">3.2.1 - (Pin) section complete</a></li>
-<li><a href="#check-3-3-1">3.3.1 - (Diff Pin) referenced pin models match</a></li>
-<li><a href="#check-4-1">4.1 - (Model Selector) entries have reasonable descriptions</a></li>
-<li><a href="#check-4-2">4.2 - Default (Model Selector) entries are consistent</a></li>
-<li><a href="#check-5-1-1">5.1.1 - (Model) parameters have correct typ/min/max order</a></li>
-<li><a href="#check-5-1-2">5.1.2 - (Model) C_comp is reasonable</a></li>
-<li><a href="#check-5-1-3">5.1.3 - (Temperature Range) is reasonable</a></li>
-<li><a href="#check-5-1-4">5.1.4 - (Voltage Range) or (* Reference) is reasonable</a></li>
-<li><a href="#check-5-2-5">5.2.5 - (Model Spec) S_Overshoot subparameters complete and match data sheet</a></li>
-<li><a href="#check-5-2-6">5.2.6 - (Model Spec) S_Overshoot subparameters track typ/min/max</a></li>
-<li><a href="#check-5-2-7">5.2.7 - (Model Spec) D_Overshoot_* subparameters complete and match data sheet</a></li>
-<li><a href="#check-5-2-8">5.2.8 - (Model Spec) D_Overshoot_* subparameters track typ/min/max</a></li>
-<li><a href="#check-5-3-1">5.3.1 - I-V tables have correct typ/min/max order</a></li>
-<li><a href="#check-5-3-2">5.3.2 - (Pullup) voltage sweep range is correct</a></li>
-<li><a href="#check-5-3-3">5.3.3 - (Pulldown) voltage sweep range is correct</a></li>
-<li><a href="#check-5-3-4">5.3.4 - (POWER Clamp) voltage sweep range is correct</a></li>
-<li><a href="#check-5-3-5">5.3.5 - (GND Clamp) voltage sweep range is correct</a></li>
-<li><a href="#check-5-3-6">5.3.6 - I-V tables do not exhibit stair-stepping</a></li>
-<li><a href="#check-5-3-7">5.3.7 - Combined I-V tables are monotonic</a></li>
-<li><a href="#check-5-3-8">5.3.8 - (Pulldown) I-V tables pass through zero/zero</a></li>
-<li><a href="#check-5-3-9">5.3.9 - (Pullup) I-V tables pass through zero/zero</a></li>
-<li><a href="#check-5-3-10">5.3.10 - No leakage current in clamp I-V tables</a></li>
-<li><a href="#check-5-3-11">5.3.11 - I-V behavior not double-counted</a></li>
-<li><a href="#check-5-3-12">5.3.12 - On-die termination modeling documented</a></li>
-<li><a href="#check-5-3-13">5.3.13 - ECL models I-V tables swept from -Vcc to +2 * Vcc.</a></li>
-<li><a href="#check-5-3-14">5.3.14 - Point distributions in I-V tables should be sufficient</a></li>
-<li><a href="#check-5-4-1">5.4.1 - Output and I/O buffers have sufficient V-T tables</a></li>
-<li><a href="#check-5-4-2">5.4.2 - V-T tables have reasonable point distribution</a></li>
-<li><a href="#check-5-4-4">5.4.4 - V-T table endpoints match fixture voltages</a></li>
-<li><a href="#check-5-5-1">5.5.1 - (Ramp) R_load present if value other than 50 ohms</a></li>
-<li><a href="#check-5-5-2">5.5.2 - (Ramp) typ/min/max order is correct</a></li>
-<li><a href="#check-5-5-3">5.5.3 - (Ramp) dV value is consistent with I-V table calculations</a></li>
-<li><a href="#check-5-5-4">5.5.4 - (Ramp) dt is consistent with 20%-80% crossing time</a></li>
+<li class="toc-sub"><a href="#check-3-1-1">3.1.1 - (Package) must have typ/min/max values</a></li>
+<li class="toc-sub"><a href="#check-3-1-2">3.1.2 - (Package) model values must be reasonable</a></li>
+<li class="toc-sub"><a href="#check-3-2-1">3.2.1 - (Pin) section complete</a></li>
+<li class="toc-sub"><a href="#check-3-3-1">3.3.1 - (Diff Pin) referenced pin models match</a></li>
+<li class="toc-sub"><a href="#check-4-1">4.1 - (Model Selector) entries have reasonable descriptions</a></li>
+<li class="toc-sub"><a href="#check-4-2">4.2 - Default (Model Selector) entries are consistent</a></li>
+<li class="toc-sub"><a href="#check-5-1-1">5.1.1 - (Model) parameters have correct typ/min/max order</a></li>
+<li class="toc-sub"><a href="#check-5-1-2">5.1.2 - (Model) C_comp is reasonable</a></li>
+<li class="toc-sub"><a href="#check-5-1-3">5.1.3 - (Temperature Range) is reasonable</a></li>
+<li class="toc-sub"><a href="#check-5-1-4">5.1.4 - (Voltage Range) or (* Reference) is reasonable</a></li>
+<li class="toc-sub"><a href="#check-5-2-5">5.2.5 - (Model Spec) S_Overshoot subparameters complete and match data sheet</a></li>
+<li class="toc-sub"><a href="#check-5-2-6">5.2.6 - (Model Spec) S_Overshoot subparameters track typ/min/max</a></li>
+<li class="toc-sub"><a href="#check-5-2-7">5.2.7 - (Model Spec) D_Overshoot_* subparameters complete and match data sheet</a></li>
+<li class="toc-sub"><a href="#check-5-2-8">5.2.8 - (Model Spec) D_Overshoot_* subparameters track typ/min/max</a></li>
+<li class="toc-sub"><a href="#check-5-3-1">5.3.1 - I-V tables have correct typ/min/max order</a></li>
+<li class="toc-sub"><a href="#check-5-3-2">5.3.2 - (Pullup) voltage sweep range is correct</a></li>
+<li class="toc-sub"><a href="#check-5-3-3">5.3.3 - (Pulldown) voltage sweep range is correct</a></li>
+<li class="toc-sub"><a href="#check-5-3-4">5.3.4 - (POWER Clamp) voltage sweep range is correct</a></li>
+<li class="toc-sub"><a href="#check-5-3-5">5.3.5 - (GND Clamp) voltage sweep range is correct</a></li>
+<li class="toc-sub"><a href="#check-5-3-6">5.3.6 - I-V tables do not exhibit stair-stepping</a></li>
+<li class="toc-sub"><a href="#check-5-3-7">5.3.7 - Combined I-V tables are monotonic</a></li>
+<li class="toc-sub"><a href="#check-5-3-8">5.3.8 - (Pulldown) I-V tables pass through zero/zero</a></li>
+<li class="toc-sub"><a href="#check-5-3-9">5.3.9 - (Pullup) I-V tables pass through zero/zero</a></li>
+<li class="toc-sub"><a href="#check-5-3-10">5.3.10 - No leakage current in clamp I-V tables</a></li>
+<li class="toc-sub"><a href="#check-5-3-11">5.3.11 - I-V behavior not double-counted</a></li>
+<li class="toc-sub"><a href="#check-5-3-12">5.3.12 - On-die termination modeling documented</a></li>
+<li class="toc-sub"><a href="#check-5-3-13">5.3.13 - ECL models I-V tables swept from -Vcc to +2 * Vcc.</a></li>
+<li class="toc-sub"><a href="#check-5-3-14">5.3.14 - Point distributions in I-V tables should be sufficient</a></li>
+<li class="toc-sub"><a href="#check-5-4-1">5.4.1 - Output and I/O buffers have sufficient V-T tables</a></li>
+<li class="toc-sub"><a href="#check-5-4-2">5.4.2 - V-T tables have reasonable point distribution</a></li>
+<li class="toc-sub"><a href="#check-5-4-4">5.4.4 - V-T table endpoints match fixture voltages</a></li>
+<li class="toc-sub"><a href="#check-5-5-1">5.5.1 - (Ramp) R_load present if value other than 50 ohms</a></li>
+<li class="toc-sub"><a href="#check-5-5-2">5.5.2 - (Ramp) typ/min/max order is correct</a></li>
+<li class="toc-sub"><a href="#check-5-5-3">5.5.3 - (Ramp) dV value is consistent with I-V table calculations</a></li>
+<li class="toc-sub"><a href="#check-5-5-4">5.5.4 - (Ramp) dt is consistent with 20%-80% crossing time</a></li>
+<li class="toc-sub"><a href="#check-5-9-1">5.9.1 - Driver output impedance (Zout) plausibility</a></li>
 </ul>
 <p><strong>LEVEL 3 Checks</strong></p>
 <ul>
 <li><a href="#level-3-check-results">LEVEL 3 check results</a></li>
-<li><a href="#check-3-2-2">3.2.2 - (Pin) RLC values are present and reasonable</a></li>
-<li><a href="#check-3-3-2">3.3.2 - (Diff Pin) Vdiff and Tdelay_* complete and reasonable</a></li>
-<li><a href="#check-5-2-1">5.2.1 - (Model) Vinl and Vinh reasonable</a></li>
-<li><a href="#check-5-2-2">5.2.2 - (Model Spec) Vinl and Vinh reasonable</a></li>
-<li><a href="#check-5-2-3">5.2.3 - (Model Spec) Vinl+/- and Vinh+/- complete and reasonable</a></li>
-<li><a href="#check-5-2-9">5.2.9 - (Receiver Thresholds) Vth present and matches data sheet, if needed</a></li>
-<li><a href="#check-5-2-10">5.2.10 - (Receiver Thresholds) Vth_min and Vth_max present and match data sheet, if needed</a></li>
-<li><a href="#check-5-2-11">5.2.11 - (Receiver Thresholds) Vinh_ac, Vinl_ac present and match data sheet, if needed</a></li>
-<li><a href="#check-5-2-12">5.2.12 - (Receiver Thresholds) Vinh_dc, Vinl_dc present and match data sheet, if needed</a></li>
-<li><a href="#check-5-2-13">5.2.13 - (Receiver Thresholds) Tslew_ac/Tdiffslew_ac present and match data sheet, if needed</a></li>
-<li><a href="#check-5-2-14">5.2.14 - (Receiver Thresholds) Threshold_sensitivity and Ext_ref present and match data sheet, if needed</a></li>
-<li><a href="#check-5-4-3">5.4.3 - V-T table duration is not excessive</a></li>
-<li><a href="#check-5-6-1">5.6.1 - (Model Spec) Vmeas and Vref used if typ/min/max variation</a></li>
-<li><a href="#check-5-6-2">5.6.2 - Vref consistent for Open-drain, Open-source, and ECL Model_types</a></li>
+<li class="toc-sub"><a href="#check-3-2-2">3.2.2 - (Pin) RLC values are present and reasonable</a></li>
+<li class="toc-sub"><a href="#check-3-3-2">3.3.2 - (Diff Pin) Vdiff and Tdelay_* complete and reasonable</a></li>
+<li class="toc-sub"><a href="#check-5-2-1">5.2.1 - (Model) Vinl and Vinh reasonable</a></li>
+<li class="toc-sub"><a href="#check-5-2-2">5.2.2 - (Model Spec) Vinl and Vinh reasonable</a></li>
+<li class="toc-sub"><a href="#check-5-2-3">5.2.3 - (Model Spec) Vinl+/- and Vinh+/- complete and reasonable</a></li>
+<li class="toc-sub"><a href="#check-5-2-9">5.2.9 - (Receiver Thresholds) Vth present and matches data sheet, if needed</a></li>
+<li class="toc-sub"><a href="#check-5-2-10">5.2.10 - (Receiver Thresholds) Vth_min and Vth_max present and match data sheet, if needed</a></li>
+<li class="toc-sub"><a href="#check-5-2-11">5.2.11 - (Receiver Thresholds) Vinh_ac, Vinl_ac present and match data sheet, if needed</a></li>
+<li class="toc-sub"><a href="#check-5-2-12">5.2.12 - (Receiver Thresholds) Vinh_dc, Vinl_dc present and match data sheet, if needed</a></li>
+<li class="toc-sub"><a href="#check-5-2-13">5.2.13 - (Receiver Thresholds) Tslew_ac/Tdiffslew_ac present and match data sheet, if needed</a></li>
+<li class="toc-sub"><a href="#check-5-2-14">5.2.14 - (Receiver Thresholds) Threshold_sensitivity and Ext_ref present and match data sheet, if needed</a></li>
+<li class="toc-sub"><a href="#check-5-4-3">5.4.3 - V-T table duration is not excessive</a></li>
+<li class="toc-sub"><a href="#check-5-6-1">5.6.1 - (Model Spec) Vmeas and Vref used if typ/min/max variation</a></li>
+<li class="toc-sub"><a href="#check-5-6-2">5.6.2 - Vref consistent for Open-drain, Open-source, and ECL Model_types</a></li>
 </ul>
 <ul>
 <li><a href="#visual-curves-by-model">Visual Curves by Model</a></li>
@@ -184,7 +271,13 @@ p { margin: 9px 0; }
 <li><a href="#appendix-a-iq-levels">Appendix A: IQ Levels</a></li>
 <li><a href="#appendix-b-special-designators">Appendix B: Special Designators</a></li>
 </ul>
-<h2>Score Assessment</h2>
+
+</div>
+</details>
+<details class="sec2" open>
+<summary><h2>Score Assessment</h2></summary>
+<div class="sec-body">
+
 <a id="score-assessment"></a>
 <table>
 <thead>
@@ -216,7 +309,13 @@ p { margin: 9px 0; }
 </tr>
 </tbody>
 </table>
-<h2>Review Signoff Summary</h2>
+
+</div>
+</details>
+<details class="sec2">
+<summary><h2>Review Signoff Summary</h2></summary>
+<div class="sec-body">
+
 <a id="review-signoff-summary"></a>
 <table>
 <thead>
@@ -329,7 +428,13 @@ p { margin: 9px 0; }
 </tr>
 </tbody>
 </table>
-<h2>Result Summary</h2>
+
+</div>
+</details>
+<details class="sec2" open>
+<summary><h2>Result Summary</h2></summary>
+<div class="sec-body">
+
 <a id="result-summary"></a>
 <table>
 <thead>
@@ -377,11 +482,23 @@ p { margin: 9px 0; }
 </tr>
 </tbody>
 </table>
-<h2>Failed &amp; Error Items</h2>
+
+</div>
+</details>
+<details class="sec2" open>
+<summary><h2>Failed &amp; Error Items</h2></summary>
+<div class="sec-body">
+
 <a id="failed-error-items"></a>
 <p>No FAIL or ERROR items were found.</p>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h2>Passed Items Per Level</h2>
+
+</div>
+</details>
+<details class="sec2">
+<summary><h2>Passed Items Per Level</h2></summary>
+<div class="sec-body">
+
 <a id="passed-items-per-level"></a>
 <table>
 <thead>
@@ -411,14 +528,14 @@ p { margin: 9px 0; }
 </tr>
 <tr>
 <td>LEVEL 2</td>
-<td>35</td>
+<td>36</td>
 <td>0</td>
 <td>0</td>
 <td>0</td>
 <td>0</td>
 <td>0</td>
 <td>0</td>
-<td>35</td>
+<td>36</td>
 </tr>
 <tr>
 <td>LEVEL 3</td>
@@ -433,7 +550,13 @@ p { margin: 9px 0; }
 </tr>
 </tbody>
 </table>
-<h2>Zout Estimates</h2>
+
+</div>
+</details>
+<details class="sec2">
+<summary><h2>Zout Estimates</h2></summary>
+<div class="sec-body">
+
 <a id="zout-estimates"></a>
 <p>Estimated output impedance is derived from Pullup/Pulldown I-V load-line intersections using Rload = 50 ohm. These values are characterization data for the model maker; they are not IQ PASS/FAIL checks.</p>
 <ul>
@@ -462,13 +585,25 @@ p { margin: 9px 0; }
 </tr>
 </tbody>
 </table>
-<h2>Quality Check Results</h2>
+
+</div>
+</details>
+<details class="sec2">
+<summary><h2>Quality Check Results</h2></summary>
+<div class="sec-body">
+
 <a id="quality-check-results"></a>
 <p>Rows are grouped by IQ level and then by check item. Each check item is summarized by result type so PASS, WARN, FAIL, NA, and manual/external-review status are visible in one place.</p>
 <p>Source location note: this parser currently keeps the raw IBIS text but does not retain per-result IBIS source line numbers. The report identifies the affected scope, subject, and evidence; exact line references require parser metadata work.</p>
-<h3>LEVEL 1 Check Results</h3>
+<details class="sec3">
+<summary><h3>LEVEL 1 Check Results</h3></summary>
+<div class="sec-body">
+
 <a id="level-1-check-results"></a>
-<h4>2.1 - IBIS file passes IBISCHK</h4>
+<details class="sec4">
+<summary><h4>2.1 - IBIS file passes IBISCHK</h4></summary>
+<div class="sec-body">
+
 <a id="check-2-1"></a>
 <ul>
 <li>Automation class: <code>auto</code></li>
@@ -507,9 +642,21 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h3>LEVEL 2 Check Results</h3>
+
+</div>
+</details>
+
+</div>
+</details>
+<details class="sec3">
+<summary><h3>LEVEL 2 Check Results</h3></summary>
+<div class="sec-body">
+
 <a id="level-2-check-results"></a>
-<h4>3.1.1 - [Package] must have typ/min/max values</h4>
+<details class="sec4">
+<summary><h4>3.1.1 - [Package] must have typ/min/max values</h4></summary>
+<div class="sec-body">
+
 <a id="check-3-1-1"></a>
 <ul>
 <li>Automation class: <code>auto</code></li>
@@ -548,7 +695,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>3.1.2 - [Package] model values must be reasonable</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>3.1.2 - [Package] model values must be reasonable</h4></summary>
+<div class="sec-body">
+
 <a id="check-3-1-2"></a>
 <ul>
 <li>Automation class: <code>semi_auto</code></li>
@@ -587,7 +740,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>3.2.1 - [Pin] section complete</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>3.2.1 - [Pin] section complete</h4></summary>
+<div class="sec-body">
+
 <a id="check-3-2-1"></a>
 <ul>
 <li>Automation class: <code>semi_auto</code></li>
@@ -626,7 +785,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>3.3.1 - [Diff Pin] referenced pin models match</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>3.3.1 - [Diff Pin] referenced pin models match</h4></summary>
+<div class="sec-body">
+
 <a id="check-3-3-1"></a>
 <ul>
 <li>Automation class: <code>auto</code></li>
@@ -665,7 +830,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>4.1 - [Model Selector] entries have reasonable descriptions</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>4.1 - [Model Selector] entries have reasonable descriptions</h4></summary>
+<div class="sec-body">
+
 <a id="check-4-1"></a>
 <ul>
 <li>Automation class: <code>semi_auto</code></li>
@@ -704,7 +875,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>4.2 - Default [Model Selector] entries are consistent</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>4.2 - Default [Model Selector] entries are consistent</h4></summary>
+<div class="sec-body">
+
 <a id="check-4-2"></a>
 <ul>
 <li>Automation class: <code>manual</code></li>
@@ -743,7 +920,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.1.1 - [Model] parameters have correct typ/min/max order</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.1.1 - [Model] parameters have correct typ/min/max order</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-1-1"></a>
 <ul>
 <li>Automation class: <code>semi_auto</code></li>
@@ -782,7 +965,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.1.2 - [Model] C_comp is reasonable</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.1.2 - [Model] C_comp is reasonable</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-1-2"></a>
 <ul>
 <li>Automation class: <code>semi_auto</code></li>
@@ -821,7 +1010,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.1.3 - [Temperature Range] is reasonable</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.1.3 - [Temperature Range] is reasonable</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-1-3"></a>
 <ul>
 <li>Automation class: <code>manual</code></li>
@@ -860,7 +1055,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.1.4 - [Voltage Range] or [* Reference] is reasonable</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.1.4 - [Voltage Range] or [* Reference] is reasonable</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-1-4"></a>
 <ul>
 <li>Automation class: <code>semi_auto</code></li>
@@ -899,7 +1100,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.2.5 - [Model Spec] S_Overshoot subparameters complete and match data sheet</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.2.5 - [Model Spec] S_Overshoot subparameters complete and match data sheet</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-2-5"></a>
 <ul>
 <li>Automation class: <code>manual</code></li>
@@ -938,7 +1145,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.2.6 - [Model Spec] S_Overshoot subparameters track typ/min/max</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.2.6 - [Model Spec] S_Overshoot subparameters track typ/min/max</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-2-6"></a>
 <ul>
 <li>Automation class: <code>semi_auto</code></li>
@@ -977,7 +1190,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.2.7 - [Model Spec] D_Overshoot_* subparameters complete and match data sheet</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.2.7 - [Model Spec] D_Overshoot_* subparameters complete and match data sheet</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-2-7"></a>
 <ul>
 <li>Automation class: <code>manual</code></li>
@@ -1016,7 +1235,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.2.8 - [Model Spec] D_Overshoot_* subparameters track typ/min/max</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.2.8 - [Model Spec] D_Overshoot_* subparameters track typ/min/max</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-2-8"></a>
 <ul>
 <li>Automation class: <code>semi_auto</code></li>
@@ -1055,7 +1280,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.3.1 - I-V tables have correct typ/min/max order</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.3.1 - I-V tables have correct typ/min/max order</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-3-1"></a>
 <ul>
 <li>Automation class: <code>auto</code></li>
@@ -1094,7 +1325,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.3.2 - [Pullup] voltage sweep range is correct</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.3.2 - [Pullup] voltage sweep range is correct</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-3-2"></a>
 <ul>
 <li>Automation class: <code>auto</code></li>
@@ -1133,7 +1370,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.3.3 - [Pulldown] voltage sweep range is correct</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.3.3 - [Pulldown] voltage sweep range is correct</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-3-3"></a>
 <ul>
 <li>Automation class: <code>auto</code></li>
@@ -1172,7 +1415,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.3.4 - [POWER Clamp] voltage sweep range is correct</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.3.4 - [POWER Clamp] voltage sweep range is correct</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-3-4"></a>
 <ul>
 <li>Automation class: <code>auto</code></li>
@@ -1211,7 +1460,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.3.5 - [GND Clamp] voltage sweep range is correct</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.3.5 - [GND Clamp] voltage sweep range is correct</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-3-5"></a>
 <ul>
 <li>Automation class: <code>auto</code></li>
@@ -1250,7 +1505,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.3.6 - I-V tables do not exhibit stair-stepping</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.3.6 - I-V tables do not exhibit stair-stepping</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-3-6"></a>
 <ul>
 <li>Automation class: <code>semi_auto</code></li>
@@ -1289,7 +1550,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.3.7 - Combined I-V tables are monotonic</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.3.7 - Combined I-V tables are monotonic</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-3-7"></a>
 <ul>
 <li>Automation class: <code>auto</code></li>
@@ -1328,7 +1595,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.3.8 - [Pulldown] I-V tables pass through zero/zero</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.3.8 - [Pulldown] I-V tables pass through zero/zero</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-3-8"></a>
 <ul>
 <li>Automation class: <code>auto</code></li>
@@ -1367,7 +1640,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.3.9 - [Pullup] I-V tables pass through zero/zero</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.3.9 - [Pullup] I-V tables pass through zero/zero</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-3-9"></a>
 <ul>
 <li>Automation class: <code>auto</code></li>
@@ -1406,7 +1685,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.3.10 - No leakage current in clamp I-V tables</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.3.10 - No leakage current in clamp I-V tables</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-3-10"></a>
 <ul>
 <li>Automation class: <code>semi_auto</code></li>
@@ -1445,7 +1730,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.3.11 - I-V behavior not double-counted</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.3.11 - I-V behavior not double-counted</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-3-11"></a>
 <ul>
 <li>Automation class: <code>manual</code></li>
@@ -1484,7 +1775,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.3.12 - On-die termination modeling documented</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.3.12 - On-die termination modeling documented</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-3-12"></a>
 <ul>
 <li>Automation class: <code>manual</code></li>
@@ -1523,7 +1820,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.3.13 - ECL models I-V tables swept from -Vcc to +2 * Vcc.</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.3.13 - ECL models I-V tables swept from -Vcc to +2 * Vcc.</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-3-13"></a>
 <ul>
 <li>Automation class: <code>auto</code></li>
@@ -1562,7 +1865,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.3.14 - Point distributions in I-V tables should be sufficient</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.3.14 - Point distributions in I-V tables should be sufficient</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-3-14"></a>
 <ul>
 <li>Automation class: <code>semi_auto</code></li>
@@ -1601,7 +1910,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.4.1 - Output and I/O buffers have sufficient V-T tables</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.4.1 - Output and I/O buffers have sufficient V-T tables</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-4-1"></a>
 <ul>
 <li>Automation class: <code>semi_auto</code></li>
@@ -1640,7 +1955,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.4.2 - V-T tables have reasonable point distribution</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.4.2 - V-T tables have reasonable point distribution</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-4-2"></a>
 <ul>
 <li>Automation class: <code>semi_auto</code></li>
@@ -1679,7 +2000,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.4.4 - V-T table endpoints match fixture voltages</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.4.4 - V-T table endpoints match fixture voltages</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-4-4"></a>
 <ul>
 <li>Automation class: <code>semi_auto</code></li>
@@ -1718,7 +2045,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.5.1 - [Ramp] R_load present if value other than 50 ohms</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.5.1 - [Ramp] R_load present if value other than 50 ohms</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-5-1"></a>
 <ul>
 <li>Automation class: <code>auto</code></li>
@@ -1757,7 +2090,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.5.2 - [Ramp] typ/min/max order is correct</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.5.2 - [Ramp] typ/min/max order is correct</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-5-2"></a>
 <ul>
 <li>Automation class: <code>semi_auto</code></li>
@@ -1796,7 +2135,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.5.3 - [Ramp] dV value is consistent with I-V table calculations</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.5.3 - [Ramp] dV value is consistent with I-V table calculations</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-5-3"></a>
 <ul>
 <li>Automation class: <code>auto</code></li>
@@ -1835,7 +2180,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.5.4 - [Ramp] dt is consistent with 20%-80% crossing time</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.5.4 - [Ramp] dt is consistent with 20%-80% crossing time</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-5-4"></a>
 <ul>
 <li>Automation class: <code>semi_auto</code></li>
@@ -1874,9 +2225,66 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h3>LEVEL 3 Check Results</h3>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.9.1 - Driver output impedance (Zout) plausibility</h4></summary>
+<div class="sec-body">
+
+<a id="check-5-9-1"></a>
+<ul>
+<li>Automation class: <code>auto</code></li>
+<li>Spec reference: section 5.9</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Outcome</th>
+<th>Pass</th>
+<th>Warn</th>
+<th>Fail</th>
+<th>NA</th>
+<th>Error</th>
+<th>Review</th>
+<th>Subjects</th>
+<th>Visual Curves</th>
+<th>Explanation / Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual/External</td>
+<td>MANUAL REVIEW</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Applies where relevant</td>
+<td></td>
+<td>Not executed by the automated tool; this item needs model-maker or reviewer evidence.</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#table-of-contents">Back to table of contents</a></p>
+
+</div>
+</details>
+
+</div>
+</details>
+<details class="sec3">
+<summary><h3>LEVEL 3 Check Results</h3></summary>
+<div class="sec-body">
+
 <a id="level-3-check-results"></a>
-<h4>3.2.2 - [Pin] RLC values are present and reasonable</h4>
+<details class="sec4">
+<summary><h4>3.2.2 - [Pin] RLC values are present and reasonable</h4></summary>
+<div class="sec-body">
+
 <a id="check-3-2-2"></a>
 <ul>
 <li>Automation class: <code>auto</code></li>
@@ -1915,7 +2323,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>3.3.2 - [Diff Pin] Vdiff and Tdelay_* complete and reasonable</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>3.3.2 - [Diff Pin] Vdiff and Tdelay_* complete and reasonable</h4></summary>
+<div class="sec-body">
+
 <a id="check-3-3-2"></a>
 <ul>
 <li>Automation class: <code>auto</code></li>
@@ -1954,7 +2368,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.2.1 - [Model] Vinl and Vinh reasonable</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.2.1 - [Model] Vinl and Vinh reasonable</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-2-1"></a>
 <ul>
 <li>Automation class: <code>manual</code></li>
@@ -1993,7 +2413,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.2.2 - [Model Spec] Vinl and Vinh reasonable</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.2.2 - [Model Spec] Vinl and Vinh reasonable</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-2-2"></a>
 <ul>
 <li>Automation class: <code>manual</code></li>
@@ -2032,7 +2458,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.2.3 - [Model Spec] Vinl+/- and Vinh+/- complete and reasonable</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.2.3 - [Model Spec] Vinl+/- and Vinh+/- complete and reasonable</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-2-3"></a>
 <ul>
 <li>Automation class: <code>manual</code></li>
@@ -2071,7 +2503,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.2.9 - [Receiver Thresholds] Vth present and matches data sheet, if needed</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.2.9 - [Receiver Thresholds] Vth present and matches data sheet, if needed</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-2-9"></a>
 <ul>
 <li>Automation class: <code>manual</code></li>
@@ -2110,7 +2548,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.2.10 - [Receiver Thresholds] Vth_min and Vth_max present and match data sheet, if needed</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.2.10 - [Receiver Thresholds] Vth_min and Vth_max present and match data sheet, if needed</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-2-10"></a>
 <ul>
 <li>Automation class: <code>manual</code></li>
@@ -2149,7 +2593,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.2.11 - [Receiver Thresholds] Vinh_ac, Vinl_ac present and match data sheet, if needed</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.2.11 - [Receiver Thresholds] Vinh_ac, Vinl_ac present and match data sheet, if needed</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-2-11"></a>
 <ul>
 <li>Automation class: <code>manual</code></li>
@@ -2188,7 +2638,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.2.12 - [Receiver Thresholds] Vinh_dc, Vinl_dc present and match data sheet, if needed</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.2.12 - [Receiver Thresholds] Vinh_dc, Vinl_dc present and match data sheet, if needed</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-2-12"></a>
 <ul>
 <li>Automation class: <code>manual</code></li>
@@ -2227,7 +2683,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.2.13 - [Receiver Thresholds] Tslew_ac/Tdiffslew_ac present and match data sheet, if needed</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.2.13 - [Receiver Thresholds] Tslew_ac/Tdiffslew_ac present and match data sheet, if needed</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-2-13"></a>
 <ul>
 <li>Automation class: <code>manual</code></li>
@@ -2266,7 +2728,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.2.14 - [Receiver Thresholds] Threshold_sensitivity and Ext_ref present and match data sheet, if needed</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.2.14 - [Receiver Thresholds] Threshold_sensitivity and Ext_ref present and match data sheet, if needed</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-2-14"></a>
 <ul>
 <li>Automation class: <code>manual</code></li>
@@ -2305,7 +2773,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.4.3 - V-T table duration is not excessive</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.4.3 - V-T table duration is not excessive</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-4-3"></a>
 <ul>
 <li>Automation class: <code>semi_auto</code></li>
@@ -2344,7 +2818,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.6.1 - [Model Spec] Vmeas and Vref used if typ/min/max variation</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.6.1 - [Model Spec] Vmeas and Vref used if typ/min/max variation</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-6-1"></a>
 <ul>
 <li>Automation class: <code>manual</code></li>
@@ -2383,7 +2863,13 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h4>5.6.2 - Vref consistent for Open-drain, Open-source, and ECL Model_types</h4>
+
+</div>
+</details>
+<details class="sec4">
+<summary><h4>5.6.2 - Vref consistent for Open-drain, Open-source, and ECL Model_types</h4></summary>
+<div class="sec-body">
+
 <a id="check-5-6-2"></a>
 <ul>
 <li>Automation class: <code>semi_auto</code></li>
@@ -2422,10 +2908,28 @@ p { margin: 9px 0; }
 </tbody>
 </table>
 <p><a href="#table-of-contents">Back to table of contents</a></p>
-<h2>Visual Curves by Model</h2>
+
+</div>
+</details>
+
+</div>
+</details>
+
+</div>
+</details>
+<details class="sec2">
+<summary><h2>Visual Curves by Model</h2></summary>
+<div class="sec-body">
+
 <a id="visual-curves-by-model"></a>
 <p>Figures provide curve/table context for the linked QA items. The quality-check tables above remain the authoritative status summary.</p>
-<h2>Manual Review Items</h2>
+
+</div>
+</details>
+<details class="sec2">
+<summary><h2>Manual Review Items</h2></summary>
+<div class="sec-body">
+
 <a id="manual-review-items"></a>
 <p>Manual items require external evidence such as datasheets, extraction notes, SPICE/measurement data, package files, or model-maker documentation.</p>
 <table>
@@ -2587,7 +3091,13 @@ p { margin: 9px 0; }
 </tr>
 </tbody>
 </table>
-<h2>Appendix A: IQ Levels</h2>
+
+</div>
+</details>
+<details class="sec2">
+<summary><h2>Appendix A: IQ Levels</h2></summary>
+<div class="sec-body">
+
 <a id="appendix-a-iq-levels"></a>
 <table>
 <thead>
@@ -2620,7 +3130,13 @@ p { margin: 9px 0; }
 </tr>
 </tbody>
 </table>
-<h2>Appendix B: Special Designators</h2>
+
+</div>
+</details>
+<details class="sec2">
+<summary><h2>Appendix B: Special Designators</h2></summary>
+<div class="sec-body">
+
 <a id="appendix-b-special-designators"></a>
 <p>Special letters may be appended to the IQ score when the supporting evidence is documented.</p>
 <table>
@@ -2654,7 +3170,13 @@ p { margin: 9px 0; }
 </tr>
 </tbody>
 </table>
-<h2>Appendix C: Scoring Notes</h2>
+
+</div>
+</details>
+<details class="sec2">
+<summary><h2>Appendix C: Scoring Notes</h2></summary>
+<div class="sec-body">
+
 <a id="appendix-c-scoring-notes"></a>
 <ul>
 <li>Base level: The summary IQ number is the highest level for which all required checks at that level and below pass, are NA, or are accepted exceptions.</li>
@@ -2663,7 +3185,34 @@ p { margin: 9px 0; }
 <li>Exception designator: Append X when any check passes only by documented exception or any remaining parser warning needs user attention.</li>
 <li>Writeback: The summary IQ score must be written into the IBIS file, preferably in [Notes]; detailed per-check status is better stored in a quality report.</li>
 </ul>
+</div>
+</details>
+
 </main>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  function openParents(el) {
+    var node = el ? el.parentElement : null;
+    while (node) {
+      if (node.tagName === 'DETAILS') node.open = true;
+      node = node.parentElement;
+    }
+  }
+  if (location.hash) {
+    var t = document.getElementById(location.hash.slice(1));
+    if (t) openParents(t);
+  }
+  document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+    a.addEventListener('click', function () {
+      var id = a.getAttribute('href').slice(1);
+      setTimeout(function () {
+        var t = document.getElementById(id);
+        if (t) { openParents(t); t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+      }, 30);
+    });
+  });
+});
+</script>
 </body>
 </html>
 

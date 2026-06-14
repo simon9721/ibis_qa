@@ -38,6 +38,10 @@
 <circle cx="78.00" cy="322.87" r="4.0" fill="#ffffff" stroke="#1f77b4" stroke-width="1.5"/>
 <circle cx="78.00" cy="322.91" r="3.0" fill="#ffffff" stroke="#1f77b4" stroke-width="1.5"/>
 <circle cx="78.00" cy="322.88" r="3.0" fill="#ffffff" stroke="#1f77b4" stroke-width="1.5"/>
+<line x1="78" y1="322.86" x2="768" y2="322.86" stroke="#b54708" stroke-width="1.4" stroke-dasharray="5 3"/>
+<text x="764" y="318.86" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#b54708">+1uA leakage limit</text>
+<line x1="78" y1="322.88" x2="768" y2="322.88" stroke="#b54708" stroke-width="1.4" stroke-dasharray="5 3"/>
+<text x="764" y="318.88" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#b54708">-1uA leakage limit</text>
 <line x1="88" y1="72" x2="110" y2="72" stroke="#1f77b4" stroke-width="2.4"/>
 <text x="116" y="76" font-family="Arial, sans-serif" font-size="12">[Pulldown]</text>
 <text x="423.00" y="404.00" text-anchor="middle" font-family="Arial, sans-serif" font-size="12">Table voltage (V), zoomed around 0 V</text>

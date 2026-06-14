@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="560" viewBox="0 0 800 560">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="78" y="25" font-family="Arial, sans-serif" font-size="16" font-weight="700">E34_GPIO_1V1TO1V8_1v2_01 I-V Combined Curves</text>
+<rect x="78" y="52" width="694" height="348" fill="#fbfbfb" stroke="#c8c8c8"/>
+<line x1="78.00" y1="52" x2="78.00" y2="400" stroke="#ececec"/>
+<text x="78.00" y="422" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">-1.3</text>
+<line x1="216.80" y1="52" x2="216.80" y2="400" stroke="#ececec"/>
+<text x="216.80" y="422" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">-0.523</text>
+<line x1="355.60" y1="52" x2="355.60" y2="400" stroke="#ececec"/>
+<text x="355.60" y="422" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">0.226</text>
+<line x1="494.40" y1="52" x2="494.40" y2="400" stroke="#ececec"/>
+<text x="494.40" y="422" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">0.974</text>
+<line x1="633.20" y1="52" x2="633.20" y2="400" stroke="#ececec"/>
+<text x="633.20" y="422" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">1.7</text>
+<line x1="772.00" y1="52" x2="772.00" y2="400" stroke="#ececec"/>
+<text x="772.00" y="422" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">2.5</text>
+<line x1="78" y1="400.00" x2="772" y2="400.00" stroke="#ececec"/>
+<text x="70" y="404.00" text-anchor="end" font-family="Arial, sans-serif" font-size="11">-0.623</text>
+<line x1="78" y1="330.40" x2="772" y2="330.40" stroke="#ececec"/>
+<text x="70" y="334.40" text-anchor="end" font-family="Arial, sans-serif" font-size="11">-0.487</text>
+<line x1="78" y1="260.80" x2="772" y2="260.80" stroke="#ececec"/>
+<text x="70" y="264.80" text-anchor="end" font-family="Arial, sans-serif" font-size="11">-0.351</text>
+<line x1="78" y1="191.20" x2="772" y2="191.20" stroke="#ececec"/>
+<text x="70" y="195.20" text-anchor="end" font-family="Arial, sans-serif" font-size="11">-0.214</text>
+<line x1="78" y1="121.60" x2="772" y2="121.60" stroke="#ececec"/>
+<text x="70" y="125.60" text-anchor="end" font-family="Arial, sans-serif" font-size="11">-0.0779</text>
+<line x1="78" y1="52.00" x2="772" y2="52.00" stroke="#ececec"/>
+<text x="70" y="56.00" text-anchor="end" font-family="Arial, sans-serif" font-size="11">0.0584</text>
+<line x1="313.78" y1="52" x2="313.78" y2="400" stroke="#777" stroke-dasharray="4 4"/>
+<line x1="78" y1="81.81" x2="772" y2="81.81" stroke="#777" stroke-dasharray="4 4"/>
+<line x1="91.35" y1="52" x2="91.35" y2="400" stroke="#555" stroke-dasharray="2 4"/>
+<text x="95.35" y="66" font-family="Arial, sans-serif" font-size="11" fill="#555">-Vcc</text>
+<line x1="536.22" y1="52" x2="536.22" y2="400" stroke="#555" stroke-dasharray="2 4"/>
+<text x="540.22" y="66" font-family="Arial, sans-serif" font-size="11" fill="#555">Vcc</text>
+<line x1="758.65" y1="52" x2="758.65" y2="400" stroke="#555" stroke-dasharray="2 4"/>
+<text x="762.65" y="66" font-family="Arial, sans-serif" font-size="11" fill="#555">2Vcc</text>
+<polyline fill="none" stroke="#0f766e" stroke-width="2.8" opacity="0.95" stroke-dasharray="6 3" points="91.35,376.00 102.47,323.94 111.74,280.55 122.86,228.49 133.98,176.43 135.83,167.75 137.69,159.08 139.54,150.40 141.39,141.72 143.25,133.05 145.10,124.37 146.96,116.73 148.81,110.23 150.66,104.81 152.52,100.41 154.37,96.91 156.22,94.20 158.08,92.15 159.93,90.62 161.78,89.51 163.64,88.69 165.49,88.11 167.35,87.68 169.20,87.36 171.05,87.12 172.91,86.94 174.76,86.79 176.61,86.67 178.47,86.56 180.32,86.47 182.17,86.39 184.03,86.31 185.88,86.23 187.74,86.16 189.59,86.09 191.44,86.02 193.30,85.95 195.15,85.88 197.00,85.81 198.86,85.75 200.71,85.68 202.56,85.61 204.42,85.55 206.27,85.48 208.12,85.42 209.98,85.35 211.83,85.29 213.69,85.22 215.54,85.15 217.39,85.08 219.25,85.02 221.10,84.95 222.95,84.89 224.81,84.82 226.66,84.75 228.51,84.69 230.37,84.63 232.22,84.56 234.08,84.49 237.78,84.36 248.90,83.97 258.17,83.65 269.29,83.27 280.42,82.89 289.68,82.58 300.81,82.22 310.07,81.93 313.78,81.81 321.20,81.59 332.32,81.26 337.88,81.11 341.59,81.00 352.71,80.71 358.27,80.57 363.83,80.44 373.10,80.23 384.22,80.00 391.63,79.88 395.34,79.81 404.61,79.68 415.73,79.56 426.85,79.47 436.12,79.43 447.24,79.38 456.51,79.36 467.63,79.33 478.76,79.31 488.02,79.29 489.88,79.29 499.15,79.27 510.27,79.25 513.97,79.25 519.54,79.24 530.66,79.22 536.22,79.21 541.78,79.21 551.05,79.19 558.46,79.18 562.17,79.18 571.44,79.17 582.56,79.15 593.68,79.14 602.95,79.13 614.07,79.12 625.19,79.10 634.46,79.09 645.58,79.07 656.70,79.03 665.97,78.99 677.09,78.92 688.22,78.83 697.48,78.73 708.61,78.58 717.87,78.44 729.00,78.25 732.70,78.19 738.26,78.08 740.12,78.04 741.97,78.01 749.39,77.86 758.65,77.66"/>
+<polyline fill="none" stroke="#7c2d12" stroke-width="2.8" opacity="0.95" stroke-dasharray="6 3" points="91.35,76.00 93.20,76.00 95.05,76.00 98.76,76.00 100.61,76.00 102.47,76.01 104.32,76.02 106.18,76.04 108.03,76.06 109.88,76.08 111.74,76.11 113.59,76.13 115.44,76.16 117.30,76.20 119.15,76.23 121.00,76.26 122.86,76.30 124.71,76.34 126.57,76.38 128.42,76.42 130.27,76.46 133.98,76.55 135.83,76.59 137.69,76.64 139.54,76.68 141.39,76.73 143.25,76.77 145.10,76.82 146.96,76.87 148.81,76.92 150.66,76.97 152.52,77.02 154.37,77.07 156.22,77.12 158.08,77.17 161.78,77.27 163.64,77.33 165.49,77.38 169.20,77.49 171.05,77.54 172.91,77.60 174.76,77.65 176.61,77.70 178.47,77.76 182.17,77.87 185.88,77.98 189.59,78.09 191.44,78.15 193.30,78.20 195.15,78.26 197.00,78.32 200.71,78.43 202.56,78.49 204.42,78.55 206.27,78.60 208.12,78.66 209.98,78.72 213.69,78.83 215.54,78.89 217.39,78.95 219.25,79.00 221.10,79.06 222.95,79.12 224.81,79.18 226.66,79.23 228.51,79.29 230.37,79.35 232.22,79.40 234.08,79.46 235.93,79.52 237.78,79.58 239.64,79.63 241.49,79.69 245.20,79.80 247.05,79.86 248.90,79.91 250.76,79.97 252.61,80.03 254.47,80.08 256.32,80.14 258.17,80.19 260.03,80.25 261.88,80.30 263.73,80.36 267.44,80.47 269.29,80.52 273.00,80.63 276.71,80.74 280.42,80.85 282.27,80.91 284.12,80.96 285.98,81.01 287.83,81.07 289.68,81.12 291.54,81.18 293.39,81.23 295.25,81.28 297.10,81.34 298.95,81.39 300.81,81.44 302.66,81.50 304.51,81.55 306.37,81.60 308.22,81.66 310.07,81.71 311.93,81.76 313.78,81.81 321.20,82.02 328.61,82.22 330.46,82.27 341.59,82.55 352.71,82.81 363.83,83.06 373.10,83.25 384.22,83.46 395.34,83.64 404.61,83.77 415.73,83.90 426.85,84.00 430.56,84.03 436.12,84.07 447.24,84.12 456.51,84.16 467.63,84.20 478.76,84.23 480.61,84.24 488.02,84.26 489.88,84.26 491.73,84.27 499.15,84.29 510.27,84.31 513.97,84.32 519.54,84.33 530.66,84.35 536.22,84.36 541.78,84.37 551.05,84.39 558.46,84.40 562.17,84.40 571.44,84.42 582.56,84.43 593.68,84.45 602.95,84.45 614.07,84.45 625.19,84.45 634.46,84.45 645.58,84.45 656.70,84.45 665.97,84.45 677.09,84.45 688.22,84.45 697.48,84.45 708.61,84.45 717.87,84.45 729.00,84.45 740.12,84.45 749.39,84.45 758.65,84.45"/>
+<circle cx="98.76" cy="76.00" r="6" fill="none" stroke="#b42318" stroke-width="2"/>
+<line x1="93.76" y1="71.00" x2="103.76" y2="81.00" stroke="#b42318" stroke-width="1.6"/>
+<line x1="93.76" y1="81.00" x2="103.76" y2="71.00" stroke="#b42318" stroke-width="1.6"/>
+<text x="420" y="30" font-family="Arial, sans-serif" font-size="11" fill="#b42318">x = 5.3.7 monotonicity violation</text>
+<line x1="88" y1="70" x2="110" y2="70" stroke="#0f766e" stroke-width="2.8" stroke-dasharray="6 3"/>
+<text x="116" y="74" font-family="Arial, sans-serif" font-size="12">[Pulldown]+[GND Clamp]</text>
+<line x1="88" y1="88" x2="110" y2="88" stroke="#7c2d12" stroke-width="2.8" stroke-dasharray="6 3"/>
+<text x="116" y="92" font-family="Arial, sans-serif" font-size="12">[Pullup]+[POWER Clamp]</text>
+<rect x="78" y="464" width="694" height="60" fill="#fffdf7" stroke="#d8c6a1" rx="4"/>
+<text x="88" y="481" font-family="Arial, sans-serif" font-size="11" font-weight="700" fill="#4b3b21">Findings needing attention</text>
+<rect x="88" y="488" width="7" height="7" fill="#b42318"/>
+<text x="102" y="495" font-family="Arial, sans-serif" font-size="11" fill="#333">FAIL 5.3.7: [Pullup] + [POWER Clamp] combined curve non-monotonic (... | V=-1.16: combined current increases from 11.39mA to...</text>
+<rect x="88" y="504" width="7" height="7" fill="#b54708"/>
+<text x="102" y="511" font-family="Arial, sans-serif" font-size="11" fill="#333">WARN 5.3.6: I-V stair-step evidence needs review | [GND Clamp]: roughness=0.179 &gt; 0.1</text>
+<text x="425.00" y="444.00" text-anchor="middle" font-family="Arial, sans-serif" font-size="12">Table voltage (V)</text>
+<text transform="translate(18 226.00) rotate(-90)" text-anchor="middle" font-family="Arial, sans-serif" font-size="12">Current (A)</text>
+<text x="420" y="42" font-family="Arial, sans-serif" font-size="11" fill="#555">thick dashed=combined typ curves</text>
+</svg>

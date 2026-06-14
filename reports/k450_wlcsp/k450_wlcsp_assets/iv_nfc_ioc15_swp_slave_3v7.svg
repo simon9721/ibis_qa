@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="560" viewBox="0 0 800 560">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="78" y="25" font-family="Arial, sans-serif" font-size="16" font-weight="700">nfc_ioc15_swp_slave_3v7 I-V Combined Curves</text>
+<rect x="78" y="52" width="694" height="348" fill="#fbfbfb" stroke="#c8c8c8"/>
+<line x1="78.00" y1="52" x2="78.00" y2="400" stroke="#ececec"/>
+<text x="78.00" y="422" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">-3.9</text>
+<line x1="216.80" y1="52" x2="216.80" y2="400" stroke="#ececec"/>
+<text x="216.80" y="422" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">-1.6</text>
+<line x1="355.60" y1="52" x2="355.60" y2="400" stroke="#ececec"/>
+<text x="355.60" y="422" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">0.696</text>
+<line x1="494.40" y1="52" x2="494.40" y2="400" stroke="#ececec"/>
+<text x="494.40" y="422" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">3</text>
+<line x1="633.20" y1="52" x2="633.20" y2="400" stroke="#ececec"/>
+<text x="633.20" y="422" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">5.3</text>
+<line x1="772.00" y1="52" x2="772.00" y2="400" stroke="#ececec"/>
+<text x="772.00" y="422" text-anchor="middle" font-family="Arial, sans-serif" font-size="11">7.6</text>
+<line x1="78" y1="400.00" x2="772" y2="400.00" stroke="#ececec"/>
+<text x="70" y="404.00" text-anchor="end" font-family="Arial, sans-serif" font-size="11">-5.6</text>
+<line x1="78" y1="330.40" x2="772" y2="330.40" stroke="#ececec"/>
+<text x="70" y="334.40" text-anchor="end" font-family="Arial, sans-serif" font-size="11">-3.4</text>
+<line x1="78" y1="260.80" x2="772" y2="260.80" stroke="#ececec"/>
+<text x="70" y="264.80" text-anchor="end" font-family="Arial, sans-serif" font-size="11">-1.1</text>
+<line x1="78" y1="191.20" x2="772" y2="191.20" stroke="#ececec"/>
+<text x="70" y="195.20" text-anchor="end" font-family="Arial, sans-serif" font-size="11">1.1</text>
+<line x1="78" y1="121.60" x2="772" y2="121.60" stroke="#ececec"/>
+<text x="70" y="125.60" text-anchor="end" font-family="Arial, sans-serif" font-size="11">3.3</text>
+<line x1="78" y1="52.00" x2="772" y2="52.00" stroke="#ececec"/>
+<text x="70" y="56.00" text-anchor="end" font-family="Arial, sans-serif" font-size="11">5.6</text>
+<line x1="313.78" y1="52" x2="313.78" y2="400" stroke="#777" stroke-dasharray="4 4"/>
+<line x1="78" y1="225.38" x2="772" y2="225.38" stroke="#777" stroke-dasharray="4 4"/>
+<line x1="91.35" y1="52" x2="91.35" y2="400" stroke="#555" stroke-dasharray="2 4"/>
+<text x="95.35" y="66" font-family="Arial, sans-serif" font-size="11" fill="#555">-Vcc</text>
+<line x1="536.22" y1="52" x2="536.22" y2="400" stroke="#555" stroke-dasharray="2 4"/>
+<text x="540.22" y="66" font-family="Arial, sans-serif" font-size="11" fill="#555">Vcc</text>
+<line x1="758.65" y1="52" x2="758.65" y2="400" stroke="#555" stroke-dasharray="2 4"/>
+<text x="762.65" y="66" font-family="Arial, sans-serif" font-size="11" fill="#555">2Vcc</text>
+<polyline fill="none" stroke="#0f766e" stroke-width="2.8" opacity="0.95" stroke-dasharray="6 3" points="91.35,376.00 101.57,367.01 112.39,357.49 122.61,348.50 132.83,339.51 143.65,329.99 153.87,321.00 164.69,311.47 174.91,302.48 185.13,293.49 195.95,283.97 206.17,274.98 216.39,265.99 227.21,256.47 237.43,247.48 247.65,238.49 256.07,231.08 256.67,230.55 257.27,230.03 257.87,229.50 258.47,228.97 259.07,228.44 259.68,227.95 260.28,227.52 260.88,227.16 261.48,226.86 262.08,226.62 262.68,226.42 264.49,226.06 265.09,225.99 265.69,225.93 266.29,225.89 266.89,225.85 267.49,225.82 268.69,225.77 269.90,225.76 270.50,225.75 271.10,225.74 271.70,225.73 272.30,225.73 273.50,225.71 274.10,225.70 274.71,225.69 275.31,225.68 275.91,225.67 276.51,225.67 278.91,225.63 279.51,225.62 280.12,225.62 280.72,225.61 289.73,225.53 292.14,225.51 293.34,225.50 299.95,225.45 310.78,225.39 311.98,225.39 312.58,225.39 313.18,225.38 313.78,225.38 314.38,225.38 314.98,225.38 315.59,225.38 316.19,225.37 316.79,225.37 317.39,225.37 317.99,225.37 318.59,225.37 319.19,225.37 319.79,225.37 321.00,225.36 331.22,225.36 342.04,225.36 352.26,225.36 362.48,225.36 373.30,225.36 383.52,225.36 393.74,225.36 404.56,225.36 414.78,225.36 425.60,225.36 435.82,225.36 446.04,225.36 456.86,225.36 465.88,225.36 467.08,225.36 470.09,225.36 477.30,225.36 488.12,225.36 498.34,225.36 508.56,225.36 516.38,225.36 516.98,225.36 517.58,225.36 518.18,225.36 518.78,225.36 519.38,225.36 529.60,225.36 531.41,225.36 536.22,225.36 539.83,225.36 550.65,225.36 560.87,225.36 571.69,225.36 581.91,225.35 587.92,224.93 588.52,224.76 589.12,224.55 589.72,224.27 590.32,223.94 590.93,223.52 591.53,223.03 592.13,222.50 602.95,212.98 613.17,203.99 623.39,195.00 634.21,185.48 638.42,181.78 644.43,176.49 654.65,167.50 665.47,157.98 675.69,148.99 685.91,140.00 696.73,130.48 700.34,127.30 700.94,126.77 701.54,126.24 702.14,125.72 702.74,125.19 706.95,121.48 717.77,111.96 727.99,102.97 738.21,93.98 749.03,84.46 758.65,76.00"/>
+<line x1="88" y1="70" x2="110" y2="70" stroke="#0f766e" stroke-width="2.8" stroke-dasharray="6 3"/>
+<text x="116" y="74" font-family="Arial, sans-serif" font-size="12">[Pulldown]+[GND Clamp]</text>
+<rect x="78" y="464" width="694" height="44" fill="#fffdf7" stroke="#d8c6a1" rx="4"/>
+<text x="88" y="481" font-family="Arial, sans-serif" font-size="11" font-weight="700" fill="#4b3b21">Findings needing attention</text>
+<rect x="88" y="488" width="7" height="7" fill="#b54708"/>
+<text x="102" y="495" font-family="Arial, sans-serif" font-size="11" fill="#333">WARN 5.3.6: I-V stair-step evidence needs review | [Pulldown]: roughness=0.265 &gt; 0.1</text>
+<text x="425.00" y="444.00" text-anchor="middle" font-family="Arial, sans-serif" font-size="12">Table voltage (V)</text>
+<text transform="translate(18 226.00) rotate(-90)" text-anchor="middle" font-family="Arial, sans-serif" font-size="12">Current (A)</text>
+<text x="420" y="42" font-family="Arial, sans-serif" font-size="11" fill="#555">thick dashed=combined typ curves</text>
+</svg>

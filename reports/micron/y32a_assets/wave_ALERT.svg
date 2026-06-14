@@ -33,10 +33,6 @@
 <text x="116" y="76" font-family="Arial, sans-serif" font-size="12">falling #1</text>
 <line x1="88" y1="90" x2="110" y2="90" stroke="#d62728" stroke-width="2.4"/>
 <text x="116" y="94" font-family="Arial, sans-serif" font-size="12">rising #2</text>
-<rect x="78" y="342" width="694" height="44" fill="#fffdf7" stroke="#d8c6a1" rx="4"/>
-<text x="88" y="359" font-family="Arial, sans-serif" font-size="11" font-weight="700" fill="#4b3b21">Findings needing attention</text>
-<rect x="88" y="366" width="7" height="7" fill="#b42318"/>
-<text x="102" y="373" font-family="Arial, sans-serif" font-size="11" fill="#333">FAIL 5.5.3: [Ramp] dV inconsistent with I-V load-line (2 corner(s)) | Rise dV/max: ramp=0.4875V, expected≈0.454V (7.4% er...</text>
 <text x="425.00" y="322.00" text-anchor="middle" font-family="Arial, sans-serif" font-size="12">Time (s)</text>
 <text x="420" y="42" font-family="Arial, sans-serif" font-size="11" fill="#555">solid=V-T voltage, faint horizontal=V_fixture</text>
 </svg>

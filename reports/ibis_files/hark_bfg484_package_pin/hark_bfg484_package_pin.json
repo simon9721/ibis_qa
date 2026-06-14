@@ -1,5 +1,5 @@
 {
-  "file": "C:\\Users\\simom\\Desktop\\Projects\\IBIS Files\\Hark Labs\\FPGA-MD-02047-1-1-CertusPro-NX-IBIS-AMI Model_file\\ibis_bfg484_package_pin.ibs",
+  "file": "C:\\Users\\simonhwang_pcbauto\\Desktop\\IBIS Files\\Hark Labs\\FPGA-MD-02047-1-1-CertusPro-NX-IBIS-AMI Model_file\\ibis_bfg484_package_pin.ibs",
   "max_level": 3,
   "ibis_ver": "5.0",
   "file_rev": "1.0",
@@ -12,7 +12,7 @@
     "total_pin_count": 450
   },
   "header": {
-    "path": "C:\\Users\\simom\\Desktop\\Projects\\IBIS Files\\Hark Labs\\FPGA-MD-02047-1-1-CertusPro-NX-IBIS-AMI Model_file\\ibis_bfg484_package_pin.ibs",
+    "path": "C:\\Users\\simonhwang_pcbauto\\Desktop\\IBIS Files\\Hark Labs\\FPGA-MD-02047-1-1-CertusPro-NX-IBIS-AMI Model_file\\ibis_bfg484_package_pin.ibs",
     "file_name": "ibis_bfg484_package_pin.ibs",
     "ibis_ver": "5.0",
     "date": "July 19,2021",
@@ -86,7 +86,7 @@
     {
       "iq_level": "LEVEL 2",
       "numeric_level": 2,
-      "required_items": 35,
+      "required_items": 36,
       "implemented_items": 0,
       "passed_items": 0,
       "not_applicable_items": 0,
@@ -94,7 +94,7 @@
       "failed_items": 0,
       "error_items": 0,
       "review_required_items": 0,
-      "manual_or_unimplemented_items": 35,
+      "manual_or_unimplemented_items": 36,
       "clear_items": 0,
       "result_count": 0
     },
@@ -529,7 +529,9 @@
     "decision_count": 0,
     "reviewer": "",
     "organization": "",
-    "approval_date": ""
+    "approval_date": "",
+    "stale_decision_count": 0,
+    "stale_decisions": []
   },
   "effective_summary": {
     "PASS": 0,
