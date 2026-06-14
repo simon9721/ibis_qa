@@ -41,7 +41,7 @@ _DEFAULT_SCHEMA_VERSION = 2
 
 def load_check_metadata() -> dict[str, dict]:
     try:
-        data = json.loads(_SPEC_PATH.read_text(encoding="utf-8"))
+        data = json.loads(_SPEC_PATH.read_text(encoding="utf-8-sig"))
     except (OSError, json.JSONDecodeError):
         return {}
     return {
@@ -75,12 +75,35 @@ def assign_stable_result_ids(results: list[dict]) -> None:
         seen[base_key] += 1
         review_key = base_key if seen[base_key] == 1 else f"{base_key}-{seen[base_key]}"
         result["legacy_result_id"] = f"R{index:05d}"
+        result["legacy_result_key"] = _legacy_stable_result_key(result)
         result["result_key"] = review_key
         result["review_key"] = review_key
         result["result_id"] = review_key
 
 
 def stable_result_key(result: dict) -> str:
+    """Identity-stable key: hashes only check_id + scope + entity fields.
+
+    Deliberately excludes status, message, and details so that tool
+    wording/logic changes never invalidate reviewer decisions already recorded
+    against an unchanged finding.  The legacy key (below) retains the old
+    behaviour for backward-compatible lookup of pre-v2 review files.
+    """
+    check_id = str(result.get("check_id") or "unknown")
+    scope = str(result.get("scope") or "unknown")
+    subject = str(result.get("subject") or "")
+    component = str(result.get("component_name") or "")
+    model = str(result.get("model_name") or "")
+    package_model = str(result.get("package_model_name") or "")
+    base = "|".join([check_id, scope, subject, component, model, package_model])
+    digest = hashlib.sha1(base.encode("utf-8", "replace")).hexdigest()[:12]
+    prefix = _slug(f"{check_id}-{scope}-{subject or model or component or package_model}", 46)
+    return f"{prefix}-{digest}"
+
+
+def _legacy_stable_result_key(result: dict) -> str:
+    """Pre-v2 key that included status/message/details in the hash.
+    Stored on results as `legacy_result_key` so old review files still resolve."""
     check_id = str(result.get("check_id") or "unknown")
     scope = str(result.get("scope") or "unknown")
     subject = str(result.get("subject") or "")
@@ -91,15 +114,8 @@ def stable_result_key(result: dict) -> str:
     message = str(result.get("message") or "")
     details = "\n".join(str(item) for item in (result.get("details") or [])[:4])
     base = "|".join([
-        check_id,
-        scope,
-        subject,
-        component,
-        model,
-        package_model,
-        status,
-        message,
-        details,
+        check_id, scope, subject, component, model, package_model,
+        status, message, details,
     ])
     digest = hashlib.sha1(base.encode("utf-8", "replace")).hexdigest()[:12]
     prefix = _slug(f"{check_id}-{scope}-{subject or model or component or package_model}", 46)
@@ -160,6 +176,7 @@ def _decision_keys(item: dict) -> list[str]:
         "result_key",
         "manual_key",
         "result_id",
+        "legacy_result_key",
         "legacy_result_id",
     ):
         value = item.get(field)
@@ -172,6 +189,7 @@ def _decision_keys(item: dict) -> list[str]:
             "result_key",
             "manual_key",
             "result_id",
+            "legacy_result_key",
             "legacy_result_id",
         ):
             value = source.get(field)
@@ -195,6 +213,7 @@ def _item_keys(item: dict) -> list[str]:
         "result_key",
         "manual_key",
         "result_id",
+        "legacy_result_key",
         "legacy_result_id",
     ):
         value = item.get(field)
@@ -218,6 +237,7 @@ def effective_status(item: dict, decisions: dict[str, dict] | None = None) -> st
 
 def build_manual_review_queue(report: dict) -> list[dict]:
     max_level = report.get("max_level")
+    models_info = report.get("models") or {}
     entries: list[dict] = []
     for check_id, metadata in sorted(_CHECK_METADATA.items(), key=lambda kv: _check_sort_key(kv[0])):
         if metadata.get("automation_class") != "manual":
@@ -229,14 +249,16 @@ def build_manual_review_queue(report: dict) -> list[dict]:
             components = report.get("components") or []
             if components:
                 for component in components:
-                    entries.append(_manual_entry(metadata, "component", component.get("name", "")))
+                    entry = _manual_entry(metadata, "component", component.get("name", ""))
+                    entries.append(entry)
             else:
                 entries.append(_manual_entry(metadata, "file", Path(report.get("file", "")).name))
         else:
-            models = report.get("models") or {}
-            if models:
-                for model_name in models:
-                    entries.append(_manual_entry(metadata, "model", model_name))
+            if models_info:
+                for model_name in models_info:
+                    entry = _manual_entry(metadata, "model", model_name)
+                    entry["_model_context"] = _model_context_from_info(models_info.get(model_name) or {})
+                    entries.append(entry)
             else:
                 entries.append(_manual_entry(metadata, "file", Path(report.get("file", "")).name))
 
@@ -245,6 +267,21 @@ def build_manual_review_queue(report: dict) -> list[dict]:
         entry["manual_key"] = key
         entry["review_key"] = key
     return entries
+
+
+def _model_context_from_info(model_info: dict) -> dict:
+    """Compact model facts for manual-review entries so reviewers have context."""
+    vr = model_info.get("voltage_range")
+    return {
+        "model_type": model_info.get("model_type"),
+        "voltage_range_typ": vr[0] if isinstance(vr, (list, tuple)) and len(vr) > 0 else None,
+        "has_pullup": model_info.get("has_pullup"),
+        "has_pulldown": model_info.get("has_pulldown"),
+        "has_power_clamp": model_info.get("has_power_clamp"),
+        "has_gnd_clamp": model_info.get("has_gnd_clamp"),
+        "has_ramp": model_info.get("has_ramp"),
+        "has_waveforms": (model_info.get("waveform_count") or 0) > 0,
+    }
 
 
 def _manual_entry(metadata: dict, scope: str, subject: str) -> dict:
@@ -284,9 +321,19 @@ def apply_review_decisions(
     if "manual_review_queue" not in out:
         out["manual_review_queue"] = build_manual_review_queue(out)
 
+    # Track which loaded decisions were matched so we can report stale ones.
+    matched_ids: set[int] = set()
+
+    def _find(item: dict) -> dict | None:
+        for key in _item_keys(item):
+            d = decisions.get(key)
+            if d:
+                matched_ids.add(id(d))
+                return d
+        return None
+
     for result in out.get("results", []):
-        decision = decision_for_item(result, decisions)
-        _apply_decision_fields(result, decision)
+        _apply_decision_fields(result, _find(result))
 
     # Nested result lists share object identity in freshly generated reports,
     # but JSON-loaded reports do not. Refresh them by key after applying.
@@ -297,14 +344,28 @@ def apply_review_decisions(
     _refresh_nested_results(out, by_key)
 
     for item in out.get("review_queue", []):
-        decision = decision_for_item(item, decisions)
-        _apply_decision_fields(item, decision)
+        _apply_decision_fields(item, _find(item))
 
     for item in out.get("manual_review_queue", []):
-        decision = decision_for_item(item, decisions)
-        _apply_decision_fields(item, decision, manual=True)
+        _apply_decision_fields(item, _find(item), manual=True)
 
-    out["review_overlay"] = _overlay_summary(review_decisions, decisions)
+    # Stale-decision detection: decisions that matched no result/queue item
+    unique_decisions = {id(d): d for d in decisions.values()}
+    stale = [
+        {
+            "check_id": d.get("check_id"),
+            "subject": d.get("subject"),
+            "decision": d.get("decision"),
+            "review_key": d.get("review_key"),
+        }
+        for did, d in unique_decisions.items()
+        if did not in matched_ids
+    ]
+    overlay = _overlay_summary(review_decisions, decisions)
+    overlay["stale_decision_count"] = len(stale)
+    overlay["stale_decisions"] = stale
+    out["review_overlay"] = overlay
+
     out["effective_summary"] = _effective_summary(out.get("results", []))
     out["manual_review_summary"] = _manual_summary(out.get("manual_review_queue", []))
     out["review_summary"] = _review_summary(out)
@@ -539,7 +600,8 @@ def make_review_payload(
             normalized["organization"] = organization
         if approval_date and not normalized.get("approval_date"):
             normalized["approval_date"] = approval_date
-        payload_decisions.append({
+
+        entry: dict = {
             "review_key": item.get("review_key") or item.get("result_key") or item.get("manual_key") or item.get("result_id"),
             "result_id": item.get("result_id", ""),
             "result_key": item.get("result_key", ""),
@@ -561,7 +623,29 @@ def make_review_payload(
             "organization": normalized.get("organization", ""),
             "approval_date": normalized.get("approval_date", ""),
             "source_item": item,
-        })
+            "_history": (existing or {}).get("_history", []),
+        }
+
+        # fix_proposal stub: surface for reviewers when a IBIS patch is available
+        fp = (item.get("data") or {}).get("fix_proposal")
+        if fp:
+            entry["fix_approved"] = (existing or {}).get("fix_approved", False)
+            entry["fix_vcc_min"] = (existing or {}).get("fix_vcc_min")
+            entry["fix_vcc_max"] = (existing or {}).get("fix_vcc_max")
+            entry["_fix_info"] = {
+                "keyword": fp.get("keyword"),
+                "current_typ": fp.get("current_typ"),
+                "inferred_typ": fp.get("inferred_typ"),
+                "suggested_min": fp.get("suggested_min"),
+                "suggested_max": fp.get("suggested_max"),
+                "_note": (
+                    f"Set fix_approved: true to patch {fp.get('keyword')} "
+                    f"typ {fp.get('current_typ')}V → {fp.get('inferred_typ')}V. "
+                    f"Scaled corners: min={fp.get('suggested_min')}, max={fp.get('suggested_max')}."
+                ),
+            }
+
+        payload_decisions.append(entry)
 
     return {
         "schema_version": _DEFAULT_SCHEMA_VERSION,

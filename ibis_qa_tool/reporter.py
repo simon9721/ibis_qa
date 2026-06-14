@@ -414,6 +414,8 @@ def _plot_keys_for_check(check_id: str) -> list[str]:
         return ["isso"]
     if check_id.startswith("5.5.") or check_id.startswith("5.8."):
         return ["waveform"]
+    if check_id.startswith("5.9."):
+        return ["zout"]
     return []
 
 
@@ -493,6 +495,7 @@ def _render_toc(lines: list[str], max_level: int | None, has_report_diff: bool =
         "- [Failed & Error Items](#failed-error-items)",
         "- [Passed Items Per Level](#passed-items-per-level)",
         "- [Zout Estimates](#zout-estimates)",
+        "- [IBIS Table Plots](#ibis-table-plots)",
         "- [Quality Check Results](#quality-check-results)",
     ])
     if has_report_diff:
@@ -508,7 +511,7 @@ def _render_toc(lines: list[str], max_level: int | None, has_report_diff: bool =
             f"- [LEVEL {level} check results](#level-{level}-check-results)",
         ])
         for check_id in check_ids:
-            lines.append(f"- [{_md_cell(_toc_link_label(check_id))}](#check-{_anchor_id(check_id)})")
+            lines.append(f"  - [{_md_cell(_toc_link_label(check_id))}](#check-{_anchor_id(check_id)})")
     lines.extend([
         "",
         "- [Visual Curves by Model](#visual-curves-by-model)",
@@ -575,6 +578,36 @@ def _render_failures_overview(
         for detail in result.get("details", [])[:10]:
             lines.append(f"- {_md_cell(detail)}")
 
+        fp = result.get("data", {}).get("fix_proposal")
+        if fp:
+            kw      = fp.get("keyword", "[Voltage Range]")
+            cur_typ = fp.get("current_typ")
+            inf_typ = fp.get("inferred_typ")
+            cur_min = fp.get("current_min")
+            cur_max = fp.get("current_max")
+            sug_min = fp.get("suggested_min")
+            sug_max = fp.get("suggested_max")
+            cur_corners = (
+                f"min={cur_min}, max={cur_max}"
+                if cur_min is not None and cur_max is not None
+                else "min/max unknown"
+            )
+            if sug_min is not None and sug_max is not None:
+                sug_note = (f" Default scaled corners: min={sug_min}, max={sug_max}."
+                            " Override with `\"fix_vcc_min\"` / `\"fix_vcc_max\"` if needed.")
+            else:
+                sug_note = (" Add `\"fix_vcc_min\"` / `\"fix_vcc_max\"` to set corners"
+                            " (otherwise existing values kept).")
+            lines.extend([
+                "",
+                f"**Fix proposal:** `{kw}` typ `{cur_typ}V → {inf_typ}V` "
+                f"(inferred from table endpoints; current corners: {cur_corners})."
+                f"{sug_note}"
+                " Set `\"fix_approved\": true` in the review entry then run"
+                " `--apply-fixes review.json` to patch the IBIS file.",
+                "",
+            ])
+
         model_name = result.get("model_name")
         shown_visual = False
         if model_name and model_name in plot_refs:
@@ -597,6 +630,10 @@ def _render_failures_overview(
             )
 
     lines.extend([
+        "",
+        "---",
+        "",
+        "**&#x2014; End of Failed &amp; Error Items &#x2014;**",
         "",
         "[Back to table of contents](#table-of-contents)",
     ])
@@ -1193,6 +1230,7 @@ def render_markdown_report(
         )
 
     _render_zout_estimates(lines, report, plot_refs)
+    _render_ibis_table_plots_gallery(lines, plot_refs, report)
     _render_quality_check_results(lines, results, max_level, plot_refs)
 
     lines.extend([
@@ -1321,6 +1359,8 @@ def render_html_report(
     markdown = render_markdown_report(report, asset_dir, asset_ref_prefix)
     title = f"IBIS QA Report - {Path(report.get('file', 'IBIS')).name}"
     asset_path = Path(asset_dir) if asset_dir is not None else None
+    body = _markdown_to_html(markdown, asset_path)
+    body = _wrap_headings_as_details(body)
     return "\n".join([
         "<!doctype html>",
         '<html lang="en">',
@@ -1334,8 +1374,11 @@ def render_html_report(
         "</head>",
         "<body>",
         '<main class="report">',
-        _markdown_to_html(markdown, asset_path),
+        body,
         "</main>",
+        "<script>",
+        _REPORT_JS,
+        "</script>",
         "</body>",
         "</html>",
         "",
@@ -1419,7 +1462,214 @@ img {
 }
 ul { padding-left: 22px; }
 p { margin: 9px 0; }
+/* ── Collapsible sections ─────────────────────────────────────────────── */
+details.sec2, details.sec3, details.sec4 { margin: 2px 0; }
+details.sec2 > summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 7px;
+  margin-top: 34px;
+  user-select: none;
+}
+details.sec2 > summary::-webkit-details-marker { display: none; }
+details.sec2 > summary::marker { display: none; }
+details.sec2 > summary::before {
+  content: "▶";
+  font-size: 11px;
+  color: var(--muted);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+details.sec2[open] > summary::before { content: "▼"; }
+details.sec2 > summary > h2 {
+  display: inline;
+  margin: 0;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+details.sec3 > summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  user-select: none;
+  margin-top: 28px;
+}
+details.sec3 > summary::-webkit-details-marker { display: none; }
+details.sec3 > summary::marker { display: none; }
+details.sec3 > summary::before {
+  content: "▶";
+  font-size: 9px;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+details.sec3[open] > summary::before { content: "▼"; }
+details.sec3 > summary > h3 { display: inline; margin: 0; }
+details.sec4 > summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  user-select: none;
+  margin-top: 24px;
+}
+details.sec4 > summary::-webkit-details-marker { display: none; }
+details.sec4 > summary::marker { display: none; }
+details.sec4 > summary::before {
+  content: "▶";
+  font-size: 8px;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+details.sec4[open] > summary::before { content: "▼"; }
+details.sec4 > summary > h4 { display: inline; margin: 0; }
+.sec-body { padding-left: 2px; }
+/* ── Nested TOC ───────────────────────────────────────────────────────── */
+ul li.toc-sub { margin-left: 18px; font-size: 12.5px; }
 """.strip()
+
+
+_REPORT_JS = """
+document.addEventListener('DOMContentLoaded', function () {
+  function openParents(el) {
+    var node = el ? el.parentElement : null;
+    while (node) {
+      if (node.tagName === 'DETAILS') node.open = true;
+      node = node.parentElement;
+    }
+  }
+  if (location.hash) {
+    var t = document.getElementById(location.hash.slice(1));
+    if (t) openParents(t);
+  }
+  document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+    a.addEventListener('click', function () {
+      var id = a.getAttribute('href').slice(1);
+      setTimeout(function () {
+        var t = document.getElementById(id);
+        if (t) { openParents(t); t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+      }, 30);
+    });
+  });
+});
+""".strip()
+
+
+_ALWAYS_OPEN_H2 = frozenset(["file summary", "score assessment", "result summary"])
+
+
+def _wrap_headings_as_details(html: str) -> str:
+    return _wrap_level_re(html, 2, ctx="")
+
+
+def _wrap_level_re(html: str, level: int, ctx: str = "") -> str:
+    """Recursively wrap h2/h3/h4 sections in <details> elements.
+
+    ctx values propagated from parent:
+      ""        — default (closed)
+      "fail"    — inside Failed & Error Items; all sub-sections open
+      "gallery" — inside IBIS Table Plots; h3 (model) closed, h4 (figure) open
+    """
+    if level > 4:
+        return html
+    tag = f"h{level}"
+    parts = re.split(rf"<{tag}>(.*?)</{tag}>", html, flags=re.DOTALL)
+    if len(parts) <= 1:
+        return html
+    out = [parts[0]]
+    for idx in range(1, len(parts), 2):
+        title_inner = parts[idx]
+        body = parts[idx + 1] if idx + 1 < len(parts) else ""
+        # Strip tags and decode common HTML entities for title inspection
+        title_text = re.sub(r"<[^>]+>", "", title_inner).lower()
+        title_text = re.sub(r"&[a-z]+;", " ", title_text).strip()
+
+        # Determine open state and child context
+        if ctx == "fail":
+            is_open = True          # every sub-section in the fail block is open
+            child_ctx = "fail"
+        elif ctx == "gallery":
+            is_open = level >= 4    # model (h3) closed; figures (h4+) open
+            child_ctx = "gallery"
+        elif level == 2:
+            is_open = "fail" in title_text or title_text in _ALWAYS_OPEN_H2
+            if "fail" in title_text:
+                child_ctx = "fail"
+            elif "ibis table plot" in title_text:
+                child_ctx = "gallery"
+            else:
+                child_ctx = ""
+        else:
+            is_open = False
+            child_ctx = ctx
+
+        open_attr = " open" if is_open else ""
+        body = _wrap_level_re(body, level + 1, ctx=child_ctx)
+        out.append(
+            f'<details class="sec{level}"{open_attr}>\n'
+            f'<summary><{tag}>{title_inner}</{tag}></summary>\n'
+            f'<div class="sec-body">\n{body}\n</div>\n'
+            f'</details>\n'
+        )
+    return "".join(out)
+
+
+_GALLERY_PLOT_ORDER = [
+    ("iv",             "I-V Curves ([Pulldown] / [Pullup] / [GND Clamp] / [POWER Clamp])"),
+    ("iv_clamp",       "[GND Clamp] / [POWER Clamp] I-V Clamp Detail (0..Vcc window)"),
+    ("iv_zero",        "[Pulldown] / [Pullup] I-V at 0 V"),
+    ("iv_clamp_sweep", "[GND Clamp] / [POWER Clamp] Sweep Range"),
+    ("zout",           "Output Impedance (Zout) Load-Line"),
+    ("isso",           "[ISSO PD] / [ISSO PU] Curves"),
+    ("waveform",       "[Rising Waveform] / [Falling Waveform] V-T and Composite Current"),
+]
+
+
+def _render_ibis_table_plots_gallery(
+        lines: list[str],
+        plot_refs: dict[str, dict[str, str]],
+        report: dict) -> None:
+    if not plot_refs:
+        return
+    lines.extend([
+        "",
+        "## IBIS Table Plots",
+        '<a id="ibis-table-plots"></a>',
+        "",
+        "Plots generated from IBIS table data for each model, grouped by table type.",
+        "",
+    ])
+    models = report.get("models", {})
+    for model_name, model_refs in plot_refs.items():
+        if not model_refs:
+            continue
+        model_info = models.get(model_name, {})
+        lines.extend([
+            f"### Model: `{_md_cell(model_name)}`",
+            "",
+            f"- Model type: {_md_cell(model_info.get('model_type', ''))}",
+            f"- Waveform tables: {model_info.get('waveform_count', 0)}",
+            "",
+        ])
+        for key, default_label in _GALLERY_PLOT_ORDER:
+            ref = model_refs.get(key)
+            if not ref:
+                continue
+            label = model_refs.get("iv_label", default_label) if key == "iv" else default_label
+            # Strip [ ] from alt text — brackets break the markdown image regex
+            alt = re.sub(r"[\[\]]", "", f"{model_name} {label}")
+            lines.extend([
+                f"#### {label}",
+                "",
+                f"![{alt}]({ref})",
+                "",
+            ])
 
 
 def _markdown_to_html(markdown: str, asset_dir: Path | None = None) -> str:
@@ -1488,6 +1738,14 @@ def _markdown_to_html(markdown: str, asset_dir: Path | None = None) -> str:
             alt = html_escape(image.group(1), quote=True)
             src = html_escape(_html_image_src(image.group(2), asset_dir), quote=True)
             html_lines.append(f'<p><img src="{src}" alt="{alt}" loading="lazy"></p>')
+            i += 1
+            continue
+
+        if line.startswith("  - "):
+            if not in_list:
+                html_lines.append("<ul>")
+                in_list = True
+            html_lines.append(f'<li class="toc-sub">{_inline_md_to_html(line[4:], asset_dir)}</li>')
             i += 1
             continue
 

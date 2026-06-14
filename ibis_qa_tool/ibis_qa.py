@@ -77,6 +77,34 @@ from review import (
 from spreadsheet import write_spreadsheet_report
 
 
+def _update_ibis_local_db(args, ibs_path, review_json_path: str) -> None:
+    """Write the review decisions JSON path into the ibis-local DB if --ibis-local-db given."""
+    if not getattr(args, "ibis_local_db", None):
+        return
+    try:
+        import hashlib
+        from pathlib import Path as _Path
+        db_path = _Path(args.ibis_local_db)
+        if not db_path.exists():
+            print(f"WARNING: --ibis-local-db path not found: {db_path}", file=sys.stderr)
+            return
+        checksum = hashlib.sha256(ibs_path.read_bytes()).hexdigest()
+        # Use ibis-local's Store directly
+        import sys as _sys
+        _sys.path.insert(0, str(db_path.parent))
+        from ibis_library.store import Store
+        store = Store(db_path)
+        file_id = store.find_by_checksum(checksum)
+        if file_id is None:
+            print(f"WARNING: IBIS file not found in ibis-local DB (checksum mismatch)", file=sys.stderr)
+            return
+        store.update_review_decisions_path(file_id, review_json_path)
+        print(f"Updated ibis-local DB: file_id={file_id} → review_decisions={review_json_path}",
+              file=sys.stderr)
+    except Exception as exc:
+        print(f"WARNING: could not update ibis-local DB: {exc}", file=sys.stderr)
+
+
 def main():
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
@@ -103,6 +131,15 @@ def main():
     ap.add_argument("--reviewer-org", default="", help="Reviewer organization for review exports")
     ap.add_argument("--approval-date", default="", help="Approval date for review exports")
     ap.add_argument("--compare-report", help="Compare this run against a previous QA JSON report")
+    ap.add_argument("--ibis-local-db", metavar="DB_PATH",
+                    help="Path to ibis-local SQLite DB. When review decisions are "
+                         "written (--review-out / --review-template), also stores the "
+                         "decisions JSON path in the DB under the matching IBIS file entry.")
+    ap.add_argument("--apply-fixes", metavar="REVIEW_JSON",
+                    help="Apply approved fix proposals from REVIEW_JSON to the IBIS file "
+                         "in-place (creates .bak backup). Review entries need "
+                         "\"fix_approved\": true; optionally add \"fix_vcc_min\" / "
+                         "\"fix_vcc_max\" to also update the min/max corners.")
     ap.add_argument("--plot-dir", help="Write SVG visual-curve assets to this directory")
     ap.add_argument("--zout-rload", type=float, default=50.0,
                     help="Load impedance in ohms for reported Zout estimates (default: 50)")
@@ -188,6 +225,25 @@ def main():
         )
         review_path = write_review_payload(payload, args.review_out)
         print(f"Wrote review decisions: {review_path}", file=sys.stderr)
+        _update_ibis_local_db(args, path, str(review_path))
+
+    if args.review_template and not args.review_interactive:
+        _update_ibis_local_db(args, path, args.review_template)
+
+    if args.apply_fixes:
+        from fixer import collect_approved_fixes, apply_fixes as _apply_fixes
+        from review import load_review_decisions
+        review_data = load_review_decisions(args.apply_fixes) or {}
+        fixes = collect_approved_fixes(report_dict, review_data)
+        if fixes:
+            changes = _apply_fixes(path, fixes)
+            for c in changes:
+                print(f"  {'Applied' if not c.startswith('WARNING') else ''}{c}", file=sys.stderr)
+            applied = sum(1 for c in changes if not c.startswith("WARNING"))
+            print(f"Applied {applied} fix(es) to {path.name} (backup: {path.name}.bak)",
+                  file=sys.stderr)
+        else:
+            print("No approved fixes found in review JSON.", file=sys.stderr)
 
     if args.compare_report:
         report_dict["report_diff"] = compare_reports(report_dict, args.compare_report)

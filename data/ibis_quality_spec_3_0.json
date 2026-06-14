@@ -502,7 +502,7 @@
       "automation": {
         "class": "auto",
         "rationale": "Run IBISCHK, parse version/errors/warnings/cautions, and require documented exceptions for any remaining warnings.",
-        "how": "Run the appropriate IBISCHK version for the file's [IBIS Ver], capture the full output, parse version/errors/warnings/cautions, fail on any error, and require [Notes]/comments plus the X designator for unresolved warnings. Additionally verify per \u00a71.4 that an |IQ Score: tag appears inside the .ibs file itself (in [Notes] or a comment line) and that the IBISCHK version used is documented in-file; referencing an external quality report does not satisfy this requirement."
+        "how": "Run the appropriate IBISCHK version for the file's [IBIS Ver], capture the full output, parse version/errors/warnings/cautions, fail on any error, and require [Notes]/comments plus the X designator for unresolved warnings. Additionally verify per §1.4 that an |IQ Score: tag appears inside the .ibs file itself (in [Notes] or a comment line) and that the IBISCHK version used is documented in-file; referencing an external quality report does not satisfy this requirement."
       }
     },
     {
@@ -2135,6 +2135,31 @@
         "class": "auto",
         "rationale": "V_fixture=0 start/end zero-current rules can be checked from waveform data.",
         "how": "When V_fixture = 0, check that falling-waveform composite current ends at 0 A and rising-waveform composite current starts at 0 A."
+      }
+    },
+    {
+      "kind": "check",
+      "id": "5.9.1",
+      "level": "LEVEL 2",
+      "title": "Driver output impedance (Zout) plausibility",
+      "source_line": 0,
+      "paragraphs": [
+        "Estimated Zout derived from Pullup/Pulldown I-V load-line intersections should not exceed a plausibility threshold. High Zout (>100 Ohm) may indicate a misscaled I-V table, incorrect Vcc declaration, or a driver whose I-V curves do not produce a realistic operating point."
+      ],
+      "numeric_level": 2,
+      "optional": false,
+      "section_id": "5.9",
+      "section_title": "Driver Output Impedance",
+      "ibis_keywords": [
+        "[Pullup]",
+        "[Pulldown]",
+        "[Voltage Range]",
+        "[Pullup Reference]"
+      ],
+      "automation": {
+        "rationale": "Estimate Zout via Westerhoff load-line from Pullup/Pulldown tables and warn if worst-case corner exceeds threshold.",
+        "class": "auto",
+        "how": "For each model with Pullup/Pulldown tables, compute load-line intersection at typ/min/max corners. Emit WARN if any corner Zout > ZOUT_WARN_OHM."
       }
     }
   ],

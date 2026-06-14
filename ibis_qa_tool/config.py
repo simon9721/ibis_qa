@@ -49,6 +49,10 @@ CLAMP_LEAKAGE_TOL_A = 1e-6     # 1 uA clamp leakage evidence tolerance
 RAMP_DV_TOLERANCE   = 0.10     # 10%
 RAMP_DV_FRACTION    = 0.60     # use 60% of (Vhigh - Vlow)
 
+# ── 5.9.1 Zout plausibility ──────────────────────────────────────────────────
+ZOUT_WARN_OHM     = 100.0      # WARN if worst-case Zout exceeds this
+ZOUT_RLOAD_OHM    = 50.0       # load used for Zout estimation in the check
+
 # ── 5.7.1 ISSO endpoint tolerance ────────────────────────────────────────────
 ISSO_ENDPOINT_TOL   = 0.02     # 2% — Isso_pd(0) vs Ipd(Vcc)
 

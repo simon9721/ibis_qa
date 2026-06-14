@@ -54,11 +54,16 @@ class Check5_3_IVSweep(CheckModule):
         pulldown_not_required = mt in INPUT_TYPES or mt == "open_source"
 
         if model.pullup is not None and vcc is not None:
-            results.append(self._check_sweep(
+            r = self._check_sweep(
                 "5.3.2", subj, model.pullup,
                 expected_min=-vcc, expected_max=2*vcc,
                 label="[Pullup]", table_key="pullup",
-                spec_ref="Quality Spec §5.3.2"))
+                spec_ref="Quality Spec §5.3.2")
+            if r.status == Status.FAIL:
+                fp = self._sweep_fix_proposal(model, r.data["sweep_range"], for_clamp=False)
+                if fp:
+                    r.data["fix_proposal"] = fp
+            results.append(r)
         elif model.pullup is None and pullup_not_required:
             results.append(self._na("5.3.2", subj,
                 f"Model_type={model.model_type} has no required [Pullup] table - NA",
@@ -66,11 +71,16 @@ class Check5_3_IVSweep(CheckModule):
 
         # ── 5.3.3: [Pulldown] sweep ───────────────────────────────────────────
         if model.pulldown is not None and vcc is not None:
-            results.append(self._check_sweep(
+            r = self._check_sweep(
                 "5.3.3", subj, model.pulldown,
                 expected_min=-vcc, expected_max=2*vcc,
                 label="[Pulldown]", table_key="pulldown",
-                spec_ref="Quality Spec §5.3.3"))
+                spec_ref="Quality Spec §5.3.3")
+            if r.status == Status.FAIL:
+                fp = self._sweep_fix_proposal(model, r.data["sweep_range"], for_clamp=False)
+                if fp:
+                    r.data["fix_proposal"] = fp
+            results.append(r)
         elif model.pulldown is None and pulldown_not_required:
             results.append(self._na("5.3.3", subj,
                 f"Model_type={model.model_type} has no required [Pulldown] table - NA",
@@ -80,21 +90,31 @@ class Check5_3_IVSweep(CheckModule):
         # Minimum required coverage is -Vcc to 0 (extending to +2*Vcc is
         # permitted/recommended but not required).
         if model.power_clamp is not None and pwr_vcc is not None:
-            results.append(self._check_sweep(
+            r = self._check_sweep(
                 "5.3.4", subj, model.power_clamp,
                 expected_min=-pwr_vcc, expected_max=0.0,
                 label="[POWER Clamp]", table_key="power_clamp",
-                spec_ref="Quality Spec §5.3.4"))
+                spec_ref="Quality Spec §5.3.4")
+            if r.status == Status.FAIL:
+                fp = self._sweep_fix_proposal(model, r.data["sweep_range"], for_clamp=True)
+                if fp:
+                    r.data["fix_proposal"] = fp
+            results.append(r)
 
         # ── 5.3.5: [GND Clamp] sweep ─────────────────────────────────────────
         # Minimum required coverage is -Vcc to +Vcc (extending to +2*Vcc is
         # permitted/recommended but not required).
         if model.gnd_clamp is not None and pwr_vcc is not None:
-            results.append(self._check_sweep(
+            r = self._check_sweep(
                 "5.3.5", subj, model.gnd_clamp,
                 expected_min=-pwr_vcc, expected_max=pwr_vcc,
                 label="[GND Clamp]", table_key="gnd_clamp",
-                spec_ref="Quality Spec §5.3.5"))
+                spec_ref="Quality Spec §5.3.5")
+            if r.status == Status.FAIL:
+                fp = self._sweep_fix_proposal(model, r.data["sweep_range"], for_clamp=True)
+                if fp:
+                    r.data["fix_proposal"] = fp
+            results.append(r)
 
         # ── 5.3.7: Monotonicity ───────────────────────────────────────────────
         if model.pulldown is not None or model.gnd_clamp is not None:
@@ -204,6 +224,85 @@ class Check5_3_IVSweep(CheckModule):
                     spec_ref="Quality Spec §5.3.1"))
 
         return results
+
+    # ── Sweep fix-proposal inference ─────────────────────────────────────────
+
+    def _sweep_fix_proposal(self, model: "Model", sweep_data: dict,
+                             for_clamp: bool) -> dict | None:
+        """
+        Infer the correct Vcc from the table's actual endpoints and return a
+        fix_proposal dict, or None if the inference is ambiguous or the change
+        would be negligible.
+
+        The I-V voltage column is fixed (shared across corners), so the table
+        endpoints tell us what Vcc it was built for:
+          5.3.2/5.3.3: table spans  -Vcc to +2*Vcc  → Vcc = -actual_min = actual_max/2
+          5.3.4:        table spans  -Vcc to 0        → Vcc = -actual_min
+          5.3.5:        table spans  -Vcc to +Vcc     → Vcc = -actual_min = actual_max
+        """
+        actual_min = sweep_data["actual_min"]
+        actual_max = sweep_data["actual_max"]
+        expected_min = sweep_data["expected_min"]   # = -declared_vcc
+        expected_max = sweep_data["expected_max"]   # = 2*Vcc / 0 / Vcc
+
+        # Infer from low end (always applicable: table starts at -Vcc)
+        if actual_min >= 0:
+            return None
+        vcc_from_low = -actual_min
+
+        # Cross-check from high end where possible
+        declared_vcc = -expected_min
+        if expected_max > 0 and declared_vcc > 0:
+            multiplier = expected_max / declared_vcc   # 2.0 for PU/PD, 1.0 for GND Clamp
+            vcc_from_high = actual_max / multiplier
+            # Accept inference only when both endpoints agree within 5 %
+            if abs(vcc_from_high - vcc_from_low) / vcc_from_low > 0.05:
+                return None
+        # For 5.3.4 (expected_max == 0) use low-end inference only
+
+        vcc_inferred = round(vcc_from_low, 6)
+        if vcc_inferred <= 0:
+            return None
+
+        # Determine which keyword holds the declared Vcc
+        if for_clamp and model.power_clamp_ref[0] is not None:
+            keyword = "[Power Clamp Reference]"
+            cur_typ = model.power_clamp_ref[0]
+            cur_min = model.power_clamp_ref[1]   # NOTE: parser stores as (typ,min,max)
+            cur_max = model.power_clamp_ref[2]   # but [*Reference] has 6-col format
+        elif not for_clamp and model.pullup_ref[0] is not None:
+            keyword = "[Pullup Reference]"
+            cur_typ = model.pullup_ref[0]
+            cur_min = model.pullup_ref[1]
+            cur_max = model.pullup_ref[2]
+        else:
+            keyword = "[Voltage Range]"
+            cur_typ = model.voltage_range[0]
+            cur_min = model.voltage_range[1]
+            cur_max = model.voltage_range[2]
+
+        if cur_typ is None:
+            return None
+        # Skip if the change is negligible (< 1 %)
+        if abs(vcc_inferred - cur_typ) / max(abs(cur_typ), 1e-9) < 0.01:
+            return None
+
+        # Scale min/max proportionally as defaults so the reviewer can approve
+        # without manually computing corners (e.g. 1.98→1.8 scales ±10% corners).
+        scale = vcc_inferred / cur_typ if cur_typ else 1.0
+        suggested_min = round(cur_min * scale, 6) if cur_min is not None else None
+        suggested_max = round(cur_max * scale, 6) if cur_max is not None else None
+
+        return {
+            "type":          "vcc_typ_mismatch",
+            "keyword":       keyword,
+            "current_typ":   cur_typ,
+            "current_min":   cur_min,
+            "current_max":   cur_max,
+            "inferred_typ":  vcc_inferred,
+            "suggested_min": suggested_min,
+            "suggested_max": suggested_max,
+        }
 
     # ── Sweep range helper ────────────────────────────────────────────────────
 

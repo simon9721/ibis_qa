@@ -83,7 +83,7 @@ class CheckRunner:
         if not _SPEC_PATH.exists():
             return {}
         try:
-            data = json.loads(_SPEC_PATH.read_text(encoding="utf-8"))
+            data = json.loads(_SPEC_PATH.read_text(encoding="utf-8-sig"))
         except (OSError, json.JSONDecodeError):
             return {}
         return {
