@@ -89,6 +89,11 @@ REPORTS = [
      "z41c_it",
      REPS / "micron",
      REPS / "micron" / "z41c_it_assets"),
+
+    (IBIS  / "k450_wlcsp.ibs",
+     "k450_wlcsp",
+     REPS / "k450_wlcsp",
+     REPS / "k450_wlcsp" / "k450_wlcsp_assets"),
 ]
 
 def run(ibs, stem, out_dir, plot_dir):

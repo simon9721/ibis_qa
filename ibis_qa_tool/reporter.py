@@ -633,7 +633,7 @@ def _render_failures_overview(
         "",
         "---",
         "",
-        "**&#x2014; End of Failed &amp; Error Items &#x2014;**",
+        "— End of Failed & Error Items —",
         "",
         "[Back to table of contents](#table-of-contents)",
     ])
